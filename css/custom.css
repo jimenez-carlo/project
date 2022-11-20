@@ -1,0 +1,23 @@
+.login-box, .register-box {
+    width: 430px;
+}
+.login-page, .register-page{
+    height:60vh;
+}
+
+
+.flex{
+display: flex;
+flex-direction: row;
+}
+.flex>*{
+    /* display: inline!important; */
+    margin-right: 3px;
+width: 75px;
+}
+
+.page-link{
+
+background-color: #343a40!important;
+border-color: unset!important;
+}
