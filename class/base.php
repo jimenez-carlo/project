@@ -144,6 +144,8 @@ class Base
     $data['suffix'] = $this->get_list("select * from tbl_suffix where deleted_flag = 0");
     $data['branch'] = $this->get_list("select * from tbl_branch where deleted_flag = 0");
     $data['users'] = $this->get_list("select id,concat(last_name, ', ', first_name,' ', LEFT(middle_name, 1), '[#',id,']') as name from tbl_users_info where deleted_flag = 0");
+    $data['officers'] = $this->get_list("select u.id,u.access_id,concat(ui.last_name, ', ', ui.first_name,' ', LEFT(ui.middle_name, 1), '[#',u.id,']') as name from tbl_users_info ui inner join tbl_users u on u.id = ui.id where u.deleted_flag = 0 and u.access_id = 2");
+    $data['personells'] = $this->get_list("select u.id,u.access_id,concat(ui.last_name, ', ', ui.first_name,' ', LEFT(ui.middle_name, 1), '[#',u.id,']') as name from tbl_users_info ui inner join tbl_users u on u.id = ui.id where u.deleted_flag = 0 and u.access_id = 3");
     // Project
     $data['comodity'] = $this->get_list("select * from tbl_comodity where deleted_flag = 0");
     $data['expense_class'] = $this->get_list("select * from tbl_expense_class where deleted_flag = 0");

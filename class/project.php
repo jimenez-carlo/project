@@ -11,7 +11,7 @@ class Project extends Base
 
   public function create()
   {
-    extract($this->escape_data($_POST, $_FILES));
+    extract($this->escape_data(array_merge($_POST, $_FILES)));
     $result = $this->response_obj();
     $blank = 0;
     $errors = array();
@@ -53,17 +53,19 @@ class Project extends Base
       $asa_date = (!empty($asa_date) && DateTime::createFromFormat('Y-m-d', $asa_date) !== false) ? "'$asa_date'" : "null";
 
 
-
       $app_file_name = "null";
-      if (isset($app_file) && !empty($app_file['name'])) {
+
+      if (!empty($app_file['name'])) {
         $ext = explode(".", $app_file["name"]);
         $app_file_name = 'file_' . date('YmdHis') . "." . end($ext);
         move_uploaded_file($app_file['tmp_name'], "files/app/" . $app_file_name);
         $app_file_name = "'$app_file_name'";
+        echo "seige";
       }
 
+
       $ppmp_file_name = "null";
-      if (isset($ppmp_file) && !empty($ppmp_file['name'])) {
+      if (!empty($ppmp_file['name'])) {
         $ext = explode(".", $ppmp_file["name"]);
         $ppmp_file_name = 'file_' . date('YmdHis') . "." . end($ext);
         move_uploaded_file($ppmp_file['tmp_name'], "files/ppmp/" . $ppmp_file_name);
@@ -71,7 +73,7 @@ class Project extends Base
       }
 
       $procurement_file_name = "null";
-      if (isset($procurement_file) && !empty($procurement_file['name'])) {
+      if (!empty($procurement_file['name'])) {
         $ext = explode(".", $procurement_file["name"]);
         $procurement_file_name = 'file_' . date('YmdHis') . "." . end($ext);
         move_uploaded_file($procurement_file['tmp_name'], "files/procurement/" . $procurement_file_name);
@@ -79,7 +81,7 @@ class Project extends Base
       }
 
       $tech_specs_file_name = "null";
-      if (isset($tech_specs_file) && !empty($tech_specs_file['name'])) {
+      if (!empty($tech_specs_file['name'])) {
         $ext = explode(".", $tech_specs_file["name"]);
         $tech_specs_file_name = 'file_' . date('YmdHis') . "." . end($ext);
         move_uploaded_file($tech_specs_file['tmp_name'], "files/tech/" . $tech_specs_file_name);

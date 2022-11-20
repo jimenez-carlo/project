@@ -76,13 +76,13 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*PABAC Nr</label>
-                    <textarea class="form-control form-control-sm" rows="2" name="pabac_nr" id="pabac_nr"></textarea>
+                    <input type="text" class="form-control form-control-sm" name="pabac_nr" id="pabac_nr">
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*UPR Nr</label>
-                    <textarea class="form-control form-control-sm" rows="2" name="upr_nr" id="upr_nr"></textarea>
+                    <input type="text" class="form-control form-control-sm" name="upr_nr" id="upr_nr">
                   </div>
                 </div>
 
@@ -163,7 +163,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Project Description</label>
-                    <input type="text" class="form-control form-control-sm" name="project_description" id="project_description">
+                    <textarea class="form-control form-control-sm" rows="2" name="project_description" id="project_description"></textarea>
                   </div>
                 </div>
                 <div class="col-sm-3">
@@ -251,6 +251,110 @@
             </div>
           </div>
           <!-- End Supplier -->
+
+          <!-- Allied Documents -->
+          <div class="card">
+            <!-- Project Team -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Allied Documents
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="app_file">APP/IAPP/AAPP</label>
+                      <div class="input-group">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="app_file" name="app_file">
+                          <label class="custom-file-label" for="app_file">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="ppmp_file">PPMP/APPMP
+                      </label>
+                      <div class="input-group">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="ppmp_file" name="ppmp_file">
+                          <label class="custom-file-label" for="ppmp_file">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="procurement_file">Procurement Directive
+                      </label>
+                      <div class="input-group">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="procurement_file" name="procurement_file">
+                          <label class="custom-file-label" for="procurement_file">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="tech_specs_file">Tech Specs
+
+                      </label>
+                      <div class="input-group">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="tech_specs_file" name="tech_specs_file">
+                          <label class="custom-file-label" for="tech_specs_file">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="bidding_file">Bidding Directive
+                      </label>
+                      <div class="input-group">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="bidding_file" name="bidding_file">
+                          <label class="custom-file-label" for="bidding_file">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="upr_file">UPR
+
+                      </label>
+                      <div class="input-group">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="upr_file" name="upr_file">
+                          <label class="custom-file-label" for="upr_file">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="other_file">Other Documents
+
+                      </label>
+                      <div class="input-group">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="other_file" name="other_file">
+                          <label class="custom-file-label" for="other_file">Choose file</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Allied Documents -->
           <div class="card">
             <!-- Project Team -->
@@ -277,7 +381,7 @@
                       <label>*Assigned Personnel
                       </label>
                       <select class="form-control select2bs4 form-control-sm" name="assigned_personell[]" id="assigned_personell" multiple="multiple">
-                        <?php foreach ($data['default']['users'] as $res) { ?>
+                        <?php foreach ($data['default']['personells'] as $res) { ?>
                           <option value="<?= $res['id'] ?>"><?= strtoupper($res['name']) ?></option>
                         <?php } ?>
                       </select>
@@ -285,7 +389,10 @@
                   </div>
 
                 </div>
-                <!-- End Allied Documents -->
+              </div>
+            </div>
+          </div>
+          <!-- End Allied Documents -->
         </form>
       </div>
       <!-- /.col -->
