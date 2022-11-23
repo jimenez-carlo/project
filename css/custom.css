@@ -13,11 +13,17 @@ flex-direction: row;
 .flex>*{
     /* display: inline!important; */
     margin-right: 3px;
-width: 75px;
+    width: fit-content;
 }
-
+.base{
+    align-items: baseline;
+}
 .page-link{
 
 background-color: #343a40!important;
 border-color: unset!important;
+}
+
+.mg-r{
+margin-right: 3px;
 }

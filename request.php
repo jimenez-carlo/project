@@ -35,6 +35,9 @@ switch ($form) {
   case 'project_create':
     $result = $project->create();
     break;
+  case 'project_update':
+    $result = $project->update();
+    break;
 }
 echo json_encode($result);
 die;

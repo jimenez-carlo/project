@@ -53,9 +53,9 @@
                     <td><?= $res['created_date'] ?></td>
                     <td><?= $res['updated_date'] ?></td>
                     <td class="flex">
-                      <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/user/edit" value="<?= $res['id']; ?>" disabled> <i class="fa fa-edit"></i> Edit</button>
-                      <form method="post" name="user_update" refresh="admin/user/list">
-                        <button type="submit" class="btn btn-sm btn-dark" name="delete_list" value="<?= $res['id']; ?>" confirmation="You Are About To Delete This User" disabled> <i class="fa fa-trash"></i> Delete</button>
+                      <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
+                      <form method="post" name="user_update" refresh="admin/project/list">
+                        <button type="submit" class="btn btn-sm btn-dark" name="delete_list" value="<?= $res['id']; ?>" confirmation="You Are About To Delete This User"> <i class="fa fa-trash"></i> Delete</button>
                       </form>
                     </td>
                   </tr>

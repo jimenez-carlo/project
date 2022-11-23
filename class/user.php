@@ -50,7 +50,7 @@ class User extends Base
       return $result;
     }
 
-    $check_username = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.username ='$username' and deleted_flag = 0 limit 1");
+    $check_username = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.username ='$username' and b.status_id <> 3 limit 1");
 
     if (!empty($check_username->res)) {
       $msg .= "Username Already In-use!";
@@ -58,7 +58,8 @@ class User extends Base
       $result->items = implode(',', array('username'));
       return $result;
     }
-    $check_serial_no = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.serial_no ='$serial_no' and deleted_flag = 0 limit 1");
+
+    $check_serial_no = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.serial_no ='$serial_no' and b.status_id <> 3 limit 1");
 
     if (!empty($check_serial_no->res)) {
       $msg .= "Serial No Already In-use!";
@@ -71,8 +72,8 @@ class User extends Base
 
     try {
       $created_by = $_SESSION['user']->id;
-      $user_id = $this->insert_get_id("INSERT INTO tbl_users (`serial_no`,`access_id`,`branch_id`,`rank_id`,`username`,`password`,`created_by`) VALUES('$serial_no','$access','$branch','$rank','$username','$password','$created_by')");
-      $this->query("INSERT INTO tbl_users_info (`id`,`first_name`,`middle_name`,`last_name`,`suffix`) VALUES('$user_id','$first_name', '$middle_name','$last_name', '$suffix')");
+      $user_id = $this->insert_get_id("INSERT INTO tbl_users (`serial_no`,`access_id`,`branch_id`,`rank_id`,`classification_id`,`username`,`password`,`created_by`,`status_id`) VALUES('$serial_no','$access','$branch','$rank','$classification','$username','$password','$created_by','$status')");
+      $this->query("INSERT INTO tbl_users_info (`id`,`first_name`,`middle_name`,`last_name`,`suffix_id`) VALUES('$user_id','$first_name', '$middle_name','$last_name', '$suffix')");
 
       $this->commit_transaction();
       $result->status = true;
@@ -98,7 +99,8 @@ class User extends Base
     $errors = array();
     $msg = '';
 
-    $required_fields = array('branch_name', 'description');
+
+    $required_fields = array('first_name', 'last_name', 'serial_no', 'username');
 
     foreach ($required_fields as $res) {
       if (empty(${$res})) {
@@ -114,21 +116,31 @@ class User extends Base
       return $result;
     }
 
-    $check_branch_name = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_branch b where b.name ='$branch_name' and id <> $id  and deleted_flag = 0 limit 1");
+    $check_username = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.username ='$username' and b.status_id <> 3 and b.id <> $id limit 1");
 
-    if (!empty($check_branch_name->res)) {
-      $msg .= "Branch Name Already In-use!";
+    if (!empty($check_username->res)) {
+      $msg .= "Username Already In-use!";
       $result->result = $this->response_error($msg);
-      $result->items = implode(',', array('branch_name'));
+      $result->items = implode(',', array('username'));
+      return $result;
+    }
+
+    $check_serial_no = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.serial_no ='$serial_no' and b.status_id <> 3 and b.id <> $id limit 1");
+
+    if (!empty($check_serial_no->res)) {
+      $msg .= "Serial No Already In-use!";
+      $result->result = $this->response_error($msg);
+      $result->items = implode(',', array('serial_no'));
       return $result;
     }
 
     $this->start_transaction();
     try {
-      $this->query("UPDATE tbl_branch set `name` = '$branch_name', `description` = '$description' where id = $id");
+      $this->query("UPDATE tbl_users set `serial_no` = '$serial_no' ,`access_id` = '$access' ,`branch_id` = '$branch' ,`rank_id` = '$rank' ,`classification_id` = '$classification' ,`username` = '$username' ,`password` = '$password', `status_id` = '$status' where id = $id");
+      $this->query("UPDATE tbl_users_info set `first_name` = '$first_name',`middle_name` = '$middle_name',`last_name` = '$last_name',`suffix_id`= '$suffix' where id = $id");
       $this->commit_transaction();
       $result->status = true;
-      $result->result = $this->response_success("Branch Updated Successfully!", 'Successfull!');
+      $result->result = $this->response_swal("Account Updated Successfully!", 'Successfull!');
       return $result;
     } catch (mysqli_sql_exception $exception) {
       $this->roll_back();
@@ -143,10 +155,28 @@ class User extends Base
 
     $this->start_transaction();
     try {
-      $this->query("UPDATE tbl_users set `deleted_flag` = 1 where id = $id");
+      $this->query("UPDATE tbl_users set `status_id` = 3 where id = $id");
       $this->commit_transaction();
       $result->status = true;
       $result->result = $this->response_swal("User Deleted Successfully!", 'Successfull!');
+      return $result;
+    } catch (mysqli_sql_exception $exception) {
+      $this->roll_back();
+      $result->result = $this->response_error();
+      return $result;
+    }
+  }
+
+  public function verify($id)
+  {
+    $result = $this->response_obj();
+
+    $this->start_transaction();
+    try {
+      $this->query("UPDATE tbl_users set `verified_flag` = 1 where id = $id");
+      $this->commit_transaction();
+      $result->status = true;
+      $result->result = $this->response_swal("User Verified Successfully!", 'Successfull!');
       return $result;
     } catch (mysqli_sql_exception $exception) {
       $this->roll_back();

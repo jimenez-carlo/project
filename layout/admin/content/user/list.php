@@ -29,11 +29,13 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Access</th>
+                  <th>Role</th>
                   <th>Branch</th>
+                  <th>Verified</th>
                   <th>Status</th>
                   <th>Serial No#</th>
                   <th>Full Name</th>
+                  <th>Classification</th>
                   <th>Rank</th>
                   <th>Approved By</th>
                   <th>Created Date</th>
@@ -48,18 +50,20 @@
                     <td><?= $res['id'] ?></td>
                     <td><?= $res['access'] ?></td>
                     <td><?= $res['branch'] ?></td>
+                    <td><?= ($res['verified_flag']) ? 'VEIRIFED' : 'PENDING' ?></td>
                     <td><?= $res['status'] ?></td>
                     <td><?= $res['serial_no'] ?></td>
                     <td><?= $res['user_full_name'] ?></td>
+                    <td><?= $res['classification'] ?></td>
                     <td><?= $res['rank'] ?></td>
                     <td><?= $res['verifier_full_name'] ?></td>
                     <td><?= $res['created_date'] ?></td>
                     <td><?= $res['creator_full_name'] ?></td>
                     <td><?= $res['updated_date'] ?></td>
                     <td class="flex">
-                      <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/user/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
+                      <button type="button" class="btn btn-sm btn-dark btn-view flex base" name="admin/user/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
                       <form method="post" name="user_update" refresh="admin/user/list">
-                        <button type="submit" class="btn btn-sm btn-dark" name="delete_list" value="<?= $res['id']; ?>" confirmation="You Are About To Delete This User"> <i class="fa fa-trash"></i> Delete</button>
+                        <button type="submit" class="btn btn-sm btn-dark flex base" name="delete_list" value="<?= $res['id']; ?>" confirmation="You Are About To Delete This User"> <i class="fa fa-trash"></i> Delete</button>
                       </form>
                     </td>
                   </tr>

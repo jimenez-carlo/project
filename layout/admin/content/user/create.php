@@ -51,7 +51,11 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Suffix</label>
-                    <input type="text" class="form-control form-control-sm" placeholder="Suffix" name="suffix">
+                    <select class="form-control form-control-sm" name="suffix" id="suffix">
+                      <?php foreach ($data['default']['suffix'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
+                      <?php } ?>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -62,16 +66,7 @@
                     <input type="text" class="form-control form-control-sm" placeholder="Serial No" name="serial_no">
                   </div>
                 </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>*Access</label>
-                    <select class="form-control form-control-sm" name="access" id="access">
-                      <?php foreach ($data['default']['access'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
-                      <?php } ?>
-                    </select>
-                  </div>
-                </div>
+
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Branch of Service</label>
@@ -84,16 +79,48 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*Rank</label>
-                    <select class="form-control form-control-sm" name="rank" id="rank">
-                      <?php foreach ($data['default']['rank'] as $res) { ?>
+                    <label>*Rank Classification</label>
+                    <select class="form-control form-control-sm" name="classification" id="classification">
+                      <?php foreach ($data['default']['classification'] as $res) { ?>
                         <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
                       <?php } ?>
                     </select>
                   </div>
                 </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>*Rank</label>
+                    <select class="form-control form-control-sm" name="rank" id="rank">
+                      <?php foreach ($data['default']['rank'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>" style="color:<?= $res['color'] ?>"><?= $res['name'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
               </div>
+
+
               <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>*Role</label>
+                    <select class="form-control form-control-sm" name="access" id="access">
+                      <?php foreach ($data['default']['access'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>*Status</label>
+                    <select class="form-control form-control-sm" name="status" id="status">
+                      <?php foreach ($data['default']['user_status'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Username</label>

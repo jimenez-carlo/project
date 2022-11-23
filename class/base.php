@@ -140,7 +140,9 @@ class Base
     $data = array();
     // User
     $data['access'] = $this->get_list("select * from tbl_access where deleted_flag = 0");
+    $data['user_status'] = $this->get_list("select * from tbl_users_status where deleted_flag = 0");
     $data['rank'] = $this->get_list("select * from tbl_rank where deleted_flag = 0");
+    $data['classification'] = $this->get_list("select * from tbl_classification where deleted_flag = 0");
     $data['suffix'] = $this->get_list("select * from tbl_suffix where deleted_flag = 0");
     $data['branch'] = $this->get_list("select * from tbl_branch where deleted_flag = 0");
     $data['users'] = $this->get_list("select id,concat(last_name, ', ', first_name,' ', LEFT(middle_name, 1), '[#',id,']') as name from tbl_users_info where deleted_flag = 0");
@@ -157,6 +159,8 @@ class Base
     $data['supplier'] = $this->get_list("select * from tbl_supplier where deleted_flag = 0");
     $data['local'] = $this->get_list("select * from tbl_local where deleted_flag = 0");
     $data['unit'] = $this->get_list("select * from tbl_unit where deleted_flag = 0");
+    $data['supplier_status'] = $this->get_list("select * from tbl_supplier_status where deleted_flag = 0");
+    $data['designation'] = $this->get_list("select * from tbl_designation where deleted_flag = 0");
     return $data;
   }
 }

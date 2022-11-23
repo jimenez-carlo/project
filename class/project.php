@@ -38,12 +38,12 @@ class Project extends Base
       return $result;
     }
 
-    if (!isset($supplier)) {
-      $msg .= "No Selected Supplier!";
-      $result->result = $this->response_error($msg);
-      $result->items = implode(',', array('supplier'));
-      return $result;
-    }
+    // if (!isset($supplier)) {
+    //   $msg .= "No Selected Supplier!";
+    //   $result->result = $this->response_error($msg);
+    //   $result->items = implode(',', array('supplier'));
+    //   return $result;
+    // }
 
     $this->start_transaction();
 
@@ -60,7 +60,6 @@ class Project extends Base
         $app_file_name = 'file_' . date('YmdHis') . "." . end($ext);
         move_uploaded_file($app_file['tmp_name'], "files/app/" . $app_file_name);
         $app_file_name = "'$app_file_name'";
-        echo "seige";
       }
 
 
@@ -114,14 +113,29 @@ class Project extends Base
 
 
       $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`asa_nr`,`asa_date`,`object_code`,`asa_amount`,`expense_class_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr','$upr_date','$comodity','$program_manager','$asa_nr', $asa_date,'$object_code','$asa_amount','$expense_class','$project_description','$qty','$unit','$abc','$end_user','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by')");
-
-      foreach ($supplier as $key => $res) {
-        $supplier_id = $supplier[$key];
-        $local_id = $local[$key];
-        $price = $bid_price[$key];
-        $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier_id)  values ($project_id,'$price', '$local_id','$supplier_id')");
-      }
       $this->query("INSERT INTO tbl_project_history (`project_id`,`project_status_id`,`created_by`) VALUES('$project_id',1, '$created_by')");
+
+      // foreach ($supplier as $key => $res) {
+      //   $supplier_id = $supplier[$key];
+      //   $local_id = $local[$key];
+      //   $price = $bid_price[$key];
+      //   $supplier_status = $supplier_status[$key];
+      //   $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier_id,status_id)  values ($project_id,'$price', '$local_id','$supplier_id','$supplier_status')");
+      // }
+
+      if (isset($rank)) {
+        foreach ($rank as $key => $res) {
+          $rank_id = $rank[$key];
+          $ln = $last_name[$key];
+          $fn = $first_name[$key];
+          $mn = $middle_name[$key];
+          $suffix_id = $suffix[$key];
+          $branch_id = $branch[$key];
+          $serial = $serial_no[$key];
+          $designation_id = $designation[$key];
+          $this->query("INSERT INTO tbl_project_twg (project_id,rank_id,first_name,middle_name,last_name,suffix_id,branch_id,serial_no,designation_id)  values ('$project_id','$rank_id', '$fn','$mn','$ln','$suffix_id','$branch_id','$serial','$designation_id')");
+        }
+      }
 
       $this->commit_transaction();
       $result->status = true;
