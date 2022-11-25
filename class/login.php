@@ -55,12 +55,13 @@ class Login extends Base
       $result->status = true;
       $result->refresh = true;
       $result->result = $this->response_success("Please wait...", "Logging In");
+      return $result;
     } else {
       $msg .= "Invalid Username/Password!";
       $result->result = $this->response_error($msg);
       $result->items = implode(',', $required_fields);
       $result->message = $msg;
+      return $result;
     }
-    return $result;
   }
 }

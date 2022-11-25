@@ -17,7 +17,11 @@ class Project extends Base
     $errors = array();
     $msg = '';
 
-    $required_fields = array('pabac_nr', 'upr_nr', 'upr_date', 'project_description', 'qty', 'end_user', 'assigned_officer');
+    $required_fields = array('pabac_nr', 'project_description', 'qty', 'end_user', 'assigned_officer', 'preproc_target_date');
+
+    if ($implementing_unit == 2) {
+      $required_fields += array('upr_nr', 'upr_date');
+    }
 
     foreach ($required_fields as $res) {
       if (empty(${$res})) {
@@ -38,94 +42,67 @@ class Project extends Base
       return $result;
     }
 
+    if (!$epa && !isset($asa_nr)) {
+      $msg .= "No ASA Entry!";
+      $result->result = $this->response_error($msg);
+      $result->items = implode(',', array('asa_nr'));
+      return $result;
+    }
+
     // if (!isset($supplier)) {
     //   $msg .= "No Selected Supplier!";
     //   $result->result = $this->response_error($msg);
     //   $result->items = implode(',', array('supplier'));
     //   return $result;
     // }
-
     $this->start_transaction();
 
     try {
       $created_by = $_SESSION['user']->id;
       $personell_ids = implode(",", $assigned_personell);
-      $asa_date = (!empty($asa_date) && DateTime::createFromFormat('Y-m-d', $asa_date) !== false) ? "'$asa_date'" : "null";
+      $upr_date = (!empty($upr_date) && DateTime::createFromFormat('Y-m-d', $upr_date) !== false) ? "'$upr_date'" : "null";
+
+      $app_file_name = $this->upload_file($app_file, "app");
+      $ppmp_file_name = $this->upload_file($ppmp_file, "ppmp");
+      $procurement_file_name = $this->upload_file($procurement_file, "procurement");
+      $tech_specs_file_name = $this->upload_file($tech_specs_file, "tech");
+      $bidding_file_name = $this->upload_file($bidding_file, "bidding");
+      $upr_file_name = $this->upload_file($upr_file, "upr");
+      $other_file_name = $this->upload_file($other_file, "other");
 
 
-      $app_file_name = "null";
+      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by','$preproc_target_date')");
 
-      if (!empty($app_file['name'])) {
-        $ext = explode(".", $app_file["name"]);
-        $app_file_name = 'file_' . date('YmdHis') . "." . end($ext);
-        move_uploaded_file($app_file['tmp_name'], "files/app/" . $app_file_name);
-        $app_file_name = "'$app_file_name'";
+      $this->insert_project_status($project_id, 1, "Project Initialize");
+
+      if (isset($asa_nr)) {
+        $tmp = 0;
+        foreach ($asa_nr as $key => $res) {
+          $tmp++;
+          $asa_nr_value = $asa_nr[$key];
+          $asa_date = ${'asa_date_' . $tmp};
+          $asa_code = $asa_object[$key];
+          $asa_amt = $asa_amount[$key];
+          $asa_class = $asa_expense_class[$key];
+
+          $this->query("INSERT INTO tbl_project_asa (project_id,asa_nr,asa_date,object_code,asa_amount,expense_class_id,created_by)  values ($project_id,'$asa_nr_value','$asa_date', '$asa_code','$asa_amt','$asa_class','$created_by')");
+        }
       }
 
-
-      $ppmp_file_name = "null";
-      if (!empty($ppmp_file['name'])) {
-        $ext = explode(".", $ppmp_file["name"]);
-        $ppmp_file_name = 'file_' . date('YmdHis') . "." . end($ext);
-        move_uploaded_file($ppmp_file['tmp_name'], "files/ppmp/" . $ppmp_file_name);
-        $ppmp_file_name = "'$ppmp_file_name'";
+      if (isset($supplier)) {
+        foreach ($supplier as $key => $res) {
+          $supplier_r = $supplier_rank[$key];
+          $supplier_id = $supplier[$key];
+          $local_id = $local[$key];
+          $price = $bid_price[$key];
+          $supplier_status = $supplier_status[$key];
+          $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,`rank`,created_by)  values ('$project_id','$price', '$local_id','$supplier_id','$supplier_status','$supplier_r','$created_by')");
+        }
       }
 
-      $procurement_file_name = "null";
-      if (!empty($procurement_file['name'])) {
-        $ext = explode(".", $procurement_file["name"]);
-        $procurement_file_name = 'file_' . date('YmdHis') . "." . end($ext);
-        move_uploaded_file($procurement_file['tmp_name'], "files/procurement/" . $procurement_file_name);
-        $procurement_file_name = "'$procurement_file_name'";
-      }
-
-      $tech_specs_file_name = "null";
-      if (!empty($tech_specs_file['name'])) {
-        $ext = explode(".", $tech_specs_file["name"]);
-        $tech_specs_file_name = 'file_' . date('YmdHis') . "." . end($ext);
-        move_uploaded_file($tech_specs_file['tmp_name'], "files/tech/" . $tech_specs_file_name);
-        $tech_specs_file_name = "'$tech_specs_file_name'";
-      }
-
-      $bidding_file_name = "null";
-      if (isset($bidding_file) && !empty($bidding_file['name'])) {
-        $ext = explode(".", $bidding_file["name"]);
-        $bidding_file_name = 'file_' . date('YmdHis') . "." . end($ext);
-        move_uploaded_file($bidding_file['tmp_name'], "files/bidding/" . $bidding_file_name);
-        $bidding_file_name = "'$bidding_file_name'";
-      }
-
-      $upr_file_name = "null";
-      if (isset($upr_file) && !empty($upr_file['name'])) {
-        $ext = explode(".", $upr_file["name"]);
-        $upr_file_name = 'file_' . date('YmdHis') . "." . end($ext);
-        move_uploaded_file($upr_file['tmp_name'], "files/upr/" . $upr_file_name);
-        $upr_file_name = "'$upr_file_name'";
-      }
-
-      $other_file_name = "null";
-      if (isset($other_file) && !empty($other_file['name'])) {
-        $ext = explode(".", $other_file["name"]);
-        $other_file_name = 'file_' . date('YmdHis') . "." . end($ext);
-        move_uploaded_file($other_file['tmp_name'], "files/other/" . $other_file_name);
-        $other_file_name = "'$other_file_name'";
-      }
-
-
-      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`asa_nr`,`asa_date`,`object_code`,`asa_amount`,`expense_class_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr','$upr_date','$comodity','$program_manager','$asa_nr', $asa_date,'$object_code','$asa_amount','$expense_class','$project_description','$qty','$unit','$abc','$end_user','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by')");
-      $this->query("INSERT INTO tbl_project_history (`project_id`,`project_status_id`,`created_by`) VALUES('$project_id',1, '$created_by')");
-
-      // foreach ($supplier as $key => $res) {
-      //   $supplier_id = $supplier[$key];
-      //   $local_id = $local[$key];
-      //   $price = $bid_price[$key];
-      //   $supplier_status = $supplier_status[$key];
-      //   $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier_id,status_id)  values ($project_id,'$price', '$local_id','$supplier_id','$supplier_status')");
-      // }
-
-      if (isset($rank)) {
-        foreach ($rank as $key => $res) {
-          $rank_id = $rank[$key];
+      if (isset($twg_rank)) {
+        foreach ($twg_rank as $key => $res) {
+          $rank_id = $twg_rank[$key];
           $ln = $last_name[$key];
           $fn = $first_name[$key];
           $mn = $middle_name[$key];
@@ -133,7 +110,8 @@ class Project extends Base
           $branch_id = $branch[$key];
           $serial = $serial_no[$key];
           $designation_id = $designation[$key];
-          $this->query("INSERT INTO tbl_project_twg (project_id,rank_id,first_name,middle_name,last_name,suffix_id,branch_id,serial_no,designation_id)  values ('$project_id','$rank_id', '$fn','$mn','$ln','$suffix_id','$branch_id','$serial','$designation_id')");
+          $auth = $authority[$key];
+          $this->query("INSERT INTO tbl_project_twg (project_id,rank_id,first_name,middle_name,last_name,suffix_id,branch_id,serial_no,designation_id,authority)  values ('$project_id','$rank_id', '$fn','$mn','$ln','$suffix_id','$branch_id','$serial','$designation_id','$auth')");
         }
       }
 
@@ -142,6 +120,7 @@ class Project extends Base
       $result->result = $this->response_swal("User Project Created Successfully!", 'Successfull!');
       return $result;
     } catch (mysqli_sql_exception $exception) {
+      print_r($exception);
       $this->roll_back();
       $result->result = $this->response_error();
       return $result;

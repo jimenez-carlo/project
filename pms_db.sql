@@ -38,7 +38,7 @@ CREATE TABLE `tbl_access` (
 
 LOCK TABLES `tbl_access` WRITE;
 /*!40000 ALTER TABLE `tbl_access` DISABLE KEYS */;
-INSERT INTO `tbl_access` VALUES (1,'SYSTEM ADMIN','2022-08-12 19:48:56','2022-08-12 19:48:56',0),(2,'OFFICER','2022-08-12 19:48:56','2022-08-12 19:48:56',0),(3,'ENLISTED PERSONNEL','2022-08-12 19:48:56','2022-08-12 19:48:56',0);
+INSERT INTO `tbl_access` VALUES (1,'SYSTEM ADMIN','2022-08-12 19:48:56','2022-08-12 19:48:56',0),(2,'MAKER','2022-08-12 19:48:56','2022-08-12 19:48:56',0),(3,'CHECKER','2022-08-12 19:48:56','2022-08-12 19:48:56',0);
 /*!40000 ALTER TABLE `tbl_access` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,6 +70,33 @@ INSERT INTO `tbl_branch` VALUES (1,'ARMY','2022-11-20 10:57:25','2022-11-20 10:5
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tbl_classification`
+--
+
+DROP TABLE IF EXISTS `tbl_classification`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_classification` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT current_timestamp(),
+  `updated_date` datetime DEFAULT current_timestamp(),
+  `deleted_flag` tinyint(4) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_classification`
+--
+
+LOCK TABLES `tbl_classification` WRITE;
+/*!40000 ALTER TABLE `tbl_classification` DISABLE KEYS */;
+INSERT INTO `tbl_classification` VALUES (1,'OFFICER','2022-11-20 10:54:13','2022-11-20 10:54:13',0),(2,'ENLISTED PERSONNEL','2022-11-20 10:54:13','2022-11-20 10:54:13',0);
+/*!40000 ALTER TABLE `tbl_classification` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tbl_comodity`
 --
 
@@ -94,6 +121,33 @@ LOCK TABLES `tbl_comodity` WRITE;
 /*!40000 ALTER TABLE `tbl_comodity` DISABLE KEYS */;
 INSERT INTO `tbl_comodity` VALUES (1,'ENG','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(2,'FP','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(3,'MED','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(4,'MOB','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(5,'MOB(Aircraft Spares)','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(6,'MOB(Armor Spares)','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(7,'QM','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(8,'SERVICES','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(9,'SERVICES(PCHT)','2022-11-20 20:21:03','2022-11-20 20:21:03',0),(10,'SIG','2022-11-20 20:21:03','2022-11-20 20:21:03',0);
 /*!40000 ALTER TABLE `tbl_comodity` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_designation`
+--
+
+DROP TABLE IF EXISTS `tbl_designation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_designation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_date` datetime DEFAULT current_timestamp(),
+  `updated_date` datetime DEFAULT current_timestamp(),
+  `deleted_flag` tinyint(4) DEFAULT 0,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_designation`
+--
+
+LOCK TABLES `tbl_designation` WRITE;
+/*!40000 ALTER TABLE `tbl_designation` DISABLE KEYS */;
+INSERT INTO `tbl_designation` VALUES (1,'2022-11-23 11:34:36','2022-11-23 11:34:36',0,'DESIGNATION 1'),(2,'2022-11-23 11:34:36','2022-11-23 11:34:36',0,'DESIGNATION 2');
+/*!40000 ALTER TABLE `tbl_designation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -300,8 +354,16 @@ CREATE TABLE `tbl_project` (
   `updated_date` datetime DEFAULT current_timestamp(),
   `deleted_flag` tinyint(4) DEFAULT 0,
   `created_by` int(11) DEFAULT NULL,
+  `delivery_period` varchar(255) DEFAULT NULL,
+  `ldd` varchar(255) DEFAULT NULL,
+  `amount` varchar(255) DEFAULT NULL,
+  `delivery_date` date DEFAULT NULL,
+  `retention` varchar(255) DEFAULT NULL,
+  `retention_date` date DEFAULT NULL,
+  `total` varchar(255) DEFAULT NULL,
+  `dv` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -310,7 +372,7 @@ CREATE TABLE `tbl_project` (
 
 LOCK TABLES `tbl_project` WRITE;
 /*!40000 ALTER TABLE `tbl_project` DISABLE KEYS */;
-INSERT INTO `tbl_project` VALUES (21,1,1,1,'test','test','2022-11-09',1,1,'',NULL,'','',1,'test','78',1,'','test',1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2,348','2022-11-20 23:20:59','2022-11-20 23:20:59',0,1);
+INSERT INTO `tbl_project` VALUES (21,1,1,1,'test','test','2022-11-09',1,1,'',NULL,'','',1,'test','78',1,'','test',1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2,348','2022-11-20 23:20:59','2022-11-20 23:20:59',0,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(22,1,1,1,'test','test','2022-11-16',1,1,'',NULL,'','',1,'test','123',1,'','test',1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'3','2022-11-21 00:34:06','2022-11-21 00:34:06',0,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(23,1,1,1,'asd','asdas','2022-11-16',1,1,'',NULL,'','',1,'asdas','123',1,'','tes',1,1,'file_20221121004643.xlsx',NULL,NULL,NULL,NULL,NULL,NULL,1,'3','2022-11-21 00:46:43','2022-11-21 00:46:43',0,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(24,1,1,1,'asd','asdas','2022-11-16',1,1,'',NULL,'','',1,'asdas','123',1,'','tes',1,1,'file_20221121004728.xlsx',NULL,NULL,NULL,NULL,NULL,NULL,1,'3','2022-11-21 00:47:28','2022-11-21 00:47:28',0,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(25,1,1,1,'asd','asdas','2022-11-16',1,1,'',NULL,'','',1,'asdas','123',1,'','tes',1,1,'file_20221121004824.xlsx',NULL,NULL,NULL,NULL,NULL,NULL,1,'3','2022-11-21 00:48:24','2022-11-21 00:48:24',0,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(26,1,1,1,'test','test','2022-11-02',1,1,'',NULL,'','',1,'test','23',1,'','test',1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'3','2022-11-23 14:59:20','2022-11-23 14:59:20',0,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,1,1,1,'test','test','2022-11-02',1,1,'',NULL,'','',1,'test','23',1,'','test',1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'3','2022-11-23 15:45:31','2022-11-23 15:45:31',0,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tbl_project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -331,7 +393,7 @@ CREATE TABLE `tbl_project_history` (
   `updated_date` datetime DEFAULT current_timestamp(),
   `deleted_flag` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -340,7 +402,7 @@ CREATE TABLE `tbl_project_history` (
 
 LOCK TABLES `tbl_project_history` WRITE;
 /*!40000 ALTER TABLE `tbl_project_history` DISABLE KEYS */;
-INSERT INTO `tbl_project_history` VALUES (1,21,1,NULL,1,'2022-11-20 23:20:59','2022-11-20 23:20:59',0);
+INSERT INTO `tbl_project_history` VALUES (1,21,1,NULL,1,'2022-11-20 23:20:59','2022-11-20 23:20:59',0),(2,22,1,NULL,1,'2022-11-21 00:34:06','2022-11-21 00:34:06',0),(3,23,1,NULL,1,'2022-11-21 00:46:43','2022-11-21 00:46:43',0),(4,24,1,NULL,1,'2022-11-21 00:47:28','2022-11-21 00:47:28',0),(5,25,1,NULL,1,'2022-11-21 00:48:24','2022-11-21 00:48:24',0),(6,26,1,NULL,1,'2022-11-23 14:59:20','2022-11-23 14:59:20',0),(7,27,1,NULL,1,'2022-11-23 15:45:31','2022-11-23 15:45:31',0);
 /*!40000 ALTER TABLE `tbl_project_history` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -384,11 +446,12 @@ CREATE TABLE `tbl_project_supplier` (
   `price` varchar(255) DEFAULT NULL,
   `local_id` int(11) DEFAULT NULL,
   `supplier_id` int(11) DEFAULT NULL,
+  `status_id` int(11) DEFAULT 1,
   `created_date` datetime DEFAULT current_timestamp(),
   `updated_date` datetime DEFAULT current_timestamp(),
   `deleted_flag` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -397,8 +460,43 @@ CREATE TABLE `tbl_project_supplier` (
 
 LOCK TABLES `tbl_project_supplier` WRITE;
 /*!40000 ALTER TABLE `tbl_project_supplier` DISABLE KEYS */;
-INSERT INTO `tbl_project_supplier` VALUES (1,21,'123',2,1,'2022-11-20 23:20:59','2022-11-20 23:20:59',0),(2,21,'123',1,1,'2022-11-20 23:20:59','2022-11-20 23:20:59',0);
+INSERT INTO `tbl_project_supplier` VALUES (1,21,'123',2,1,1,'2022-11-20 23:20:59','2022-11-20 23:20:59',0),(2,21,'123',1,1,1,'2022-11-20 23:20:59','2022-11-20 23:20:59',0),(3,22,'',1,1,1,'2022-11-21 00:34:06','2022-11-21 00:34:06',0),(4,23,'',1,1,1,'2022-11-21 00:46:43','2022-11-21 00:46:43',0),(5,24,'',1,1,1,'2022-11-21 00:47:28','2022-11-21 00:47:28',0),(6,25,'',1,1,1,'2022-11-21 00:48:24','2022-11-21 00:48:24',0);
 /*!40000 ALTER TABLE `tbl_project_supplier` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_project_twg`
+--
+
+DROP TABLE IF EXISTS `tbl_project_twg`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_project_twg` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) DEFAULT NULL,
+  `rank_id` int(11) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `middle_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `suffix_id` int(11) DEFAULT NULL,
+  `branch_id` int(11) DEFAULT NULL,
+  `serial_no` varchar(255) DEFAULT NULL,
+  `designation_id` int(11) DEFAULT NULL,
+  `created_date` datetime DEFAULT current_timestamp(),
+  `updated_date` datetime DEFAULT current_timestamp(),
+  `deleted_flag` tinyint(4) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_project_twg`
+--
+
+LOCK TABLES `tbl_project_twg` WRITE;
+/*!40000 ALTER TABLE `tbl_project_twg` DISABLE KEYS */;
+INSERT INTO `tbl_project_twg` VALUES (1,26,1,'test','test','test',1,1,'1231232',1,'2022-11-23 14:59:20','2022-11-23 14:59:20',0),(2,26,1,'tes','test','tes',1,1,'123123',1,'2022-11-23 14:59:20','2022-11-23 14:59:20',0),(3,27,1,'test','test','test',1,1,'1231232',1,'2022-11-23 15:45:31','2022-11-23 15:45:31',0),(4,27,1,'tes','test','tes',1,1,'123123',1,'2022-11-23 15:45:31','2022-11-23 15:45:31',0);
+/*!40000 ALTER TABLE `tbl_project_twg` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -410,12 +508,13 @@ DROP TABLE IF EXISTS `tbl_rank`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_rank` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
   `created_date` datetime DEFAULT current_timestamp(),
   `updated_date` datetime DEFAULT current_timestamp(),
   `deleted_flag` tinyint(4) DEFAULT 0,
+  `name` varchar(255) DEFAULT NULL,
+  `color` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -424,7 +523,7 @@ CREATE TABLE `tbl_rank` (
 
 LOCK TABLES `tbl_rank` WRITE;
 /*!40000 ALTER TABLE `tbl_rank` DISABLE KEYS */;
-INSERT INTO `tbl_rank` VALUES (1,'OFFICER','2022-11-20 10:54:13','2022-11-20 10:54:13',0),(2,'ENLISTED PERSONNEL','2022-11-20 10:54:13','2022-11-20 10:54:13',0);
+INSERT INTO `tbl_rank` VALUES (1,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Private First Class','black'),(2,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Corporal','black'),(3,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Sergeant','black'),(4,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Staff Sergeant','black'),(5,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Technical Sergeant','black'),(6,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Master Sergeant','black'),(7,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Senior Master Sergeant','black'),(8,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Chief Master Sergeant','black'),(9,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'First Chief Master Sergeant','black'),(10,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Second Lieutenant','red'),(11,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'First Lieutenant','red'),(12,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Captain','red'),(13,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Major','red'),(14,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Lieutenant Colonel','red'),(15,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Colonel','red'),(16,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Brigadier General','red'),(17,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Major General','red'),(18,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'Lieutenant General','red'),(19,'2022-11-22 17:22:04','2022-11-22 17:22:04',0,'General','red');
 /*!40000 ALTER TABLE `tbl_rank` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -478,6 +577,33 @@ LOCK TABLES `tbl_supplier` WRITE;
 /*!40000 ALTER TABLE `tbl_supplier` DISABLE KEYS */;
 INSERT INTO `tbl_supplier` VALUES (1,'2022-11-20 20:54:07','2022-11-20 20:54:07',0,'SUPPLIER 1'),(2,'2022-11-20 20:54:07','2022-11-20 20:54:07',0,'SUPPLIER 2'),(3,'2022-11-20 20:54:07','2022-11-20 20:54:07',0,'SUPPLIER 3');
 /*!40000 ALTER TABLE `tbl_supplier` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_supplier_status`
+--
+
+DROP TABLE IF EXISTS `tbl_supplier_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_supplier_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_date` datetime DEFAULT current_timestamp(),
+  `updated_date` datetime DEFAULT current_timestamp(),
+  `deleted_flag` tinyint(4) DEFAULT 0,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_supplier_status`
+--
+
+LOCK TABLES `tbl_supplier_status` WRITE;
+/*!40000 ALTER TABLE `tbl_supplier_status` DISABLE KEYS */;
+INSERT INTO `tbl_supplier_status` VALUES (1,'2022-11-23 10:55:56','2022-11-23 10:55:56',0,'PASSED'),(2,'2022-11-23 10:55:56','2022-11-23 10:55:56',0,'FAILED');
+/*!40000 ALTER TABLE `tbl_supplier_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -543,12 +669,14 @@ DROP TABLE IF EXISTS `tbl_users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `verified_flag` tinyint(4) DEFAULT 0,
   `status_id` int(11) DEFAULT 1,
   `serial_no` varchar(255) DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `access_id` int(11) DEFAULT NULL,
   `branch_id` int(11) DEFAULT NULL,
+  `classification_id` int(11) DEFAULT 1,
   `rank_id` int(11) DEFAULT NULL,
   `created_date` datetime DEFAULT current_timestamp(),
   `updated_date` datetime DEFAULT current_timestamp(),
@@ -556,7 +684,7 @@ CREATE TABLE `tbl_users` (
   `created_by` int(11) DEFAULT NULL,
   `approved_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=351 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=352 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -565,7 +693,7 @@ CREATE TABLE `tbl_users` (
 
 LOCK TABLES `tbl_users` WRITE;
 /*!40000 ALTER TABLE `tbl_users` DISABLE KEYS */;
-INSERT INTO `tbl_users` VALUES (1,2,'123','admin','$2y$10$0wT9y123kN7PasG4NBqQf.QmKwpnPcWR01.b9bYvL20ZTznZqFaqO',1,1,1,'2022-08-13 18:16:03','2022-11-12 18:06:41',0,NULL,1),(2,2,'456','officer','$2y$10$0wT9y123kN7PasG4NBqQf.QmKwpnPcWR01.b9bYvL20ZTznZqFaqO',2,1,1,'2022-08-13 18:17:02','2022-08-24 14:46:04',0,NULL,1),(3,2,'789','personnel','$2y$10$0wT9y123kN7PasG4NBqQf.QmKwpnPcWR01.b9bYvL20ZTznZqFaqO',3,1,2,'2022-08-13 18:17:02','2022-11-15 23:45:25',0,NULL,1),(347,1,'123456','test','test',1,1,1,'2022-11-20 19:29:54','2022-11-20 19:29:54',0,NULL,NULL),(348,1,'999999999','testasd','test',1,1,1,'2022-11-20 19:33:04','2022-11-20 19:33:04',0,NULL,NULL),(349,1,'dasdadas','jimenez31396','asdasdsa',1,1,1,'2022-11-20 19:36:21','2022-11-20 19:36:21',0,NULL,NULL),(350,1,'asdasdasdsa','testest','testest',1,1,1,'2022-11-20 19:42:35','2022-11-20 19:42:35',0,1,NULL);
+INSERT INTO `tbl_users` VALUES (1,1,1,'123','admin','$2y$10$0wT9y123kN7PasG4NBqQf.QmKwpnPcWR01.b9bYvL20ZTznZqFaqO',1,2,2,14,'2022-08-13 18:16:03','2022-11-12 18:06:41',0,NULL,1),(2,1,1,'456','officer','$2y$10$0wT9y123kN7PasG4NBqQf.QmKwpnPcWR01.b9bYvL20ZTznZqFaqO',2,1,1,1,'2022-08-13 18:17:02','2022-08-24 14:46:04',0,NULL,1),(3,1,1,'789','personnel','$2y$10$0wT9y123kN7PasG4NBqQf.QmKwpnPcWR01.b9bYvL20ZTznZqFaqO',3,1,1,2,'2022-08-13 18:17:02','2022-11-15 23:45:25',0,NULL,1),(347,0,1,'123456','test','test',1,1,1,1,'2022-11-20 19:29:54','2022-11-20 19:29:54',0,NULL,NULL),(348,0,1,'999999999','testasd','test',1,1,1,1,'2022-11-20 19:33:04','2022-11-20 19:33:04',0,NULL,NULL),(349,0,1,'dasdadas','jimenez31396','asdasdsa',1,1,1,1,'2022-11-20 19:36:21','2022-11-20 19:36:21',0,NULL,NULL),(350,0,1,'asdasdasdsa','testest','testest',1,1,1,1,'2022-11-20 19:42:35','2022-11-20 19:42:35',1,1,NULL),(351,0,1,'yrd','yrdy','yrdy',1,1,1,1,'2022-11-22 18:21:58','2022-11-22 18:21:58',0,1,NULL);
 /*!40000 ALTER TABLE `tbl_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -589,7 +717,7 @@ CREATE TABLE `tbl_users_info` (
   `updated_date` datetime DEFAULT current_timestamp(),
   `deleted_flag` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=351 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=352 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -598,8 +726,63 @@ CREATE TABLE `tbl_users_info` (
 
 LOCK TABLES `tbl_users_info` WRITE;
 /*!40000 ALTER TABLE `tbl_users_info` DISABLE KEYS */;
-INSERT INTO `tbl_users_info` VALUES (1,'admin','admin','admin','09217635295',NULL,'default.jpg',1,'2022-08-13 18:17:51','2022-11-12 18:06:41',0),(2,'officer','officer','officer','09217635295',NULL,'default.jpg',1,'2022-08-13 18:17:51','2022-08-24 14:46:04',0),(3,'personnel','personnel','personnel','09217635295',NULL,'default.jpg',1,'2022-08-13 18:17:51','2022-08-24 14:46:04',0),(347,'test','test','test',NULL,'','default.jpg',1,'2022-11-20 19:29:54','2022-11-20 19:29:54',0),(348,'customer4','','customer4',NULL,'test','default.jpg',1,'2022-11-20 19:33:04','2022-11-20 19:33:04',0),(349,'testestes','testest','testes',NULL,'tsetes','default.jpg',1,'2022-11-20 19:36:21','2022-11-20 19:36:21',0),(350,'customer4asd','test','customer4',NULL,'test','default.jpg',1,'2022-11-20 19:42:35','2022-11-20 19:42:35',0);
+INSERT INTO `tbl_users_info` VALUES (1,'admin','admin','admin','09217635295',NULL,'default.jpg',1,'2022-08-13 18:17:51','2022-11-12 18:06:41',0),(2,'officer','officer','officer','09217635295',NULL,'default.jpg',1,'2022-08-13 18:17:51','2022-08-24 14:46:04',0),(3,'personnel','personnel','personnel','09217635295',NULL,'default.jpg',1,'2022-08-13 18:17:51','2022-08-24 14:46:04',0),(347,'test','test','test',NULL,'','default.jpg',1,'2022-11-20 19:29:54','2022-11-20 19:29:54',0),(348,'customer4','','customer4',NULL,'test','default.jpg',1,'2022-11-20 19:33:04','2022-11-20 19:33:04',0),(349,'testestes','testest','testes',NULL,'tsetes','default.jpg',1,'2022-11-20 19:36:21','2022-11-20 19:36:21',0),(350,'customer4asd','test','customer4',NULL,'test','default.jpg',1,'2022-11-20 19:42:35','2022-11-20 19:42:35',0),(351,'yrdy','yrdy','yrd',NULL,NULL,'default.jpg',1,'2022-11-22 18:21:58','2022-11-22 18:21:58',0);
 /*!40000 ALTER TABLE `tbl_users_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_users_status`
+--
+
+DROP TABLE IF EXISTS `tbl_users_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_users_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_date` datetime DEFAULT current_timestamp(),
+  `updated_date` datetime DEFAULT current_timestamp(),
+  `deleted_flag` tinyint(4) DEFAULT 0,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_users_status`
+--
+
+LOCK TABLES `tbl_users_status` WRITE;
+/*!40000 ALTER TABLE `tbl_users_status` DISABLE KEYS */;
+INSERT INTO `tbl_users_status` VALUES (1,'2022-11-22 17:37:24','2022-11-22 17:37:24',0,'ACTIVE'),(2,'2022-11-22 17:37:24','2022-11-22 17:37:24',0,'IN-ACTIVE'),(3,'2022-11-22 17:37:24','2022-11-22 17:37:24',0,'DELETED');
+/*!40000 ALTER TABLE `tbl_users_status` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbl_verify_status`
+--
+
+DROP TABLE IF EXISTS `tbl_verify_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_verify_status` (
+  `id` int(11) NOT NULL,
+  `created_date` datetime DEFAULT current_timestamp(),
+  `updated_date` datetime DEFAULT current_timestamp(),
+  `deleted_flag` tinyint(4) DEFAULT 0,
+  `name` varchar(255) DEFAULT NULL,
+  `tbl_verify_statuscol` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`tbl_verify_statuscol`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbl_verify_status`
+--
+
+LOCK TABLES `tbl_verify_status` WRITE;
+/*!40000 ALTER TABLE `tbl_verify_status` DISABLE KEYS */;
+INSERT INTO `tbl_verify_status` VALUES (0,'2022-11-22 17:38:11','2022-11-22 17:38:11',0,'PENDING',1),(1,'2022-11-22 17:38:11','2022-11-22 17:38:11',0,'VERIFIED',2);
+/*!40000 ALTER TABLE `tbl_verify_status` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -611,4 +794,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-20 23:41:24
+-- Dump completed on 2022-11-23 18:58:01

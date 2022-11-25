@@ -72,7 +72,8 @@ class User extends Base
 
     try {
       $created_by = $_SESSION['user']->id;
-      $user_id = $this->insert_get_id("INSERT INTO tbl_users (`serial_no`,`access_id`,`branch_id`,`rank_id`,`classification_id`,`username`,`password`,`created_by`,`status_id`) VALUES('$serial_no','$access','$branch','$rank','$classification','$username','$password','$created_by','$status')");
+      $new_password = password_hash($password, PASSWORD_DEFAULT);
+      $user_id = $this->insert_get_id("INSERT INTO tbl_users (`serial_no`,`access_id`,`branch_id`,`rank_id`,`classification_id`,`username`,`password`,`created_by`,`status_id`) VALUES('$serial_no','$access','$branch','$rank','$classification','$username','$new_password','$created_by','$status')");
       $this->query("INSERT INTO tbl_users_info (`id`,`first_name`,`middle_name`,`last_name`,`suffix_id`) VALUES('$user_id','$first_name', '$middle_name','$last_name', '$suffix')");
 
       $this->commit_transaction();
@@ -136,7 +137,8 @@ class User extends Base
 
     $this->start_transaction();
     try {
-      $this->query("UPDATE tbl_users set `serial_no` = '$serial_no' ,`access_id` = '$access' ,`branch_id` = '$branch' ,`rank_id` = '$rank' ,`classification_id` = '$classification' ,`username` = '$username' ,`password` = '$password', `status_id` = '$status' where id = $id");
+      $new_password = password_hash($password, PASSWORD_DEFAULT);
+      $this->query("UPDATE tbl_users set `serial_no` = '$serial_no' ,`access_id` = '$access' ,`branch_id` = '$branch' ,`rank_id` = '$rank' ,`classification_id` = '$classification' ,`username` = '$username' ,`password` = '$new_password', `status_id` = '$status' where id = $id");
       $this->query("UPDATE tbl_users_info set `first_name` = '$first_name',`middle_name` = '$middle_name',`last_name` = '$last_name',`suffix_id`= '$suffix' where id = $id");
       $this->commit_transaction();
       $result->status = true;
