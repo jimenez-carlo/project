@@ -91,7 +91,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Date of UPR:</label>
-                    <div class="input-group datepicker" id="upr_date" data-target-input="nearest">
+                    <div class="input-group input-group-sm datepicker" id="upr_date" data-target-input="nearest">
                       <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#upr_date" name="upr_date" />
                       <div class="input-group-append" data-target="#upr_date" data-toggle="datetimepicker">
                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -205,7 +205,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>End User</label>
-                    <select class="form-control form-control-sm select2bs4" name="end_user" id="end_user" multiple="multiple">
+                    <select class="form-control input-sm select2bs4" name="end_user[]" id="end_user" multiple="multiple">
                       <?php foreach ($data['default']['end_user'] as $res) { ?>
                         <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
                       <?php } ?>
@@ -306,7 +306,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="app_file">APP/IAPP/AAPP</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="app_file" name="app_file">
                         <label class="custom-file-label" for="app_file">Choose file</label>
@@ -318,7 +318,7 @@
                   <div class="form-group">
                     <label for="ppmp_file">PPMP/APPMP
                     </label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="ppmp_file" name="ppmp_file">
                         <label class="custom-file-label" for="ppmp_file">Choose file</label>
@@ -330,7 +330,7 @@
                   <div class="form-group">
                     <label for="procurement_file">Procurement Directive
                     </label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="procurement_file" name="procurement_file">
                         <label class="custom-file-label" for="procurement_file">Choose file</label>
@@ -342,7 +342,7 @@
                   <div class="form-group">
                     <label for="tech_specs_file">Tech Specs
                     </label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="tech_specs_file" name="tech_specs_file">
                         <label class="custom-file-label" for="tech_specs_file">Choose file</label>
@@ -356,7 +356,7 @@
                   <div class="form-group">
                     <label for="bidding_file">Bidding Directive
                     </label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="bidding_file" name="bidding_file">
                         <label class="custom-file-label" for="bidding_file">Choose file</label>
@@ -368,7 +368,7 @@
                   <div class="form-group">
                     <label for="upr_file">UPR
                     </label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="upr_file" name="upr_file">
                         <label class="custom-file-label" for="upr_file">Choose file</label>
@@ -380,7 +380,7 @@
                   <div class="form-group">
                     <label for="other_file">Other Documents
                     </label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="other_file" name="other_file">
                         <label class="custom-file-label" for="other_file">Choose file</label>
@@ -484,7 +484,7 @@
     e.preventDefault();
     var tmp = $('.asa_date').length
     tmp++;
-    $(wrapper3).append('<tr><td> <input type="text" class="form-control form-control-sm" name="asa_nr[]"></td><td> <div class="input-group datepicker asa_date" id="asa_date_' + tmp + '" data-target-input="nearest"><input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#asa_date_' + tmp + '" name="asa_date_' + tmp + '" /><div class="input-group-append" data-target="#asa_date_' + tmp + '" data-toggle="datetimepicker"><div class="input-group-text"><i class="fa fa-calendar"></i></div></div></div></td></td> <td>  <input type="text" class="form-control form-control-sm" name="asa_object[]"> </td><td> <input type="text" class="form-control form-control-sm" name="asa_amount[]"> </td><td> <select name = "asa_expense_class[]" class="form-control form-control-sm"><?php foreach ($data['default']['expense_class'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $(wrapper3).append('<tr><td> <input type="text" class="form-control form-control-sm" name="asa_nr[]"></td><td> <div class="input-group input-group-sm datepicker asa_date" id="asa_date_' + tmp + '" data-target-input="nearest"><input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#asa_date_' + tmp + '" name="asa_date_' + tmp + '" /><div class="input-group-append" data-target="#asa_date_' + tmp + '" data-toggle="datetimepicker"><div class="input-group-text"><i class="fa fa-calendar"></i></div></div></div></td></td> <td>  <input type="text" class="form-control form-control-sm" name="asa_object[]"> </td><td> <input type="text" class="form-control form-control-sm" name="asa_amount[]"> </td><td> <select name = "asa_expense_class[]" class="form-control form-control-sm"><?php foreach ($data['default']['expense_class'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
 
     $('.datepicker').datetimepicker({
       format: 'yyyy-MM-DD'
@@ -520,4 +520,8 @@
       $(add_button3).show();
     }
   })
+
+  $(window).scroll(function() {
+    $('#show').addClass('scrolled', $(this).scrollTop() > 100);
+  });
 </script>

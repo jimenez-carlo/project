@@ -71,6 +71,7 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       $data['default_data'] = $base->get_one("Select p.* from tbl_project p where p.id = $id");
       $data['suppliers'] = $base->get_list("Select p.* from tbl_project_supplier p where p.project_id = $id");
       $data['twgs'] = $base->get_list("Select p.* from tbl_project_twg p where p.project_id = $id");
+      $data['asas'] = $base->get_list("Select p.* from tbl_project_asa p where p.project_id = $id");
       $data['bread_crumb'] = $base->breadcrumb($data['default_data']->status_id);
       break;
 

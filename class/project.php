@@ -130,7 +130,8 @@ class Project extends Base
   public function update()
   {
     extract($this->escape_data($_POST));
-
+    print_r($_POST);
+    die;
     if (isset($delete_list) && !empty($delete_list)) {
       return $this->delete($delete_list);
     }

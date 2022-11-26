@@ -184,7 +184,7 @@ class Base
     $list = $this->get_list("select * from tbl_project_status where id < $id+1 and deleted_flag = 0  and type = 1 order by id asc ");
     $tmp = "";
     foreach ($list as $res) {
-      $tmp .= '<li class="breadcrumb-item active">' . ucfirst(strtolower($res['name'])) . '</li>';
+      $tmp .= '<li class="breadcrumb-item active text-' . $res['color'] . '">' . ucfirst(strtolower($res['name'])) . '</li>';
     }
     return $tmp;
   }
