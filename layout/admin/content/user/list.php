@@ -21,7 +21,7 @@
 
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Create</h3>
+            <h3 class="card-title">User List</h3>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -88,35 +88,15 @@
       "lengthChange": false,
       "autoWidth": false,
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      <?php if ($_SESSION['user']->access_id == 1): ?>
       "buttons": [{
           text: '<i class="fa fa-use"></i> Create User</button>',
           className: 'btn btn-sm btn-dark btn-view',
           attr: {
             name: 'admin/user/create'
           }
-        },
-        {
-          extend: 'copy',
-          text: '<i class="fa fa-export"></i> Copy</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'csv',
-          text: '<i class="fa fa-export"></i> CSV</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'excel',
-          text: '<i class="fa fa-export"></i> Excel</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'pdf',
-          text: '<i class="fa fa-export"></i> PDF</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'print',
-          text: '<i class="fa fa-export"></i> Print</button>',
-          className: 'btn btn-sm btn-dark'
-        }
-      ]
+        }, ]
+      <?php endif; ?>
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 
