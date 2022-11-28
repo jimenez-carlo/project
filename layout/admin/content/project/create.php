@@ -263,38 +263,7 @@
             </div>
           </div>
 
-          <div class="card card-dark card-outline card-tabs">
-            <div class="card-header">
-              <h3 class="card-title">
-                TWG
-              </h3>
-              <button type="button" class="btn btn-sm btn-dark float-right" id="add_twg">Add TWG Entry</button>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <table id="example1" class="table table-bordered table-striped table-sm">
-                  <thead>
-                    <tr>
-                      <th>Rank</th>
-                      <th>Last Name</th>
-                      <th>First Name</th>
-                      <th>Middle Initial</th>
-                      <th>Suffix</th>
-                      <th>Branch of Service</th>
-                      <th>Serial No</th>
-                      <th>Designation</th>
-                      <th>Authority</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="wrapper2">
 
-                  </tbody>
-                </table>
-              </div>
-
-            </div>
-          </div>
           <div class="card card-dark card-outline card-tabs">
             <div class="card-header">
               <h3 class="card-title">
@@ -308,7 +277,7 @@
                     <label for="app_file">APP/IAPP/AAPP</label>
                     <div class="input-group input-group-sm">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="app_file" name="app_file">
+                        <input type="file" class="custom-file-input" accept="application/pdf" id="app_file" name="app_file">
                         <label class="custom-file-label" for="app_file">Choose file</label>
                       </div>
                     </div>
@@ -320,7 +289,7 @@
                     </label>
                     <div class="input-group input-group-sm">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="ppmp_file" name="ppmp_file">
+                        <input type="file" class="custom-file-input" accept="application/pdf" id="ppmp_file" name="ppmp_file">
                         <label class="custom-file-label" for="ppmp_file">Choose file</label>
                       </div>
                     </div>
@@ -332,7 +301,7 @@
                     </label>
                     <div class="input-group input-group-sm">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="procurement_file" name="procurement_file">
+                        <input type="file" class="custom-file-input" accept="application/pdf" id="procurement_file" name="procurement_file">
                         <label class="custom-file-label" for="procurement_file">Choose file</label>
                       </div>
                     </div>
@@ -344,7 +313,7 @@
                     </label>
                     <div class="input-group input-group-sm">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="tech_specs_file" name="tech_specs_file">
+                        <input type="file" class="custom-file-input" accept="application/pdf" id="tech_specs_file" name="tech_specs_file">
                         <label class="custom-file-label" for="tech_specs_file">Choose file</label>
                       </div>
                     </div>
@@ -358,7 +327,7 @@
                     </label>
                     <div class="input-group input-group-sm">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="bidding_file" name="bidding_file">
+                        <input type="file" class="custom-file-input" accept="application/pdf" id="bidding_file" name="bidding_file">
                         <label class="custom-file-label" for="bidding_file">Choose file</label>
                       </div>
                     </div>
@@ -370,7 +339,7 @@
                     </label>
                     <div class="input-group input-group-sm">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="upr_file" name="upr_file">
+                        <input type="file" class="custom-file-input" accept="application/pdf" id="upr_file" name="upr_file">
                         <label class="custom-file-label" for="upr_file">Choose file</label>
                       </div>
                     </div>
@@ -382,7 +351,7 @@
                     </label>
                     <div class="input-group input-group-sm">
                       <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="other_file" name="other_file">
+                        <input type="file" class="custom-file-input" accept="application/pdf" id="other_file" name="other_file">
                         <label class="custom-file-label" for="other_file">Choose file</label>
                       </div>
                     </div>
@@ -461,21 +430,6 @@
     e.preventDefault();
     $(this).parent().parent().remove();
   })
-
-  var wrapper2 = $("#wrapper2");
-  var add_button2 = $("#add_twg");
-
-  $(add_button2).click(function(e) {
-    e.preventDefault();
-
-    $(wrapper2).append('<tr><td> <select name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
-  });
-
-  $(wrapper2).on("click", ".btn-remove-user", function(e) {
-    e.preventDefault();
-    $(this).parent().parent().remove();
-  })
-
 
   var wrapper3 = $("#wrapper3");
   var add_button3 = $("#add_asa");

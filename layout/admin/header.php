@@ -103,12 +103,6 @@
                     <p>My Projects</p>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a href="#" class="nav-link btn-view" name="admin/project/list">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Updates</p>
-                  </a>
-                </li>
               </ul>
             </li>
 

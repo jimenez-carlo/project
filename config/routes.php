@@ -1,8 +1,6 @@
 <?php
 
 $admin_route    = 'layout/admin/content';
-$barangay_route = 'layout/barangay/content';
-$resident_route = 'layout/resident/content';
 $landing_route = 'layout/landing_page/content';
 
 $routes = array(
@@ -20,6 +18,7 @@ $routes = array(
   'admin/project/list' => $admin_route . '/project/list.php',
   'admin/project/create' => $admin_route . '/project/create.php',
   'admin/project/edit' => $admin_route . '/project/edit.php',
+  'admin/project/view' => $admin_route . '/project/view.php',
   'test' => 'admin/not_found.php',
 
 

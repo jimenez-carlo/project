@@ -49,12 +49,7 @@ class Project extends Base
       return $result;
     }
 
-    // if (!isset($supplier)) {
-    //   $msg .= "No Selected Supplier!";
-    //   $result->result = $this->response_error($msg);
-    //   $result->items = implode(',', array('supplier'));
-    //   return $result;
-    // }
+
     $this->start_transaction();
 
     try {
@@ -71,7 +66,7 @@ class Project extends Base
       $other_file_name = $this->upload_file($other_file, "other");
 
 
-      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by','$preproc_target_date')");
+      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`,`preproc_conducted_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by','$preproc_target_date','$preproc_conducted_date')");
 
       $this->insert_project_status($project_id, 1, "Project Initialize");
 
@@ -95,23 +90,8 @@ class Project extends Base
           $supplier_id = $supplier[$key];
           $local_id = $local[$key];
           $price = $bid_price[$key];
-          $supplier_status = $supplier_status[$key];
-          $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,`rank`,created_by)  values ('$project_id','$price', '$local_id','$supplier_id','$supplier_status','$supplier_r','$created_by')");
-        }
-      }
-
-      if (isset($twg_rank)) {
-        foreach ($twg_rank as $key => $res) {
-          $rank_id = $twg_rank[$key];
-          $ln = $last_name[$key];
-          $fn = $first_name[$key];
-          $mn = $middle_name[$key];
-          $suffix_id = $suffix[$key];
-          $branch_id = $branch[$key];
-          $serial = $serial_no[$key];
-          $designation_id = $designation[$key];
-          $auth = $authority[$key];
-          $this->query("INSERT INTO tbl_project_twg (project_id,rank_id,first_name,middle_name,last_name,suffix_id,branch_id,serial_no,designation_id,authority)  values ('$project_id','$rank_id', '$fn','$mn','$ln','$suffix_id','$branch_id','$serial','$designation_id','$auth')");
+          $new_supplier_status = $supplier_status[$key];
+          $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,`rank`,created_by)  values ('$project_id','$price', '$local_id','$supplier_id','$new_supplier_status','$supplier_r','$created_by')");
         }
       }
 
@@ -129,26 +109,126 @@ class Project extends Base
 
   public function update()
   {
-    extract($this->escape_data($_POST));
-    print_r($_POST);
-    die;
+    extract($this->escape_data(array_merge($_POST, $_FILES)));
+    // echo '<pre>';
+    // print_r($_POST);
+    // die;
+
     if (isset($delete_list) && !empty($delete_list)) {
       return $this->delete($delete_list);
     }
 
+
     $result = $this->response_obj();
-    $blank = 0;
     $errors = array();
     $msg = '';
+    $where = '';
+    $required_fields = array('pabac_nr', 'project_description', 'qty', 'assigned_officer', 'preproc_target_date');
 
-    $required_fields = array('branch_name', 'description');
+    $where .= isset($epa) ? ", `epa` = '$epa'" : "";
+    $where .= isset($implementing_unit) ? ", `implementing_unit_id` = '$implementing_unit'" : "";
+    $where .= isset($pabac) ? ", `pabac_id` = '$pabac'" : "";
+    $where .= isset($pabac_nr) ? ", `pabac_nr` = '$pabac_nr'" : "";
+    $where .= isset($upr_nr) ? ", `upr_nr` = '$upr_nr'" : "";
+    $where .= isset($comodity) ? ", `comodity_id` = '$comodity'" : "";
+    $where .= isset($program_manager) ? ", `program_manager_id` = '$program_manager'" : "";
+    $where .= isset($project_description) ? ", `project_description` = '$project_description'" : "";
+    $where .= isset($qty) ? ", `qty` = '$qty'" : "";
+    $where .= isset($unit) ? ", `unit_id` = '$unit'" : "";
+    $where .= isset($abc) ? ", `abc` = '$abc'" : "";
+    $where .= isset($contract_nr) ? ", `contract_nr` = '$contract_nr'" : "";
+    $where .= isset($contract_price) ? ", `contract_price` = '$contract_price'" : "";
+    $where .= isset($residuals) ? ", `residuals` = '$residuals'" : "";
+
+    if (isset($end_user)) {
+      $tmp_end_user = implode(",", $end_user);
+      $where .= isset($end_user) ? ", `end_user` = '$tmp_end_user'" : "";
+    }
+
+    $where .= isset($mode_of_proc) ? ", `mode_of_proc_id` = '$mode_of_proc'" : "";
+    $where .= isset($preproc_target_date) ? ", `preproc_target_date` = '$preproc_target_date'" : "";
+    $where .= isset($preproc_conducted_date) ? ", `preproc_conducted_date` = '$preproc_conducted_date'" : "";
+    $where .= isset($prebid_target_date) ? ", `prebid_target_date` = '$prebid_target_date'" : "";
+    $where .= isset($prebid_conducted_date) ? ", `prebid_conducted_date` = '$prebid_conducted_date'" : "";
+    $where .= isset($prebid_conducted_date) ? ", `sobe_target_date` = '$sobe_target_date'" : "";
+    $where .= isset($sobe_conducted_date) ? ", `sobe_conducted_date` = '$sobe_conducted_date'" : "";
+    $where .= isset($no_bidder) ? ", `no_bidder` = '$no_bidder'" : "";
+    $where .= isset($pq_target_date) ? ", `pq_target_date` = '$pq_target_date'" : "";
+    $where .= isset($pq_conducted_date) ? ", `pq_conducted_date` = '$pq_conducted_date'" : "";
+    $where .= isset($pqr_conducted_date) ? ", `pqr_conducted_date` = '$pqr_conducted_date'" : "";
+    $where .= isset($noa_conducted_date) ? ", `noa_conducted_date` = '$noa_conducted_date'" : "";
+    $where .= isset($ors_conducted_date) ? ", `ors_conducted_date` = '$ors_conducted_date'" : "";
+    $where .= isset($ntp_conducted_date) ? ", `ntp_conducted_date` = '$ntp_conducted_date'" : "";
+    $where .= isset($ntp_conforme_conducted_date) ? ", `ntp_conforme_conducted_date` = '$ntp_conforme_conducted_date'" : "";
+    $where .= isset($ntp_delivery_period) ? ", `delivery_period` = '$ntp_delivery_period'" : "";
+    $where .= isset($ldd_date) ? ", `ldd` = '$ldd_date'" : "";
+    $where .= isset($delivery_conducted_date) ? ", `delivery_conducted_date` = '$delivery_conducted_date'" : "";
+    $where .= isset($inspected_conducted_date) ? ", `inspected_conducted_date` = '$inspected_conducted_date'" : "";
+    $where .= isset($accepted_conducted_date) ? ", `accepted_conducted_date` = '$accepted_conducted_date'" : "";
+    $where .= isset($dv) ? ", `dv` = '$dv'" : "";
+    $where .= isset($amount) ? ", `amount` = '$amount'" : "";
+    $where .= isset($accepted_date_1) ? ", `accepted_date_1` = '$accepted_date_1'" : "";
+    $where .= isset($retention_percentage) ? ", `retention_percent` = '$retention_percentage'" : "";
+    $where .= isset($retention_amount) ? ", `retention_amount` = '$retention_amount'" : "";
+    $where .= isset($accepted_date_2) ? ", `accepted_date_2` = '$accepted_date_2'" : "";
+    $where .= isset($ld_amount) ? ", `ld_amount` = '$ld_amount'" : "";
+    $where .= isset($total) ? ", `total` = '$total'" : "";
+    $where .= isset($assigned_officer) ? ", `officer_id` = '$assigned_officer'" : "";
+
+    if (isset($assigned_personell)) {
+      $personell_ids = implode(",", $assigned_personell);
+      $where .= isset($assigned_personell) ? ", `personell_ids` = '$personell_ids'" : "";
+    }
+
+    // Implementing unit = ASCOM
+    if ($implementing_unit == 2) {
+      $required_fields += array('upr_nr', 'upr_date');
+    }
+    // If status NOA
+    if ($status_id == 9) {
+      $required_fields += array('contract_nr', 'contract_price');
+    }
+    // If status PREPROC PASSED/FAILED
+    if ($new_status_id == 2 || $new_status_id == 3) {
+      $required_fields += array('preproc_target_date', 'preproc_conducted_date');
+    }
+    // If status PREBID
+    if ($status_id == 2) {
+      $required_fields += array('prebid_target_date', 'prebid_conducted_date');
+    }
+
+    // If status PREBID
+    if ($status_id == 4) {
+      $required_fields += array('sobe_target_date');
+    }
+
+    if ($new_status_id == 5 || $new_status_id == 6) {
+      $required_fields += array('sobe_conducted_date');
+    }
+    // If status
+    // If status ACCEPTED
+    if ($status_id == 15 && !isset($twg_rank)) {
+      $msg .= "No TWG Entry!";
+      $result->result = $this->response_error($msg);
+      $result->items = implode(',', array('twg_rank'));
+      return $result;
+    }
 
     foreach ($required_fields as $res) {
       if (empty(${$res})) {
         $errors[] = $res;
-        $blank++;
       }
     }
+
+    if (empty($end_user)) {
+      $errors[] = 'end_user[]';
+    }
+
+    if (empty($assigned_personell)) {
+      $errors[] = 'assigned_personell[]';
+    }
+
+    $required_fields += isset($change_status) ? array('remarks') : array();
 
     if (!empty($errors)) {
       $msg .= "Please Fill Blank Fields!";
@@ -157,21 +237,96 @@ class Project extends Base
       return $result;
     }
 
-    $check_branch_name = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_branch b where b.name ='$branch_name' and id <> $id  and deleted_flag = 0 limit 1");
 
-    if (!empty($check_branch_name->res)) {
-      $msg .= "Branch Name Already In-use!";
+    if (!$epa && !isset($asa_nr)) {
+      $msg .= "No ASA Entry!";
       $result->result = $this->response_error($msg);
-      $result->items = implode(',', array('branch_name'));
+      $result->items = implode(',', array('asa_nr'));
       return $result;
     }
 
+
     $this->start_transaction();
     try {
-      $this->query("UPDATE tbl_branch set `name` = '$branch_name', `description` = '$description' where id = $id");
+      $updated_by = $_SESSION['user']->id;
+      $updated_date = date('Y-m-d H:i:s');
+
+      $old_data = $this->get_one("SELECT * from tbl_project where id = $id ");
+
+      $app_file_name = $this->upload_file($app_file, "app", (!empty($old_data->app_file) ? $old_data->app_file : "null"));
+      $ppmp_file_name = $this->upload_file($ppmp_file, "ppmp", (!empty($old_data->ppmp_file) ? $old_data->ppmp_file : "null"));
+      $procurement_file_name = $this->upload_file($procurement_file, "procurement", (!empty($old_data->procurement_file) ? $old_data->procurement_file : "null"));
+      $tech_specs_file_name = $this->upload_file($tech_specs_file, "tech", (!empty($old_data->tech_specs_file) ? $old_data->tech_specs_file : "null"));
+      $bidding_file_name = $this->upload_file($bidding_file, "bidding", (!empty($old_data->bidding_file) ? $old_data->bidding_file : "null"));
+      $upr_file_name = $this->upload_file($upr_file, "upr", (!empty($old_data->upr_file) ? $old_data->upr_file : "null"));
+      $other_file_name = $this->upload_file($other_file, "other", (!empty($old_data->other_file) ? $old_data->other_file : "null"));
+
+      $where .= isset($app_file) ? ", `app_file` = '$app_file_name'" : "";
+      $where .= isset($ppmp_file) ? ", `ppmp_file` = '$ppmp_file_name'" : "";
+      $where .= isset($procurement_file) ? ", `procurement_file` = '$procurement_file_name'" : "";
+      $where .= isset($tech_specs_file) ? ", `tech_specs_file` = '$tech_specs_file_name'" : "";
+      $where .= isset($bidding_file) ? ", `bidding_file` = '$bidding_file_name'" : "";
+      $where .= isset($upr_file) ? ", `upr_file` = '$upr_file_name'" : "";
+      $where .= isset($other_file) ? ", `other_file` = '$other_file_name'" : "";
+
+      $this->query("UPDATE tbl_project set id = id $where , updated_by = '$updated_by', updated_date = '$updated_date' where id = $id");
+
+      $this->query("DELETE FROM tbl_project_asa where project_id = $id");
+      $this->query("DELETE FROM tbl_project_supplier where project_id = $id");
+      $this->query("DELETE FROM tbl_project_twg where project_id = $id");
+
+      if (isset($asa_nr)) {
+        $tmp = 0;
+        foreach ($asa_nr as $key => $res) {
+          $tmp++;
+          $asa_nr_value = $asa_nr[$key];
+          $asa_date = ${'asa_date_' . $tmp};
+          $asa_code = $asa_object[$key];
+          $asa_amt = $asa_amount[$key];
+          $asa_class = $asa_expense_class[$key];
+
+          $this->query("INSERT INTO tbl_project_asa (project_id,asa_nr,asa_date,object_code,asa_amount,expense_class_id,created_by)  values ($id,'$asa_nr_value','$asa_date', '$asa_code','$asa_amt','$asa_class','$updated_by')");
+        }
+      }
+
+      if (isset($supplier)) {
+        foreach ($supplier as $key => $res) {
+          $supplier_r = $supplier_rank[$key];
+          $supplier_id = $supplier[$key];
+          $local_id = $local[$key];
+          $price = $bid_price[$key];
+          $new_supplier_status = $supplier_status[$key];
+          $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,`rank`,created_by)  values ('$id','$price', '$local_id','$supplier_id','$new_supplier_status','$supplier_r','$updated_by')");
+        }
+      }
+
+      if (isset($twg_rank)) {
+        foreach ($twg_rank as $key => $res) {
+          $rank_id = $twg_rank[$key];
+          $ln = $last_name[$key];
+          $fn = $first_name[$key];
+          $mn = $middle_name[$key];
+          $suffix_id = $suffix[$key];
+          $branch_id = $branch[$key];
+          $serial = $serial_no[$key];
+          $designation_id = $designation[$key];
+          $auth = $authority[$key];
+          $this->query("INSERT INTO tbl_project_twg (project_id,rank_id,first_name,middle_name,last_name,suffix_id,branch_id,serial_no,designation_id,authority)  values ('$id','$rank_id', '$fn','$mn','$ln','$suffix_id','$branch_id','$serial','$designation_id','$auth')");
+        }
+      }
+
+      if (isset($change_status)) {
+        $this->insert_project_status($id, $new_status_id, $remarks);
+        $this->query("UPDATE tbl_project set status_id = $new_status_id where id = $id");
+        $this->commit_transaction();
+        $result->status = true;
+        $result->result = $this->response_swal("Project Changed Status Successfully!", 'Successfull!');
+        return $result;
+      }
+
       $this->commit_transaction();
       $result->status = true;
-      $result->result = $this->response_success("Branch Updated Successfully!", 'Successfull!');
+      $result->result = $this->response_swal("Project Updated Successfully!", 'Successfull!');
       return $result;
     } catch (mysqli_sql_exception $exception) {
       $this->roll_back();
@@ -186,10 +341,10 @@ class Project extends Base
 
     $this->start_transaction();
     try {
-      $this->query("UPDATE tbl_users set `deleted_flag` = 1 where id = $id");
+      $this->query("UPDATE tbl_project set `deleted_flag` = 1 where id = $id");
       $this->commit_transaction();
       $result->status = true;
-      $result->result = $this->response_swal("User Deleted Successfully!", 'Successfull!');
+      $result->result = $this->response_swal("Project Deleted Successfully!", 'Successfull!');
       return $result;
     } catch (mysqli_sql_exception $exception) {
       $this->roll_back();

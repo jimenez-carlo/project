@@ -53,7 +53,7 @@ tbl_comodity cm on cm.id = p.comodity_id inner join
 tbl_program_manager pm on pm.id = p.program_manager_id inner join 
 tbl_project_status s on s.id = p.status_id left join 
 tbl_users_info o on o.id = p.officer_id left join 
-tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0 and p.created_by = $id");
+tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0 and (p.created_by = $id OR  find_in_set('$id',personell_ids) <> 0)");
       break;
     case 'admin/project/list':
       $data['list'] = $base->get_list("select concat(o.last_name, ', ', o.first_name,' ', LEFT(o.middle_name, 1), '[#',o.id,']') as officer_full_name, p.id,s.name as `status`,ui.name as `implementing_unit`,cm.name as`comodity`,pm.name as `program_manager`,p.created_date,p.updated_date from 
@@ -67,11 +67,17 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       break;
 
     case 'admin/project/edit':
+    case 'admin/project/view':
       $data['default'] = $base->set_default_data();
       $data['default_data'] = $base->get_one("Select p.* from tbl_project p where p.id = $id");
       $data['suppliers'] = $base->get_list("Select p.* from tbl_project_supplier p where p.project_id = $id");
       $data['twgs'] = $base->get_list("Select p.* from tbl_project_twg p where p.project_id = $id");
       $data['asas'] = $base->get_list("Select p.* from tbl_project_asa p where p.project_id = $id");
+      $data['chronology'] = $base->get_list("Select p.*,concat(o.first_name, ' ', o.last_name) as full_name,s.name from tbl_project_history p inner join tbl_users_info o on o.id = p.created_by inner join tbl_project_status s on s.id = p.project_status_id where p.project_id = $id order by p.created_date desc");
+      $get_next = $base->get_one("Select next_ids from tbl_project_status p where p.id = " . $data['default_data']->status_id);
+      $array = array_map('intval', explode(',', $get_next->next_ids));
+      $array = implode("','", $array);
+      $data['new_status'] = $base->get_list("SELECT id,name FROM tbl_project_status WHERE id IN ('" . $array . "')");
       $data['bread_crumb'] = $base->breadcrumb($data['default_data']->status_id);
       break;
 

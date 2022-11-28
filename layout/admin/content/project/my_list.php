@@ -53,10 +53,14 @@
                     <td><?= $res['created_date'] ?></td>
                     <td><?= $res['updated_date'] ?></td>
                     <td class="flex">
-                      <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
-                      <form method="post" name="user_update" refresh="admin/project/list">
-                        <button type="submit" class="btn btn-sm btn-dark" name="delete_list" value="<?= $res['id']; ?>" confirmation="You Are About To Delete This User"> <i class="fa fa-trash"></i> Delete</button>
-                      </form>
+                      <?php if (in_array($_SESSION['user']->access_id, array(1, 3))) { ?>
+                        <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
+                        <form method="post" name="project_update" refresh="admin/project/my_list&id=<?= $_SESSION['user']->id ?>">
+                          <button type="submit" class="btn btn-sm btn-dark" name="delete_list" value="<?= $res['id']; ?>" confirmation="You Are About To Delete This Project"> <i class="fa fa-trash"></i> Delete</button>
+                        </form>
+                      <?php } else { ?>
+                        <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/view" value="<?= $res['id']; ?>"> <i class="fa fa-eye"></i> View</button>
+                      <?php } ?>
                     </td>
                   </tr>
                 <?php } ?>
