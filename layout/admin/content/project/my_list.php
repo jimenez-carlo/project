@@ -54,7 +54,14 @@
                     <td><?= $res['updated_date'] ?></td>
                     <td class="flex">
                       <?php if (in_array($_SESSION['user']->access_id, array(1, 3))) { ?>
-                        <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
+                        <?php if ($_SESSION['user']->access_id == 1) { ?>
+                          <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit_admin" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
+                        <?php } else { ?>
+                          <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
+                        <?php } ?>
+                      <?php } ?>
+
+                      <?php if (in_array($_SESSION['user']->access_id, array(1, 3))) { ?>
                         <form method="post" name="project_update" refresh="admin/project/my_list&id=<?= $_SESSION['user']->id ?>">
                           <button type="submit" class="btn btn-sm btn-dark" name="delete_list" value="<?= $res['id']; ?>" confirmation="You Are About To Delete This Project"> <i class="fa fa-trash"></i> Delete</button>
                         </form>

@@ -18,9 +18,10 @@ $routes = array(
   'admin/project/list' => $admin_route . '/project/list.php',
   'admin/project/create' => $admin_route . '/project/create.php',
   'admin/project/edit' => $admin_route . '/project/edit.php',
+  'admin/project/edit_admin' => $admin_route . '/project/edit_admin.php',
   'admin/project/view' => $admin_route . '/project/view.php',
   'test' => 'admin/not_found.php',
-  
+
   'admin/maintenance/dropdown' => $admin_route . '/maintenance/dropdown.php',
 
 

@@ -71,6 +71,7 @@ tbl_users_info o on o.id = p.officer_id left join
 tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       break;
 
+    case 'admin/project/edit_admin':
     case 'admin/project/edit':
     case 'admin/project/view':
       $data['default'] = $base->set_default_data();
@@ -83,6 +84,7 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       $array = array_map('intval', explode(',', $get_next->next_ids));
       $array = implode("','", $array);
       $data['new_status'] = $base->get_list("SELECT id,name FROM tbl_project_status WHERE id IN ('" . $array . "')");
+      $data['new_status_admin'] = $base->get_list("SELECT id,name FROM tbl_project_status");
       $data['bread_crumb'] = $base->breadcrumb($data['default_data']->status_id);
       break;
 
