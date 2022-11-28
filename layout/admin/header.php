@@ -86,25 +86,26 @@
                 </p>
               </a>
             </li>
-            
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-columns"></i>
-                <p>
-                  Maintenance
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
+            <?php if ($user->access_id == 1) { ?>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-columns"></i>
+                  <p>
+                    Maintenance
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
 
-                <li class="nav-item">
-                  <a href="#" class="nav-link btn-view" name="admin/maintenance/dropdown" value="<?= $user->id ?>">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Dropdown</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link btn-view" name="admin/maintenance/dropdown" value="<?= $user->id ?>">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Dropdown</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            <?php } ?>
 
             <li class="nav-item">
               <a href="#" class="nav-link">
