@@ -213,14 +213,12 @@
                     </select>
                   </div>
                 </div>
-                <?php if ($default->status_id == 9) { ?>
-
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>Contract Nr</label>
-                      <input type="text" class="form-control form-control-sm" name="contract_nr" id="contract_nr" value="<?= $default->contract_nr ?>">
-                    </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Contract Nr</label>
+                    <input type="text" class="form-control form-control-sm" name="contract_nr" id="contract_nr" value="<?= $default->contract_nr ?>">
                   </div>
+                </div>
               </div>
               <div class="row">
                 <div class="col-sm-3">
@@ -265,18 +263,7 @@
                     }
                   })
                 </script>
-              <?php } else { ?>
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>End User</label>
-                    <select class="form-control form-control-sm select2bs4" name="end_user[]" id="end_user" multiple="multiple">
-                      <?php foreach ($data['default']['end_user'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>" <?= in_array($res['id'], explode(",", $default->end_user))  ? 'selected' : '' ?>><?= $res['name'] ?></option>
-                      <?php } ?>
-                    </select>
-                  </div>
-                </div>
-              <?php } ?>
+
               </div>
               <div class="row">
                 <div class="col-sm-3">
@@ -1000,7 +987,7 @@
                     <label>*Assigned Officer
                     </label>
                     <select class="form-control select2bs4 form-control-sm" name="assigned_officer" id="assigned_officer">
-                      <?php foreach ($data['default']['users'] as $res) { ?>
+                      <?php foreach ($data['default']['officers'] as $res) { ?>
                         <option value="<?= $res['id'] ?>" <?= $default->officer_id == $res['id'] ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
                       <?php } ?>
                     </select>

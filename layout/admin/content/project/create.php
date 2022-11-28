@@ -148,6 +148,7 @@
                       </tr>
                     </thead>
                     <tbody id="wrapper3">
+
                     </tbody>
                   </table>
                 </div>
@@ -177,14 +178,55 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
+                    <label>Contract Nr</label>
+                    <input type="text" class="form-control form-control-sm" name="contract_nr" id="contract_nr">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>ABC</label>
+                    <input type="text" class="form-control form-control-sm" name="abc" id="abc">
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Contract Price</label>
+                    <input type="number" class="form-control form-control-sm" name="contract_price" id="contract_price">
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Residuals</label>
+                    <input type="text" class="form-control form-control-sm" id="residuals_display" disabled>
+                    <input type="hidden" class="form-control form-control-sm" name="residuals" id="residuals">
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
                     <label>End User</label>
-                    <select class="form-control input-sm select2bs4" name="end_user[]" id="end_user" multiple="multiple">
+                    <select class="form-control form-control-sm select2bs4" name="end_user[]" id="end_user" multiple="multiple">
                       <?php foreach ($data['default']['end_user'] as $res) { ?>
                         <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
                       <?php } ?>
                     </select>
                   </div>
                 </div>
+
+                <script>
+                  $(document).on("change", "#contract_price,#abc", function(e) {
+                    if (!$("#abc").val() || !$("#contract_price").val()) {
+                      $("#residuals_display").val(0);
+                      $("#residuals").val(0);
+                    } else {
+                      let total = parseInt($("#abc").val()) - parseInt($("#contract_price").val());
+                      $("#residuals_display").val(total);
+                      $("#residuals").val(total);
+                    }
+                  })
+                </script>
+
               </div>
               <div class="row">
                 <div class="col-sm-3">
@@ -192,7 +234,7 @@
                     <label>*Mode Of Proc</label>
                     <div class="form-group" style="display:flex">
                       <div class="form-check" style="width:50%">
-                        <input class="form-check-input" type="radio" name="mode_of_proc" checked="" value="1">
+                        <input class="form-check-input" type="radio" name="mode_of_proc" value="1" checked>
                         <label class="form-check-label">PUBLIC BIDDING</label>
                       </div>
                       <div class="form-check" style="width:25%">
@@ -318,7 +360,7 @@
                     <label>*Assigned Officer
                     </label>
                     <select class="form-control select2bs4 form-control-sm" name="assigned_officer" id="assigned_officer">
-                      <?php foreach ($data['default']['users'] as $res) { ?>
+                      <?php foreach ($data['default']['officers'] as $res) { ?>
                         <option value="<?= $res['id'] ?>"><?= strtoupper($res['name']) ?></option>
                       <?php } ?>
                     </select>

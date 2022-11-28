@@ -73,8 +73,7 @@ class Project extends Base
       $upr_file_name = $this->upload_file($upr_file, "upr");
       $other_file_name = $this->upload_file($other_file, "other");
 
-
-      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`end_user`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$end_user_ids','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by','$preproc_target_date')");
+      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by','$preproc_target_date')");
 
       $this->insert_project_status($project_id, 1, "Project Initialize");
 
