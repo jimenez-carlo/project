@@ -5,11 +5,13 @@ require('class/base.php');
 require('class/login.php');
 require('class/user.php');
 require('class/project.php');
+require('class/maintenance.php');
 
 
 $base = new Base($conn);
 $user = new User($conn);
 $project = new Project($conn);
+$maintenance = new Maintenance($conn);
 $result = $base->response_error();
 
 if (!$_POST || !isset($_POST['form'])) {
@@ -37,6 +39,10 @@ switch ($form) {
     break;
   case 'project_update':
     $result = $project->update();
+    break;
+
+  case 'dropdown_create':
+    $result = $maintenance->upsert_dropdown();
     break;
 }
 echo json_encode($result);
