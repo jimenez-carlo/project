@@ -47,7 +47,7 @@ if (in_array($page, $pages)) {
 
     case 'admin/project/create':
       $data['default'] = $base->set_default_data();
-      $data['default_id'] = $base->get_one("SELECT if(max(b.id) is null, 1, max(b.id) + 1) as `res` from tbl_users b where  deleted_flag = 0 limit 1")->res;
+      $data['default_id'] = $base->get_one("SELECT if(max(b.id) is null, 1, max(b.id) + 1) as `res` from tbl_project b where  deleted_flag = 0 limit 1")->res;
       break;
 
     case 'admin/project/my_list':

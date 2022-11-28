@@ -177,33 +177,6 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>ABC</label>
-                    <input type="text" class="form-control form-control-sm" name="abc" id="abc">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>Contract Nr</label>
-                    <input type="text" class="form-control form-control-sm" name="contract_nr" id="contract_nr">
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>Contract Price</label>
-                    <input type="number" class="form-control form-control-sm" name="contract_price" id="contract_price">
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>Residuals</label>
-                    <input type="text" class="form-control form-control-sm" id="residuals_display" value="0" disabled>
-                    <input type="hidden" class="form-control form-control-sm" name="residuals">
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
                     <label>End User</label>
                     <select class="form-control input-sm select2bs4" name="end_user[]" id="end_user" multiple="multiple">
                       <?php foreach ($data['default']['end_user'] as $res) { ?>
@@ -233,35 +206,6 @@
             </div>
           </div>
 
-          <div class="card card-dark card-outline card-tabs">
-            <div class="card-header">
-              <h3 class="card-title">
-                Supplier Details
-              </h3>
-              <button type="button" class="btn btn-sm btn-dark float-right" id="add_supplier">Add Supplier Entry</button>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <table id="example1" class="table table-bordered table-striped table-sm">
-                    <thead>
-                      <tr>
-                        <th>Rank</th>
-                        <th>SUPPLIER</th>
-                        <th>BID Price</th>
-                        <th>LC/Local</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="wrapper">
-
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
 
 
           <div class="card card-dark card-outline card-tabs">
@@ -416,20 +360,6 @@
     $("input[name='epa']").trigger("change");
   });
 
-  var wrapper = $("#wrapper");
-  var add_button = $("#add_supplier");
-
-  $(add_button).click(function(e) {
-    e.preventDefault();
-    var supp = $('.supplier').length
-    supp++;
-    $(wrapper).append('<tr><td> <input type="text" class="form-control form-control-sm supplier" name="supplier_rank[]" value="' + supp + '"></td><td> <input type="text" class="form-control form-control-sm" name="supplier[]"></td> <td>  <input type="text" class="form-control form-control-sm" name="bid_price[]"> </td><td> <select name = "local[]" class="form-control form-control-sm"><?php foreach ($data['default']['local'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select name = "supplier_status[]" class="form-control form-control-sm"><?php foreach ($data['default']['supplier_status'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
-  });
-
-  $(wrapper).on("click", ".btn-remove-user", function(e) {
-    e.preventDefault();
-    $(this).parent().parent().remove();
-  })
 
   var wrapper3 = $("#wrapper3");
   var add_button3 = $("#add_asa");
@@ -453,17 +383,7 @@
 
   $('.daterange').daterangepicker();
 
-  $(document).on("change", "#contract_price,#abc", function(e) {
-    if (!$("#abc").val() || !$("#contract_price").val()) {
-      $("#residuals_display").val(0);
-      $("#residuals").val(0);
-    } else {
 
-      let total = parseInt($("#abc").val()) - parseInt($("#contract_price").val());
-      $("#residuals_display").val(total);
-      $("#residuals").val(total);
-    }
-  })
   $(document).on("change", "input[name='epa']:checked", function(e) {
     console.log($(this).val());
     if ($('input[name="epa"]:checked').val() == 1) {

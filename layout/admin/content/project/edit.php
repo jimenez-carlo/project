@@ -213,18 +213,20 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>ABC</label>
-                    <input type="text" class="form-control form-control-sm" name="abc" id="abc" value="<?= $default->abc ?>">
+                <?php if ($default->status_id == 9) { ?>
+
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Contract Nr</label>
+                      <input type="text" class="form-control form-control-sm" name="contract_nr" id="contract_nr" value="<?= $default->contract_nr ?>">
+                    </div>
                   </div>
-                </div>
               </div>
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>Contract Nr</label>
-                    <input type="text" class="form-control form-control-sm" name="contract_nr" id="contract_nr" value="<?= $default->contract_nr ?>">
+                    <label>ABC</label>
+                    <input type="text" class="form-control form-control-sm" name="abc" id="abc" value="<?= $default->abc ?>">
                   </div>
                 </div>
                 <div class="col-sm-3">
@@ -236,8 +238,8 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Residuals</label>
-                    <input type="text" class="form-control form-control-sm" id="residuals_display" value="<?= $default->residuals ?>">
-                    <input type="hidden" class="form-control form-control-sm" name="residuals" value="<?= $default->residuals ?>">
+                    <input type="text" class="form-control form-control-sm" id="residuals_display" value="<?= $default->residuals ?>" disabled>
+                    <input type="hidden" class="form-control form-control-sm" name="residuals" value="<?= $default->residuals ?>" id="residuals">
                   </div>
                 </div>
                 <div class="col-sm-3">
@@ -250,6 +252,31 @@
                     </select>
                   </div>
                 </div>
+
+                <script>
+                  $(document).on("change", "#contract_price,#abc", function(e) {
+                    if (!$("#abc").val() || !$("#contract_price").val()) {
+                      $("#residuals_display").val(0);
+                      $("#residuals").val(0);
+                    } else {
+                      let total = parseInt($("#abc").val()) - parseInt($("#contract_price").val());
+                      $("#residuals_display").val(total);
+                      $("#residuals").val(total);
+                    }
+                  })
+                </script>
+              <?php } else { ?>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>End User</label>
+                    <select class="form-control form-control-sm select2bs4" name="end_user[]" id="end_user" multiple="multiple">
+                      <?php foreach ($data['default']['end_user'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>" <?= in_array($res['id'], explode(",", $default->end_user))  ? 'selected' : '' ?>><?= $res['name'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
+              <?php } ?>
               </div>
               <div class="row">
                 <div class="col-sm-3">
@@ -271,493 +298,527 @@
             </div>
           </div>
 
-          <div class="card card-dark card-outline card-tabs">
-            <div class="card-header">
-              <h3 class="card-title">
-                PREPROC Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>*Target Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="preproc_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#preproc_target_date" name="preproc_target_date" value="<?= $default->preproc_target_date ?>" />
-                      <div class="input-group-append" data-target="#preproc_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <?php if ($default->status_id >= 1) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  PREPROC Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>*Target Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="preproc_target_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#preproc_target_date" name="preproc_target_date" value="<?= $default->preproc_target_date ?>" />
+                        <div class="input-group-append" data-target="#preproc_target_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="preproc_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#preproc_conducted_date" name="preproc_conducted_date" value="<?= $default->preproc_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#preproc_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="preproc_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#preproc_conducted_date" name="preproc_conducted_date" value="<?= $default->preproc_conducted_date ?>" />
+                        <div class="input-group-append" data-target="#preproc_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="card card-dark card-outline card-tabs">
-            <div class="card-header">
-              <h3 class="card-title">
-                PREBID Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>*Target Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="prebid_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#prebid_target_date" name="prebid_target_date" value="<?= $default->prebid_target_date ?>" />
-                      <div class="input-group-append" data-target="#prebid_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <?php } ?>
+          <?php if ($default->status_id >= 2) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  PREBID Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>*Target Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="prebid_target_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#prebid_target_date" name="prebid_target_date" value="<?= $default->prebid_target_date ?>" />
+                        <!-- <input type="text" name="prebid_target_date" id="actual_prebid_target_date"> -->
+                        <div class="input-group-append" data-target="#prebid_target_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="prebid_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#prebid_conducted_date" name="prebid_conducted_date" value="<?= $default->prebid_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#prebid_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="prebid_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#prebid_conducted_date" name="prebid_conducted_date" value="<?= $default->prebid_conducted_date ?>" id="test" />
+                        <div class="input-group-append" data-target="#prebid_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            <script>
+              // $(document).on("change", '#test',
+              //   function(e) {
+              //     console.log('bang');
 
-          <div class="card card-dark card-outline card-tabs">
-            <div class="card-header">
-              <h3 class="card-title">
-                SOBE Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>*Target Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="sobe_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#sobe_target_date" name="sobe_target_date" value="<?= $default->sobe_target_date ?>" />
-                      <div class="input-group-append" data-target="#sobe_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              // var new_date = new Date($("#prebid_conducted_date").val());
+              // new_date.setDate(new_date.getDate() + 2);
+              // console.log(new_date);
+              // $("#prebid_display").val(new_date);
+              // $("#actual_prebid_target_date").val(new_date);
+              // })
+            </script>
+          <?php } ?>
+          <?php if ($default->status_id >= 4) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  SOBE Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>*Target Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="sobe_target_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#sobe_target_date" name="sobe_target_date" value="<?= $default->sobe_target_date ?>" />
+                        <div class="input-group-append" data-target="#sobe_target_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="sobe_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#sobe_conducted_date" name="sobe_conducted_date" value="<?= $default->sobe_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#sobe_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="sobe_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#sobe_conducted_date" name="sobe_conducted_date" value="<?= $default->sobe_conducted_date ?>" />
+                        <div class="input-group-append" data-target="#sobe_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-4">
-                  <label>*No Bidder:</label>
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="no_bidder" name="no_bidder" value="1" <?= $default->no_bidder ? 'checked' : '' ?>>
+                  <div class="col-sm-4">
+                    <label>*No Bidder:</label>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="no_bidder" name="no_bidder" value="1" <?= $default->no_bidder ? 'checked' : '' ?>>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="card card-dark card-outline card-tabs">
-            <div class="card-header">
-              <h3 class="card-title">
-                Supplier Details
-              </h3>
-              <button type="button" class="btn btn-sm btn-dark float-right" id="add_supplier">Add Supplier Entry</button>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <table id="example1" class="table table-bordered table-striped table-sm">
-                    <thead>
-                      <tr>
-                        <th>Rank</th>
-                        <th>SUPPLIER</th>
-                        <th>BID Price</th>
-                        <th>LC/Local</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="wrapper">
-                      <?php foreach ($data['suppliers'] as $res) { ?>
+
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  Supplier Details
+                </h3>
+                <button type="button" class="btn btn-sm btn-dark float-right" id="add_supplier">Add Supplier Entry</button>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <table id="example1" class="table table-bordered table-striped table-sm">
+                      <thead>
                         <tr>
-                          <td>
-                            <input type="text" class="form-control form-control-sm" name="supplier_rank[]" value="<?= $res['rank'] ?>">
-                          </td>
-                          <td>
-                            <input type="text" class="form-control form-control-sm" name="supplier[]" value="<?= $res['supplier'] ?>">
-                          </td>
-                          <td><input type="text" class="form-control form-control-sm" name="bid_price[]" value="<?= $res['price'] ?>"></td>
-                          <td>
-                            <select name="local[]" class="form-control form-control-sm">
-                              <?php foreach ($data['default']['local'] as $subres) { ?>
-                                <option value="<?= $subres['id']; ?>" <?= $res['local_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                              <?php } ?>
-                            </select>
-                          </td>
-                          <td>
-                            <select name="supplier_status[]" class="form-control form-control-sm">
-                              <?php foreach ($data['default']['supplier_status'] as $subres) { ?>
-                                <option value="<?= $subres['id']; ?>" <?= $res['status_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                              <?php } ?>
-                            </select>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
-                          </td>
+                          <th>Rank</th>
+                          <th>SUPPLIER</th>
+                          <th>BID Price</th>
+                          <th>LC/Local</th>
+                          <th>Status</th>
+                          <th>Actions</th>
                         </tr>
-                      <?php } ?>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id == 5) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                PQ Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>*Target Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="pq_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pq_target_date" name="pq_target_date" value="<?= $default->pq_target_date ?>" />
-                      <div class="input-group-append" data-target="#pq_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="pq_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pq_conducted_date" name="pq_conducted_date" value="<?= $default->pqr_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#pq_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                      </thead>
+                      <tbody id="wrapper">
+                        <?php foreach ($data['suppliers'] as $res) { ?>
+                          <tr>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" name="supplier_rank[]" value="<?= $res['rank'] ?>">
+                            </td>
+                            <td>
+                              <input type="text" class="form-control form-control-sm" name="supplier[]" value="<?= $res['supplier'] ?>">
+                            </td>
+                            <td><input type="text" class="form-control form-control-sm" name="bid_price[]" value="<?= $res['price'] ?>"></td>
+                            <td>
+                              <select name="local[]" class="form-control form-control-sm">
+                                <?php foreach ($data['default']['local'] as $subres) { ?>
+                                  <option value="<?= $subres['id']; ?>" <?= $res['local_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                                <?php } ?>
+                              </select>
+                            </td>
+                            <td>
+                              <select name="supplier_status[]" class="form-control form-control-sm">
+                                <?php foreach ($data['default']['supplier_status'] as $subres) { ?>
+                                  <option value="<?= $subres['id']; ?>" <?= $res['status_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                                <?php } ?>
+                              </select>
+                            </td>
+                            <td>
+                              <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
+                            </td>
+                          </tr>
+                        <?php } ?>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          <?php } ?>
 
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id == 7) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                PQR Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="pqr_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pqr_conducted_date" name="pqr_conducted_date" value="<?= $default->pqr_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#pqr_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <?php if ($default->status_id >= 5) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  PQ Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>*Target Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="pq_target_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pq_target_date" name="pq_target_date" value="<?= $default->pq_target_date ?>" />
+                        <div class="input-group-append" data-target="#pq_target_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id >= 8) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                NOA Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="noa_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#noa_conducted_date" name="noa_conducted_date" value="<?= $default->noa_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#noa_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="pq_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pq_conducted_date" name="pq_conducted_date" value="<?= $default->pqr_conducted_date ?>" />
+                        <div class="input-group-append" data-target="#pq_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          <?php } ?>
 
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id >= 9) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                ORS Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="ors_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ors_conducted_date" name="ors_conducted_date" value="<?= $default->ors_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#ors_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <?php if ($default->status_id >= 7) { ?>
+
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  PQR Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="pqr_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pqr_conducted_date" name="pqr_conducted_date" value="<?= $default->pqr_conducted_date ?>" />
+                        <div class="input-group-append" data-target="#pqr_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          <?php } ?>
 
-
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id >= 10) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                NTP Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="ntp_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ntp_conducted_date" name="ntp_conducted_date" value="<?= $default->ntp_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#ntp_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <?php if ($default->status_id >= 8) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  NOA Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="noa_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#noa_conducted_date" name="noa_conducted_date" value="<?= $default->noa_conducted_date ?>" />
+                        <div class="input-group-append" data-target="#noa_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id >= 11) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                NTP CONFORME Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="ntp_conforme_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ntp_conforme_conducted_date" name="ntp_conforme_conducted_date" value="<?= $default->ntp_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#ntp_conforme_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>*Delivery Period</label>
-                    <input type="number" class="form-control form-control-sm" name="ntp_delivery_period" id="ntp_delivery_period" value="<?= $default->delivery_period ?>">
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>*LDD:</label>
-                    <div class="input-group input-group-sm datepicker" id="ldd_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ldd_date" name="ldd_date" value="<?= $default->ldd ?>" />
-                      <div class="input-group-append" data-target="#ldd_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <?php } ?>
+          <?php if ($default->status_id >= 9) { ?>
+
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  ORS Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="ors_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ors_conducted_date" name="ors_conducted_date" value="<?= $default->ors_conducted_date ?>" />
+                        <div class="input-group-append" data-target="#ors_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id >= 12) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                Delivery Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i></span>
-                      </div>
-                      <input type="text" class="form-control float-right daterange" id="delivery_conducted_date" name="delivery_conducted_date" value="<?= $default->delivery_conducted_date ?>">
-                    </div>
-
-                  </div>
-                </div>
+          <?php } ?>
+          <?php if ($default->status_id >= 10) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  NTP Details
+                </h3>
               </div>
-            </div>
-          </div>
-
-
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id >= 13) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                Inspected Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i></span>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="ntp_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ntp_conducted_date" name="ntp_conducted_date" value="<?= $default->ntp_conducted_date ?>" />
+                        <div class="input-group-append" data-target="#ntp_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
-                      <input type="text" class="form-control float-right daterange" id="inspected_conducted_date" name="inspected_conducted_date" value="<?= $default->inspected_conducted_date ?>">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          <?php } ?>
 
-          <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id >= 14) ? "block" : "none" ?>">
-            <div class="card-header">
-              <h3 class="card-title">
-                Accepted Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i></span>
-                      </div>
-                      <input type="text" class="form-control float-right daterange" id="accepted_conducted_date" name="accepted_conducted_date" value="<?= $default->accepted_conducted_date ?>">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>DV/Check:</label>
-                    <div class="form-group" style="display:flex">
-                      <div class="form-check" style="width:15%">
-                        <input class="form-check-input" type="radio" name="dv" value="1" <?= ($default->dv) ? 'checked' : '' ?>>
-                        <label class="form-check-label">Yes</label>
-                      </div>
-                      <div class="form-check" style="width:15%">
-                        <input class="form-check-input" type="radio" name="dv" value="0" <?= (!$default->dv) ? 'checked' : '' ?>>
-                        <label class="form-check-label">No</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group ">
-                    <label>Amount</label>
-                    <input type="number" class="form-control form-control-sm" name="amount" value="<?= $default->amount ?>">
-                  </div>
-                </div>
+          <?php if ($default->status_id >= 11) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  NTP CONFORME Details
+                </h3>
               </div>
-              <div class="row">
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="accepted_date_1" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#accepted_date_1" name="accepted_date_1" value="<?= $default->accepted_date_1 ?>" />
-                      <div class="input-group-append" data-target="#accepted_date_1" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="ntp_conforme_conducted_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ntp_conforme_conducted_date" name="ntp_conforme_conducted_date" value="<?= $default->ntp_conducted_date ?>" />
+                        <div class="input-group-append" data-target="#ntp_conforme_conducted_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>Retention Percentage</label>
-                    <select class="form-control form-control-sm" name="retention_percentage" id="retention_percentage">
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                      <option>6</option>
-                      <option>7</option>
-                      <option>8</option>
-                      <option>9</option>
-                      <option>10</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>Retention Amount</label>
-                    <input type="number" class="form-control form-control-sm" name="retention_amount" id="retention_amount" value="<?= $default->retention_amount ?>">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="accepted_date_2" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#accepted_date_2" name="accepted_date_2" value="<?= $default->accepted_date_2 ?>" />
-                      <div class="input-group-append" data-target="#accepted_date_2" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>*Delivery Period</label>
+                      <input type="number" class="form-control form-control-sm" name="ntp_delivery_period" id="ntp_delivery_period" value="<?= $default->delivery_period ?>">
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>LD Amount</label>
-                    <input type="number" class="form-control form-control-sm" name="ld_amount" id="ld_amount" value="<?= $default->ld_amount ?>">
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label>Total</label>
-                    <input type="number" class="form-control form-control-sm" name="total" id="total" value="<?= $default->total ?>">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>*LDD:</label>
+                      <div class="input-group input-group-sm datepicker" id="ldd_date" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ldd_date" name="ldd_date" value="<?= $default->ldd ?>" />
+                        <div class="input-group-append" data-target="#ldd_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
+          <?php } ?>
 
+          <?php if ($default->status_id >= 12) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  Delivery Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+
+                      <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="far fa-clock"></i></span>
+                        </div>
+                        <input type="text" class="form-control float-right daterange" id="delivery_conducted_date" name="delivery_conducted_date" value="<?= $default->delivery_conducted_date ?>">
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <?php } ?>
+
+          <?php if ($default->status_id >= 13) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  Inspected Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="far fa-clock"></i></span>
+                        </div>
+                        <input type="text" class="form-control float-right daterange" id="inspected_conducted_date" name="inspected_conducted_date" value="<?= $default->inspected_conducted_date ?>">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  Accepted Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="far fa-clock"></i></span>
+                        </div>
+                        <input type="text" class="form-control float-right daterange" id="accepted_conducted_date" name="accepted_conducted_date" value="<?= $default->accepted_conducted_date ?>">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>DV/Check:</label>
+                      <div class="form-group" style="display:flex">
+                        <div class="form-check" style="width:15%">
+                          <input class="form-check-input" type="radio" name="dv" value="1" <?= ($default->dv) ? 'checked' : '' ?>>
+                          <label class="form-check-label">Yes</label>
+                        </div>
+                        <div class="form-check" style="width:15%">
+                          <input class="form-check-input" type="radio" name="dv" value="0" <?= (!$default->dv) ? 'checked' : '' ?>>
+                          <label class="form-check-label">No</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group ">
+                      <label>Amount</label>
+                      <input type="number" class="form-control form-control-sm" name="amount" value="<?= $default->amount ?>">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="accepted_date_1" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#accepted_date_1" name="accepted_date_1" value="<?= $default->accepted_date_1 ?>" />
+                        <div class="input-group-append" data-target="#accepted_date_1" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>Retention Percentage</label>
+                      <select class="form-control form-control-sm" name="retention_percentage" id="retention_percentage">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>Retention Amount</label>
+                      <input type="number" class="form-control form-control-sm" name="retention_amount" id="retention_amount" value="<?= $default->retention_amount ?>">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>Date:</label>
+                      <div class="input-group input-group-sm datepicker" id="accepted_date_2" data-target-input="nearest">
+                        <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#accepted_date_2" name="accepted_date_2" value="<?= $default->accepted_date_2 ?>" />
+                        <div class="input-group-append" data-target="#accepted_date_2" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>LD Amount</label>
+                      <input type="number" class="form-control form-control-sm" name="ld_amount" id="ld_amount" value="<?= $default->ld_amount ?>">
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>Total</label>
+                      <input type="number" class="form-control form-control-sm" name="total" id="total" value="<?= $default->total ?>">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          <?php } ?>
           <div class="card card-dark card-outline card-tabs" style="display:<?= ($default->status_id >= 15) ? "block" : "none" ?>">
             <div class="card-header">
               <h3 class="card-title">

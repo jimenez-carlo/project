@@ -122,7 +122,7 @@ class Base
     $this->query("insert into tbl_system_error (message) values('$error')");
   }
 
-  public function upload_file(string $file = null, $path)
+  public function upload_file($file = null, $path, $default = "null")
   {
     if (isset($file) && !empty($file['name'])) {
       $ext = explode(".", $file["name"]);

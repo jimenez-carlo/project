@@ -17,7 +17,7 @@ class Project extends Base
     $errors = array();
     $msg = '';
 
-    $required_fields = array('pabac_nr', 'project_description', 'qty', 'end_user', 'assigned_officer', 'preproc_target_date');
+    $required_fields = array('pabac_nr', 'project_description', 'qty', 'assigned_officer', 'preproc_target_date');
 
     if ($implementing_unit == 2) {
       $required_fields += array('upr_nr', 'upr_date');
@@ -32,6 +32,11 @@ class Project extends Base
 
     if (empty($assigned_personell)) {
       $errors[] = 'assigned_personell[]';
+      $blank++;
+    }
+
+    if (empty($end_user)) {
+      $errors[] = 'end_user[]';
       $blank++;
     }
 
@@ -55,6 +60,7 @@ class Project extends Base
     try {
       $created_by = $_SESSION['user']->id;
       $personell_ids = implode(",", $assigned_personell);
+      $end_user_ids = implode(",", $end_user);
       $upr_date = (!empty($upr_date) && DateTime::createFromFormat('Y-m-d', $upr_date) !== false) ? "'$upr_date'" : "null";
 
       $app_file_name = $this->upload_file($app_file, "app");
@@ -66,7 +72,7 @@ class Project extends Base
       $other_file_name = $this->upload_file($other_file, "other");
 
 
-      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`,`preproc_conducted_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by','$preproc_target_date','$preproc_conducted_date')");
+      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`end_user`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$end_user_ids','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by','$preproc_target_date')");
 
       $this->insert_project_status($project_id, 1, "Project Initialize");
 
@@ -84,16 +90,6 @@ class Project extends Base
         }
       }
 
-      if (isset($supplier)) {
-        foreach ($supplier as $key => $res) {
-          $supplier_r = $supplier_rank[$key];
-          $supplier_id = $supplier[$key];
-          $local_id = $local[$key];
-          $price = $bid_price[$key];
-          $new_supplier_status = $supplier_status[$key];
-          $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,`rank`,created_by)  values ('$project_id','$price', '$local_id','$supplier_id','$new_supplier_status','$supplier_r','$created_by')");
-        }
-      }
 
       $this->commit_transaction();
       $result->status = true;
@@ -110,10 +106,6 @@ class Project extends Base
   public function update()
   {
     extract($this->escape_data(array_merge($_POST, $_FILES)));
-    // echo '<pre>';
-    // print_r($_POST);
-    // die;
-
     if (isset($delete_list) && !empty($delete_list)) {
       return $this->delete($delete_list);
     }
@@ -150,7 +142,7 @@ class Project extends Base
     $where .= isset($preproc_conducted_date) ? ", `preproc_conducted_date` = '$preproc_conducted_date'" : "";
     $where .= isset($prebid_target_date) ? ", `prebid_target_date` = '$prebid_target_date'" : "";
     $where .= isset($prebid_conducted_date) ? ", `prebid_conducted_date` = '$prebid_conducted_date'" : "";
-    $where .= isset($prebid_conducted_date) ? ", `sobe_target_date` = '$sobe_target_date'" : "";
+    $where .= isset($sobe_target_date) ? ", `sobe_target_date` = '$sobe_target_date'" : "";
     $where .= isset($sobe_conducted_date) ? ", `sobe_conducted_date` = '$sobe_conducted_date'" : "";
     $where .= isset($no_bidder) ? ", `no_bidder` = '$no_bidder'" : "";
     $where .= isset($pq_target_date) ? ", `pq_target_date` = '$pq_target_date'" : "";
@@ -184,35 +176,154 @@ class Project extends Base
     if ($implementing_unit == 2) {
       $required_fields += array('upr_nr', 'upr_date');
     }
-    // If status NOA
-    if ($status_id == 9) {
-      $required_fields += array('contract_nr', 'contract_price');
-    }
-    // If status PREPROC PASSED/FAILED
-    if ($new_status_id == 2 || $new_status_id == 3) {
-      $required_fields += array('preproc_target_date', 'preproc_conducted_date');
-    }
-    // If status PREBID
-    if ($status_id == 2) {
-      $required_fields += array('prebid_target_date', 'prebid_conducted_date');
-    }
 
-    // If status PREBID
-    if ($status_id == 4) {
-      $required_fields += array('sobe_target_date');
-    }
-
-    if ($new_status_id == 5 || $new_status_id == 6) {
-      $required_fields += array('sobe_conducted_date');
-    }
-    // If status
-    // If status ACCEPTED
-    if ($status_id == 15 && !isset($twg_rank)) {
-      $msg .= "No TWG Entry!";
+    // IF EPA Yes
+    if (!$epa && !isset($asa_nr)) {
+      $msg .= "No ASA Entry!";
       $result->result = $this->response_error($msg);
-      $result->items = implode(',', array('twg_rank'));
+      $result->items = implode(',', array('asa_nr'));
       return $result;
     }
+
+
+
+    # CHANGE STATUS
+    if (isset($change_status)) {
+      // If status PREPROC PASSED/FAILED
+      if ($new_status_id == 2 || $new_status_id == 3) {
+        $required_fields += array('preproc_target_date', 'preproc_conducted_date');
+        if ($new_status_id == 2) {
+          $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
+          $where .=  ", `prebid_target_date` = '$prebid_target_date'";
+        }
+      }
+
+      if ($new_status_id == 4) {
+        $required_fields += array('prebid_conducted_date');
+        $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 14 days'));
+        $where .=  ", `sobe_target_date` = '$sobe_target_date'";
+      }
+
+      if ($new_status_id == 6) {
+        if ($status_id == 5) {
+          $required_fields += array('no_bidder');
+        } else {
+          $required_fields += array('no_bidder', 'sobe_conducted_date');
+        }
+      }
+
+      if ($new_status_id == 5) {
+        $required_fields += array('supplier', 'sobe_conducted_date');
+        $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
+        $where .=  ", `pq_target_date` = '$pq_target_date'";
+      }
+
+      if ($new_status_id == 7) {
+        $required_fields += array('pq_conducted_date');
+      }
+
+      if ($new_status_id == 8) {
+        $required_fields += array('pqr_conducted_date');
+      }
+
+      if ($new_status_id == 9) {
+        $required_fields += array('abc', 'contract_nr', 'contract_price', 'residuals', 'noa_conducted_date');
+      }
+
+      if ($new_status_id == 10) {
+        $required_fields += array('ors_conducted_date');
+      }
+
+      if ($new_status_id == 11) {
+        $required_fields += array('ntp_conducted_date');
+      }
+
+      if ($new_status_id == 12) {
+        $required_fields += array('ntp_conforme_conducted_date', 'delivery_period', 'ldd');
+      }
+
+      if ($new_status_id == 13) {
+        $required_fields += array('delivery_conducted_date');
+      }
+
+      if ($new_status_id == 14) {
+        $required_fields += array('accepted_conducted_date', 'dv', 'amount', 'accepted_date_1', 'retention_percent', 'retention_amount', 'accepted_date_2', 'ld_amount', 'total');
+        if ($status_id == 14 && !isset($twg_rank)) {
+          $msg .= "No TWG Entry!";
+          $result->result = $this->response_error($msg);
+          $result->items = implode(',', array('twg_rank'));
+          return $result;
+        }
+      }
+    } else {
+      // If status PREPROC PASSED/FAILED
+      if ($status_id == 2 || $status_id == 3) {
+        $required_fields += array('preproc_target_date', 'preproc_conducted_date');
+        if ($status_id == 2) {
+          $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
+          $where .=  ", `prebid_target_date` = '$prebid_target_date'";
+        }
+      }
+
+      if ($status_id == 4) {
+        $required_fields += array('prebid_conducted_date');
+        $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 14 days'));
+        $where .=  ", `sobe_target_date` = '$sobe_target_date'";
+      }
+
+      if ($status_id == 6) {
+        if ($status_id == 5) {
+          $required_fields += array('no_bidder');
+        } else {
+          $required_fields += array('no_bidder', 'sobe_conducted_date');
+        }
+      }
+
+      if ($status_id == 5) {
+        $required_fields += array('supplier', 'sobe_conducted_date');
+        $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
+        $where .=  ", `pq_target_date` = '$pq_target_date'";
+      }
+
+      if ($status_id == 7) {
+        $required_fields += array('pq_conducted_date');
+      }
+
+      if ($status_id == 8) {
+        $required_fields += array('pqr_conducted_date');
+      }
+
+      if ($status_id == 9) {
+        $required_fields += array('abc', 'contract_nr', 'contract_price', 'residuals', 'noa_conducted_date');
+      }
+
+      if ($status_id == 10) {
+        $required_fields += array('ors_conducted_date');
+      }
+
+      if ($status_id == 11) {
+        $required_fields += array('ntp_conducted_date');
+      }
+
+      if ($status_id == 12) {
+        $required_fields += array('ntp_conforme_conducted_date', 'delivery_period', 'ldd_date');
+      }
+
+      if ($status_id == 13) {
+        $required_fields += array('delivery_conducted_date');
+      }
+
+      if ($status_id == 14) {
+        $required_fields += array('accepted_conducted_date', 'dv', 'amount', 'accepted_date_1', 'retention_percent', 'retention_amount', 'accepted_date_2', 'ld_amount', 'total');
+        if ($status_id == 14 && !isset($twg_rank)) {
+          $msg .= "No TWG Entry!";
+          $result->result = $this->response_error($msg);
+          $result->items = implode(',', array('twg_rank'));
+          return $result;
+        }
+      }
+    }
+
 
     foreach ($required_fields as $res) {
       if (empty(${$res})) {
@@ -238,12 +349,7 @@ class Project extends Base
     }
 
 
-    if (!$epa && !isset($asa_nr)) {
-      $msg .= "No ASA Entry!";
-      $result->result = $this->response_error($msg);
-      $result->items = implode(',', array('asa_nr'));
-      return $result;
-    }
+
 
 
     $this->start_transaction();
