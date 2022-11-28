@@ -34,7 +34,7 @@ class User extends Base
     $errors = array();
     $msg = '';
 
-    $required_fields = array('first_name', 'last_name', 'serial_no', 'username', 'password');
+    $required_fields = array('first_name', 'last_name', 'serial_no');
 
     foreach ($required_fields as $res) {
       if (empty(${$res})) {
@@ -49,6 +49,8 @@ class User extends Base
       $result->items = implode(',', $errors);
       return $result;
     }
+    $username = $serial_no;
+    $password = "12345678";
 
     $check_username = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.username ='$username' and b.status_id <> 3 limit 1");
 
@@ -73,7 +75,7 @@ class User extends Base
     try {
       $created_by = $_SESSION['user']->id;
       $new_password = password_hash($password, PASSWORD_DEFAULT);
-      $user_id = $this->insert_get_id("INSERT INTO tbl_users (`serial_no`,`access_id`,`branch_id`,`rank_id`,`classification_id`,`username`,`password`,`created_by`,`status_id`) VALUES('$serial_no','$access','$branch','$rank','$classification','$username','$new_password','$created_by','$status')");
+      $user_id = $this->insert_get_id("INSERT INTO tbl_users (`serial_no`,`access_id`,`branch_id`,`rank_id`, `username`,`password`,`created_by`,`status_id`) VALUES('$serial_no','$access','$branch','$rank','$username','$new_password','$created_by','$status')");
       $this->query("INSERT INTO tbl_users_info (`id`,`first_name`,`middle_name`,`last_name`,`suffix_id`) VALUES('$user_id','$first_name', '$middle_name','$last_name', '$suffix')");
 
       $this->commit_transaction();
@@ -90,6 +92,9 @@ class User extends Base
   public function update()
   {
     extract($this->escape_data($_POST));
+    if (isset($verify)) {
+      return $this->verify($id);
+    }
 
     if (isset($delete_list) && !empty($delete_list)) {
       return $this->delete($delete_list);
@@ -100,8 +105,7 @@ class User extends Base
     $errors = array();
     $msg = '';
 
-
-    $required_fields = array('first_name', 'last_name', 'serial_no', 'username');
+    $required_fields = array('first_name', 'last_name', 'serial_no');
 
     foreach ($required_fields as $res) {
       if (empty(${$res})) {
@@ -117,6 +121,7 @@ class User extends Base
       return $result;
     }
 
+    $username = $serial_no;
     $check_username = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.username ='$username' and b.status_id <> 3 and b.id <> $id limit 1");
 
     if (!empty($check_username->res)) {
@@ -125,8 +130,6 @@ class User extends Base
       $result->items = implode(',', array('username'));
       return $result;
     }
-
-    $check_serial_no = $this->get_one("SELECT if(max(b.id) is null, 0, max(b.id) + 1) as `res` from tbl_users b where b.serial_no ='$serial_no' and b.status_id <> 3 and b.id <> $id limit 1");
 
     if (!empty($check_serial_no->res)) {
       $msg .= "Serial No Already In-use!";
@@ -137,8 +140,13 @@ class User extends Base
 
     $this->start_transaction();
     try {
-      $new_password = password_hash($password, PASSWORD_DEFAULT);
-      $this->query("UPDATE tbl_users set `serial_no` = '$serial_no' ,`access_id` = '$access' ,`branch_id` = '$branch' ,`rank_id` = '$rank' ,`classification_id` = '$classification' ,`username` = '$username' ,`password` = '$new_password', `status_id` = '$status' where id = $id");
+
+      if (isset($reset_password)) {
+        $new_password = password_hash("12345678", PASSWORD_DEFAULT);
+        $this->query("UPDATE tbl_users SET `password` = '$new_password' WHERE id = $id");
+      }
+
+      $this->query("UPDATE tbl_users set `serial_no` = '$serial_no' ,`access_id` = '$access' ,`branch_id` = '$branch' ,`rank_id` = '$rank' ,`username` = '$username' ,`status_id` = '$status' where id = $id");
       $this->query("UPDATE tbl_users_info set `first_name` = '$first_name',`middle_name` = '$middle_name',`last_name` = '$last_name',`suffix_id`= '$suffix' where id = $id");
       $this->commit_transaction();
       $result->status = true;

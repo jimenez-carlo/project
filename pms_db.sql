@@ -853,3 +853,6 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2022-11-28 11:59:31
+
+ALTER TABLE `pms_db`.`tbl_users` 
+DROP COLUMN `classification_id`;

@@ -20,6 +20,8 @@ $routes = array(
   'admin/project/edit' => $admin_route . '/project/edit.php',
   'admin/project/view' => $admin_route . '/project/view.php',
   'test' => 'admin/not_found.php',
+  
+  'admin/maintenance/dropdown' => $admin_route . '/maintenance/dropdown.php',
 
 
 
