@@ -20,8 +20,10 @@ class Project extends Base
     $required_fields = array('pabac_nr', 'project_description', 'qty', 'assigned_officer', 'preproc_target_date');
 
     if ($implementing_unit == 2) {
-      $required_fields += array('upr_nr', 'upr_date');
+      $required_fields[] = 'upr_nr';
+      $required_fields[] = 'upr_date';
     }
+
 
     foreach ($required_fields as $res) {
       if (empty(${$res})) {
@@ -174,7 +176,8 @@ class Project extends Base
 
     // Implementing unit = ASCOM
     if ($implementing_unit == 2) {
-      $required_fields += array('upr_nr', 'upr_date');
+      $required_fields[] = 'upr_nr';
+      $required_fields[] = 'upr_date';
     }
 
     // IF EPA Yes
@@ -190,8 +193,13 @@ class Project extends Base
     # CHANGE STATUS
     if (isset($change_status)) {
       // If status PREPROC PASSED/FAILED
+
+
+      $new_status_id = (int)$new_status_id;
       if ($new_status_id == 2 || $new_status_id == 3) {
-        $required_fields += array('preproc_target_date', 'preproc_conducted_date');
+        $required_fields[] = 'preproc_target_date';
+        $required_fields[] = 'preproc_conducted_date';
+
         if ($new_status_id == 2) {
           $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
           $where .=  ", `prebid_target_date` = '$prebid_target_date'";
@@ -199,55 +207,73 @@ class Project extends Base
       }
 
       if ($new_status_id == 4) {
-        $required_fields += array('prebid_conducted_date');
+        $required_fields[] = 'prebid_conducted_date';
         $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 14 days'));
         $where .=  ", `sobe_target_date` = '$sobe_target_date'";
       }
 
+
       if ($new_status_id == 6) {
         if ($status_id == 5) {
-          $required_fields += array('no_bidder');
+          $required_fields[] = 'no_bidder';
         } else {
-          $required_fields += array('no_bidder', 'sobe_conducted_date');
+          $required_fields[] = 'no_bidder';
+          $required_fields[] = 'sobe_conducted_date';
         }
       }
 
       if ($new_status_id == 5) {
-        $required_fields += array('supplier', 'sobe_conducted_date');
+        $required_fields[] = 'supplier';
+        $required_fields[] = 'sobe_conducted_date';
         $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
         $where .=  ", `pq_target_date` = '$pq_target_date'";
       }
 
       if ($new_status_id == 7) {
-        $required_fields += array('pq_conducted_date');
+        $required_fields[] = 'pq_conducted_date';
       }
 
       if ($new_status_id == 8) {
-        $required_fields += array('pqr_conducted_date');
+        $required_fields[] = 'pqr_conducted_date';
       }
 
       if ($new_status_id == 9) {
         $required_fields += array('abc', 'contract_nr', 'contract_price', 'residuals', 'noa_conducted_date');
+        $required_fields[] = 'abc';
+        $required_fields[] = 'contract_nr';
+        $required_fields[] = 'contract_price';
+        $required_fields[] = 'residuals';
+        $required_fields[] = 'noa_conducted_date';
       }
 
       if ($new_status_id == 10) {
-        $required_fields += array('ors_conducted_date');
+        $required_fields[] = 'ors_conducted_date';
       }
 
       if ($new_status_id == 11) {
-        $required_fields += array('ntp_conducted_date');
+        $required_fields[] = 'ntp_conducted_date';
       }
 
       if ($new_status_id == 12) {
-        $required_fields += array('ntp_conforme_conducted_date', 'delivery_period', 'ldd');
+        $required_fields[] = 'ntp_conforme_conducted_date';
+        $required_fields[] = 'delivery_period';
+        $required_fields[] = 'ldd';
       }
 
       if ($new_status_id == 13) {
-        $required_fields += array('delivery_conducted_date');
+        $required_fields[] = 'delivery_conducted_date';
       }
 
       if ($new_status_id == 14) {
-        $required_fields += array('accepted_conducted_date', 'dv', 'amount', 'accepted_date_1', 'retention_percent', 'retention_amount', 'accepted_date_2', 'ld_amount', 'total');
+        $required_fields[] = 'accepted_conducted_date';
+        $required_fields[] = 'dv';
+        $required_fields[] = 'amount';
+        $required_fields[] = 'accepted_date_1';
+        $required_fields[] = 'retention_percent';
+        $required_fields[] = 'retention_amount';
+        $required_fields[] = 'accepted_date_2';
+        $required_fields[] = 'ld_amount';
+        $required_fields[] = 'total';
         if ($status_id == 14 && !isset($twg_rank)) {
           $msg .= "No TWG Entry!";
           $result->result = $this->response_error($msg);
@@ -257,8 +283,11 @@ class Project extends Base
       }
     } else {
       // If status PREPROC PASSED/FAILED
+      $status_id = (int)$status_id;
       if ($status_id == 2 || $status_id == 3) {
-        $required_fields += array('preproc_target_date', 'preproc_conducted_date');
+        $required_fields[] = 'preproc_target_date';
+        $required_fields[] = 'preproc_conducted_date';
+
         if ($status_id == 2) {
           $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
           $where .=  ", `prebid_target_date` = '$prebid_target_date'";
@@ -266,55 +295,73 @@ class Project extends Base
       }
 
       if ($status_id == 4) {
-        $required_fields += array('prebid_conducted_date');
+        $required_fields[] = 'prebid_conducted_date';
         $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 14 days'));
         $where .=  ", `sobe_target_date` = '$sobe_target_date'";
       }
 
+
       if ($status_id == 6) {
         if ($status_id == 5) {
-          $required_fields += array('no_bidder');
+          $required_fields[] = 'no_bidder';
         } else {
-          $required_fields += array('no_bidder', 'sobe_conducted_date');
+          $required_fields[] = 'no_bidder';
+          $required_fields[] = 'sobe_conducted_date';
         }
       }
 
       if ($status_id == 5) {
-        $required_fields += array('supplier', 'sobe_conducted_date');
+        $required_fields[] = 'supplier';
+        $required_fields[] = 'sobe_conducted_date';
         $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
         $where .=  ", `pq_target_date` = '$pq_target_date'";
       }
 
       if ($status_id == 7) {
-        $required_fields += array('pq_conducted_date');
+        $required_fields[] = 'pq_conducted_date';
       }
 
       if ($status_id == 8) {
-        $required_fields += array('pqr_conducted_date');
+        $required_fields[] = 'pqr_conducted_date';
       }
 
       if ($status_id == 9) {
         $required_fields += array('abc', 'contract_nr', 'contract_price', 'residuals', 'noa_conducted_date');
+        $required_fields[] = 'abc';
+        $required_fields[] = 'contract_nr';
+        $required_fields[] = 'contract_price';
+        $required_fields[] = 'residuals';
+        $required_fields[] = 'noa_conducted_date';
       }
 
       if ($status_id == 10) {
-        $required_fields += array('ors_conducted_date');
+        $required_fields[] = 'ors_conducted_date';
       }
 
       if ($status_id == 11) {
-        $required_fields += array('ntp_conducted_date');
+        $required_fields[] = 'ntp_conducted_date';
       }
 
       if ($status_id == 12) {
-        $required_fields += array('ntp_conforme_conducted_date', 'delivery_period', 'ldd_date');
+        $required_fields[] = 'ntp_conforme_conducted_date';
+        $required_fields[] = 'delivery_period';
+        $required_fields[] = 'ldd';
       }
 
       if ($status_id == 13) {
-        $required_fields += array('delivery_conducted_date');
+        $required_fields[] = 'delivery_conducted_date';
       }
 
       if ($status_id == 14) {
-        $required_fields += array('accepted_conducted_date', 'dv', 'amount', 'accepted_date_1', 'retention_percent', 'retention_amount', 'accepted_date_2', 'ld_amount', 'total');
+        $required_fields[] = 'accepted_conducted_date';
+        $required_fields[] = 'dv';
+        $required_fields[] = 'amount';
+        $required_fields[] = 'accepted_date_1';
+        $required_fields[] = 'retention_percent';
+        $required_fields[] = 'retention_amount';
+        $required_fields[] = 'accepted_date_2';
+        $required_fields[] = 'ld_amount';
+        $required_fields[] = 'total';
         if ($status_id == 14 && !isset($twg_rank)) {
           $msg .= "No TWG Entry!";
           $result->result = $this->response_error($msg);
