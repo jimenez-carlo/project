@@ -79,16 +79,6 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*Rank Classification</label>
-                    <select class="form-control form-control-sm" name="classification" id="classification">
-                      <?php foreach ($data['default']['classification'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
-                      <?php } ?>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
                     <label>*Rank</label>
                     <select class="form-control form-control-sm" name="rank" id="rank">
                       <?php foreach ($data['default']['rank'] as $res) { ?>
@@ -97,8 +87,18 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>*Rank Classification</label>
+                    <select class="form-control form-control-sm" name="classification" id="classification" disabled>
+                      <option value=""></option>
+                      <?php foreach ($data['default']['classification'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
               </div>
-
 
               <div class="row">
                 <div class="col-sm-3">
@@ -121,6 +121,7 @@
                     </select>
                   </div>
                 </div>
+                <!--
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Username</label>
@@ -134,6 +135,7 @@
                   </div>
                 </div>
               </div>
+              k-->
 
             </div>
             <div class="card-footer">

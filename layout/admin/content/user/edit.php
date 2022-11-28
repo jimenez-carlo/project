@@ -81,20 +81,21 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*Rank Classification</label>
-                    <select class="form-control form-control-sm" name="classification" id="classification">
-                      <?php foreach ($data['default']['classification'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>" <?= $default->classification_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
+                    <label>*Rank</label>
+                    <select class="form-control form-control-sm" name="rank" id="rank">
+                      <?php foreach ($data['default']['rank'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>" style="color:<?= $res['color'] ?>" <?= $default->rank_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
                       <?php } ?>
                     </select>
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*Rank</label>
-                    <select class="form-control form-control-sm" name="rank" id="rank">
-                      <?php foreach ($data['default']['rank'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>" style="color:<?= $res['color'] ?>" <?= $default->rank_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
+                    <label>*Rank Classification</label>
+                    <select class="form-control form-control-sm" name="classification" id="classification" disabled>
+                      <option value=""></option>
+                      <?php foreach ($data['default']['classification'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>" <?= $default->classification_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
                       <?php } ?>
                     </select>
                   </div>
@@ -124,11 +125,12 @@
                   </div>
                 </div>
                 <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>*Username</label>
-                    <input type="text" class="form-control form-control-sm" placeholder="Username" name="username" value="<?= $default->username ?>">
+                  <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" name="reset_password">
+                    <label>Reset Password</label>
                   </div>
                 </div>
+                <!--
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Password</label>
@@ -136,12 +138,13 @@
                   </div>
                 </div>
               </div>
+                -->
 
             </div>
             <div class="card-footer">
               <button type="submit" class="btn btn-sm btn-dark float-right" name="edit" confirmation="Save New Changes?">Save Changes</button>
               <?php if (!$default->verified_flag) { ?>
-                <button type="submit" class="btn btn-sm btn-dark float-right mg-r" name="verify" confirmation="Verify This User?">Verify</button>
+                <button type="submit" class="btn btn-sm btn-dark float-right mg-r" name="verify" value="1" confirmation="Verify This User?">Verify</button>
               <?php } else { ?>
                 <button type="button" class="btn btn-sm btn-dark float-right mg-r" disabled>Verified</button>
               <?php } ?>

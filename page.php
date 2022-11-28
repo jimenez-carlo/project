@@ -28,7 +28,12 @@ if (in_array($page, $pages)) {
       concat(v.last_name, ', ', v.first_name,' ', LEFT(v.middle_name, 1), '[#',v.id,']') as verifier_full_name,
       concat(c.last_name, ', ', c.first_name,' ', LEFT(c.middle_name, 1), '[#',c.id,']') as creator_full_name,
       u.serial_no,u.id,a.name as `access`,b.name as `branch`,s.name as `status`,r.name as `rank`,cl.name as `classification`,u.created_date,u.updated_date,u.verified_flag
-      from tbl_users u inner join tbl_users_info ui on ui.id = u.id inner join tbl_access a on a.id = u.access_id inner join tbl_branch b on b.id = u.branch_id left join tbl_rank r on r.id = u.rank_id left join tbl_classification cl on cl.id = u.classification_id inner join tbl_users_status s on s.id = u.status_id
+      from tbl_users u inner join tbl_users_info ui on ui.id = u.id 
+      inner join tbl_access a on a.id = u.access_id 
+      inner join tbl_branch b on b.id = u.branch_id 
+      left join tbl_rank r on r.id = u.rank_id 
+      inner join tbl_classification cl on cl.id = r.classification_id 
+      inner join tbl_users_status s on s.id = u.status_id
       left join tbl_users_info v on v.id = u.approved_by
       left join tbl_users_info c on c.id = u.created_by where u.deleted_flag = 0");
       break;
@@ -85,6 +90,10 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       $tmp = $members->get_resident($id);
       $data['default_data'] = $members->set_default_data();
       $data['data'] = $tmp;
+      break;
+
+    case 'admin/maintenance/dropdown':
+      $data['dropdowns'] = $base->get_list("SELECT * from tbl_dropdown");
       break;
   }
   echo get_contents(page_url($page), $data);
