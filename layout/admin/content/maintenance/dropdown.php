@@ -26,19 +26,17 @@
 
           </div>
           <!-- /.card-header -->
-          <form method="post" name="dropdown_create" refresh="admin/maintenance/dropdown">
+          <form method="post" name="dropdown_create" refresh="admin/maintenance/dropdown&table=<?= urlencode(strtoupper($data['table_title'])) ?>">
             <div class="card-body">
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Dropdown List</label>
-                    <select class="form-control form-control-sm" name="dropdown_id">
-                      <option value="PABAC">PABAC</option>
-                      <!--
-                      <?php foreach ($data['dropdowns'] as $dropdown) { ?>
-                        <option value="<?= $dropdown['id'] ?>"><?= $dropdown['name'] ?></option>
-                      <?php } ?>
-                      -->
+                    <select id="dp_name" class="form-control form-control-sm" name="dropdown_name">
+                      <option value="COMMODITY" <?= $data['is_commodity_selected'] ? 'selected' : '' ?>>COMMODITY</option>
+                      <option value="END USER" <?= $data['is_end_user_selected'] ? 'selected' : '' ?>>END USER</option>
+                      <option value="PABAC" <?= $data['is_pabac_selected'] ? 'selected' : '' ?>>PABAC</option>
+                      <option value="PROGRAM MANAGER" <?= $data['is_program_manager_selected'] ? 'selected' : '' ?>>PROGRAM MANAGER</option>
                     </select>
                   </div>
                 </div>
@@ -53,7 +51,7 @@
 
             </div>
             <div class="card-footer">
-              <button type="submit" class="btn btn-sm btn-dark float-right" name="create" confirmation="You Are About To Add PABAC">Add</button>
+              <button type="submit" class="btn btn-sm btn-dark float-right" name="create" confirmation="You Are About To Add <?= $data['table_title'] ?>">Add</button>
             </div>
           </form>
           <!-- /.card-body -->
@@ -71,6 +69,9 @@
         </div>
 
         <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><?= $data['table_title'] ?></h3>
+          </div>
           <div class="card-body">
             <table id="example1" class="table table-bordered table-striped">
               <thead>
@@ -103,3 +104,24 @@
     <!-- /.row -->
   </div>
 </div>
+
+<script>
+  $(function() {
+    $("#example1").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    $("#dp_name").on("change", function() {
+      $("#content").load(base_url + 'page.php?page=admin/maintenance/dropdown&table='+encodeURIComponent(this.value)+'&id=1',
+         (response, status, xhr) => {
+          if (status == "error") {
+            $('#result').html(MessageServerError);  
+          }
+        }
+      );
+    })
+
+  });
+</script>

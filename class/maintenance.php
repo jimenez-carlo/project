@@ -16,7 +16,7 @@ class Maintenance extends Base
     $errors = array();
     $msg = '';
 
-    $required_fields = array('dropdown_id', 'dropdown_value');
+    $required_fields = array('dropdown_name', 'dropdown_value');
 
     foreach ($required_fields as $res) {
       if (empty(${$res})) {
@@ -27,11 +27,26 @@ class Maintenance extends Base
 
     $this->start_transaction();
     try {
-      $this->query("INSERT INTO tbl_pabac (`name`,`created_date`,`updated_date`,`deleted_flag`) VALUES('$dropdown_value', NOW(), NOW(), 0)");
+      switch ($dropdown_name) {
+        case 'COMMODITY':
+          $table = 'tbl_comodity';
+          break;
+        case 'END USER':
+          $table = 'tbl_end_user';
+          break;
+        case 'PABAC':
+          $table = 'tbl_pabac';
+          break;
+        case 'PROGRAM MANAGER':
+          $table = 'tbl_program_manager';
+          break;
+      }
+
+      $this->query("INSERT INTO $table (`name`,`created_date`,`updated_date`,`deleted_flag`) VALUES('$dropdown_value', NOW(), NOW(), 0)");
 
       $this->commit_transaction();
       $result->status = true;
-      $result->result = $this->response_swal("PABAC Created Successfully!", 'Successfull!');
+      $result->result = $this->response_swal("$dropdown_name Created Successfully!", 'Successfull!');
       return $result;
     } catch (mysqli_sql_exception $exception) {
       $this->roll_back();
