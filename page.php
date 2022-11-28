@@ -94,6 +94,7 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
 
     case 'admin/maintenance/dropdown':
       $data['dropdowns'] = $base->get_list("SELECT * from tbl_dropdown");
+      $data['list'] = $base->get_list("SELECT * FROM tbl_pabac WHERE deleted_flag = 0");
       break;
   }
   echo get_contents(page_url($page), $data);
