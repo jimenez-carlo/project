@@ -89,10 +89,10 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*Rank Classification</label>
-                    <select class="form-control form-control-sm" name="classification" id="classification" disabled>
-                      <option value=""></option>
-                      <?php foreach ($data['default']['classification'] as $res) { ?>
+                    <label>*Role</label>
+                    <select class="form-control form-control-sm" name="access" id="access">
+                      <option disabled selected>--Select--</option>
+                      <?php foreach ($data['default']['access'] as $res) { ?>
                         <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
                       <?php } ?>
                     </select>
@@ -101,16 +101,6 @@
               </div>
 
               <div class="row">
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>*Role</label>
-                    <select class="form-control form-control-sm" name="access" id="access">
-                      <?php foreach ($data['default']['access'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
-                      <?php } ?>
-                    </select>
-                  </div>
-                </div>
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Status</label>
