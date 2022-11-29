@@ -23,7 +23,7 @@ $routes = array(
   'test' => 'admin/not_found.php',
 
   'admin/maintenance/dropdown' => $admin_route . '/maintenance/dropdown.php',
-
+  'admin/maintenance/dropdown/edit' => $admin_route . '/maintenance/dropdown_edit.php',
 
 
   #Landing Page

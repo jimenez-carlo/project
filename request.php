@@ -44,6 +44,12 @@ switch ($form) {
   case 'dropdown_create':
     $result = $maintenance->upsert_dropdown();
     break;
+  case 'dropdown_update':
+    $result = $maintenance->update();
+    break;
+  case 'dropdown_delete':
+    $result = $maintenance->delete();
+    break;
 }
 echo json_encode($result);
 die;
