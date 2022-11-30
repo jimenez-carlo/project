@@ -55,7 +55,7 @@
                     <td class="flex">
                       <?php if (in_array($_SESSION['user']->access_id, array(1, 3))) { ?>
                         <?php if ($_SESSION['user']->access_id == 1) { ?>
-                          <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
+                          <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit_admin" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
                         <?php } else { ?>
                           <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
                         <?php } ?>
@@ -105,27 +105,6 @@
             'data-toggle': "modal",
             'data-target': "#chronology_modal",
           }
-        },
-        {
-          extend: 'copy',
-          text: '<i class="fa fa-export"></i> Copy</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'csv',
-          text: '<i class="fa fa-export"></i> CSV</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'excel',
-          text: '<i class="fa fa-export"></i> Excel</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'pdf',
-          text: '<i class="fa fa-export"></i> PDF</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'print',
-          text: '<i class="fa fa-export"></i> Print</button>',
-          className: 'btn btn-sm btn-dark'
         }
       ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');

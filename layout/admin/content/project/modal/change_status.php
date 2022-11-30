@@ -29,7 +29,7 @@
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-sm btn-dark" onclick="document.getElementById('change_status').click()" data-dismiss="modal">Change Status</button>
+              <button type="button" class="btn btn-sm btn-dark" onclick="document.getElementById('change_status').click()" data-dismiss="modal" <?= ($default->status_id == 15) ? 'disabled' : '' ?>>Change Status</button>
             </div>
           </div>
           <!-- /.modal-content -->
