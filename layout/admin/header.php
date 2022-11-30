@@ -127,7 +127,7 @@
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link btn-view" name="admin/reports">
+              <a href="#" class="nav-link btn-view" name="admin/report">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
                   Reports

@@ -833,6 +833,21 @@ CREATE TABLE `tbl_verify_status` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+ALTER TABLE `pms_db`.`tbl_mode_of_proc` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_comodity` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_end_user` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_pabac` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_program_manager` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
 --
 -- Dumping data for table `tbl_verify_status`
 --

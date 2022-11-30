@@ -8,7 +8,6 @@ $routes = array(
   'admin/home' => 'layout/admin/dashboard.php',
   'admin/my_projects' => $admin_route . '/profile.php',
   'admin/project_updates' => $admin_route . '/project_updates.php',
-  'admin/reports' => $admin_route . '/project_updates.php',
 
   'admin/user/list' => $admin_route . '/user/list.php',
   'admin/user/create' => $admin_route . '/user/create.php',
@@ -23,8 +22,9 @@ $routes = array(
   'test' => 'admin/not_found.php',
 
   'admin/maintenance/dropdown' => $admin_route . '/maintenance/dropdown.php',
-
-
+  'admin/maintenance/dropdown/edit' => $admin_route . '/maintenance/dropdown_edit.php',
+  
+  'admin/report' => $admin_route . '/report/page.php',
 
   #Landing Page
   'landing_page/about_us' => $landing_route . '/about_us.php',

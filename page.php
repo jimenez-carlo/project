@@ -98,8 +98,77 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       break;
 
     case 'admin/maintenance/dropdown':
-      //$data['dropdowns'] = $base->get_list("SELECT * from tbl_dropdown");
-      $data['list'] = $base->get_list("SELECT * FROM tbl_pabac WHERE deleted_flag = 0");
+      $table = '';
+      $table_title = '';
+      $data['is_commodity_selected'] = false;
+      $data['is_end_user_selected'] = false;
+      $data['is_mode_of_proc_selected'] = false;
+      $data['is_pabac_selected'] = false;
+      $data['is_program_manager_selected'] = false;
+
+      if (!isset($_GET['table'])) {
+        $data['is_commodity_selected'] = true;
+        $table = 'tbl_comodity';
+        $table_title = 'Commodity';
+      } else {
+        switch ($_GET['table']) {
+          case 'COMMODITY':
+            $data['is_commodity_selected'] = true;
+            $table = 'tbl_comodity';
+            $table_title = 'Commodity';
+            break;
+          case 'END USER':
+            $data['is_end_user_selected'] = true;
+            $table = 'tbl_end_user';
+            $table_title = 'End User';
+            break;
+          case 'MODE OF PROC':
+            $data['is_mode_of_proc_selected'] = true;
+            $table = 'tbl_mode_of_proc';
+            $table_title = 'Mode of Proc';
+            break;
+          case 'PABAC':
+            $data['is_pabac_selected'] = true;
+            $table = 'tbl_pabac';
+            $table_title = 'PABAC';
+            break;
+          case 'PROGRAM MANAGER':
+            $data['is_program_manager_selected'] = true;
+            $table = 'tbl_program_manager';
+            $table_title = 'Program Manager';
+            break;
+        }
+      }
+      
+      $data['table_title'] = $table_title;
+      $data['list'] = $base->get_list("SELECT * FROM $table WHERE deleted_flag = 0");
+      break;
+
+    case "admin/maintenance/dropdown/edit":
+      switch ($_GET['table']) {
+        case 'COMMODITY':
+          $table = 'tbl_comodity';
+          $table_title = 'Commodity';
+          break;
+        case 'END USER':
+          $table = 'tbl_end_user';
+          $table_title = 'End User';
+          break;
+        case 'MODE OF PROC':
+          $table = 'tbl_mode_of_proc';
+          $table_title = 'Mode of Proc';
+          break;
+        case 'PABAC':
+          $table = 'tbl_pabac';
+          $table_title = 'PABAC';
+          break;
+        case 'PROGRAM MANAGER':
+          $table = 'tbl_program_manager';
+          $table_title = 'Program Manager';
+          break;
+      }
+      $data['table_title'] = $table_title;
+      $data['default'] = $base->get_one("SELECT id, name FROM $table WHERE id = $id AND deleted_flag = 0");
       break;
   }
   echo get_contents(page_url($page), $data);
