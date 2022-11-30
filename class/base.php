@@ -78,14 +78,17 @@ class Base
       $message
     );
   }
-  public function response_swal($message = "Action Successfull!", $title = "Action Successfull!")
+  public function response_swal($message = "Action Successfull!", $title = "Action Successfull!", $icon = "success")
   {
     return sprintf(
-      '<script> Swal.fire({title:"%s",text:"%s",icon:"success",showConfirmButton: false,timer: 1500})</script>',
+      '<script> Swal.fire({title:"%s",text:"%s",icon:"%s",showConfirmButton: false,timer: 1500})</script>',
       $title,
-      $message
+      $message,
+      $icon
     );
   }
+
+
 
   public function response_obj()
   {

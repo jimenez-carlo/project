@@ -44,14 +44,14 @@ class Project extends Base
 
     if (!empty($errors)) {
       $msg .= "Please Fill Blank Fields!";
-      $result->result = $this->response_error($msg);
+      $result->result = $this->response_swal($msg, "System Error", "error");
       $result->items = implode(',', $errors);
       return $result;
     }
 
     if (!$epa && !isset($asa_nr)) {
       $msg .= "No ASA Entry!";
-      $result->result = $this->response_error($msg);
+      $result->result = $this->response_swal($msg, "System Error", "error");
       $result->items = implode(',', array('asa_nr'));
       return $result;
     }
@@ -118,7 +118,7 @@ class Project extends Base
     } catch (mysqli_sql_exception $exception) {
 
       $this->roll_back();
-      $result->result = $this->response_error();
+      $result->result = $this->response_swal();
       return $result;
     }
   }
@@ -202,7 +202,7 @@ class Project extends Base
     // IF EPA Yes
     if (!$epa && !isset($asa_nr)) {
       $msg .= "No ASA Entry!";
-      $result->result = $this->response_error($msg);
+      $result->result = $this->response_swal($msg, "System Error", "error");
       $result->items = implode(',', array('asa_nr'));
       return $result;
     }
@@ -243,12 +243,6 @@ class Project extends Base
 
       if ($new_status_id == 5) {
 
-        if (!isset($supplier)) {
-          $msg .= "No Supplier Entry!";
-          $result->result = $this->response_error($msg);
-          $result->items = implode(',', array('supplier'));
-          return $result;
-        }
 
         $required_fields[] = 'sobe_conducted_date';
         $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
@@ -261,6 +255,12 @@ class Project extends Base
 
       if ($new_status_id == 8) {
         $required_fields[] = 'pqr_conducted_date';
+        if (!isset($supplier)) {
+          $msg .= "No Supplier Entry!";
+          $result->result = $this->response_swal($msg, "System Error", "error");
+          $result->items = implode(',', array('supplier'));
+          return $result;
+        }
       }
 
       if ($new_status_id == 9) {
@@ -302,7 +302,7 @@ class Project extends Base
         // $required_fields[] = 'total';
         // if ($status_id == 14 && !isset($twg_rank)) {
         //   $msg .= "No TWG Entry!";
-        //   $result->result = $this->response_error($msg);
+        //   $result->result = $this->response_swal($msg);
         //   $result->items = implode(',', array('twg_rank'));
         //   return $result;
         // }
@@ -349,6 +349,12 @@ class Project extends Base
 
       if ($status_id == 8) {
         $required_fields[] = 'pqr_conducted_date';
+        if (!isset($supplier)) {
+          $msg .= "No Supplier Entry!";
+          $result->result = $this->response_swal($msg, "System Error", "error");
+          $result->items = implode(',', array('supplier'));
+          return $result;
+        }
       }
 
       if ($status_id == 9) {
@@ -390,7 +396,7 @@ class Project extends Base
         // $required_fields[] = 'total';
         // if ($status_id == 14 && !isset($twg_rank)) {
         //   $msg .= "No TWG Entry!";
-        //   $result->result = $this->response_error($msg);
+        //   $result->result = $this->response_swal($msg);
         //   $result->items = implode(',', array('twg_rank'));
         //   return $result;
         // }
@@ -416,7 +422,7 @@ class Project extends Base
 
     if (!empty($errors)) {
       $msg .= "Please Fill Blank Fields!";
-      $result->result = $this->response_error($msg);
+      $result->result = $this->response_swal($msg);
       $result->items = implode(',', $errors);
       return $result;
     }
@@ -520,7 +526,7 @@ class Project extends Base
     } catch (mysqli_sql_exception $exception) {
       print_r($exception);
       $this->roll_back();
-      $result->result = $this->response_error();
+      $result->result = $this->response_swal();
       return $result;
     }
   }
@@ -539,7 +545,7 @@ class Project extends Base
     } catch (mysqli_sql_exception $exception) {
       $this->roll_back();
 
-      $result->result = $this->response_error();
+      $result->result = $this->response_swal();
       return $result;
     }
   }

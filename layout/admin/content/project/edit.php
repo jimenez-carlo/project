@@ -227,7 +227,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Contract Price</label>
-                    <input type="number" class="form-control form-control-sm currency" name="contract_price" id="contract_price" value="<?= number_format($default->contract_price, 2) ?>">
+                    <input type="text" class="form-control form-control-sm currency" name="contract_price" id="contract_price" value="<?= number_format($default->contract_price, 2) ?>">
                   </div>
                 </div>
                 <div class="col-sm-3">
@@ -391,62 +391,7 @@
             </div>
 
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Supplier Details
-                </h3>
-                <button type="button" class="btn btn-sm btn-dark float-right" id="add_supplier">Add Supplier Entry</button>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <table id="example1" class="table table-bordered table-striped table-sm">
-                      <thead>
-                        <tr>
-                          <th>Rank</th>
-                          <th>SUPPLIER</th>
-                          <th>BID Price</th>
-                          <th>LC/Local</th>
-                          <th>Status</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody id="wrapper">
-                        <?php foreach ($data['suppliers'] as $res) { ?>
-                          <tr>
-                            <td>
-                              <input type="text" class="form-control form-control-sm" name="supplier_rank[]" value="<?= $res['rank'] ?>">
-                            </td>
-                            <td>
-                              <input type="text" class="form-control form-control-sm" name="supplier[]" value="<?= $res['supplier'] ?>">
-                            </td>
-                            <td><input type="text" class="form-control form-control-sm currency" name="bid_price[]" value="<?= number_format($res['price'], 2) ?>"></td>
-                            <td>
-                              <select name="local[]" class="form-control form-control-sm">
-                                <?php foreach ($data['default']['local'] as $subres) { ?>
-                                  <option value="<?= $subres['id']; ?>" <?= $res['local_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                                <?php } ?>
-                              </select>
-                            </td>
-                            <td>
-                              <select name="supplier_status[]" class="form-control form-control-sm">
-                                <?php foreach ($data['default']['supplier_status'] as $subres) { ?>
-                                  <option value="<?= $subres['id']; ?>" <?= $res['status_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                                <?php } ?>
-                              </select>
-                            </td>
-                            <td>
-                              <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
-                            </td>
-                          </tr>
-                        <?php } ?>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           <?php } ?>
 
           <?php if ($default->status_id >= 5) { ?>
@@ -456,14 +401,15 @@
                 <h3 class="card-title">
                   PQ Details
                 </h3>
+                <button type="button" class="btn btn-sm btn-dark float-right" id="add_supplier">Add Supplier Entry</button>
               </div>
               <div class="card-body">
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>*Target Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="pq_target_date" id="pq_target_date" value="<?= date("d-m-Y", strtotime($default->pq_target_date)) ?>">
-                      <input type="hidden" name="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->pq_target_date)) ?>">
+                      <input type="text" class="form-control form-control-sm datepicker" name="pq_target_date" id="pq_target_date" value="<?= date("d-m-Y", strtotime($default->pq_target_date)) ?>" disabled>
+                      <input type="hidden" name="pq_target_date" value="<?= date("d-m-Y", strtotime($default->pq_target_date)) ?>">
                       <script>
                         $(document).on("change", '#pq_conducted_date',
                           function(e) {
@@ -486,6 +432,49 @@
                     </div>
                   </div>
                 </div>
+
+                <table id="example1" class="table table-bordered table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>SUPPLIER</th>
+                      <th>BID Price</th>
+                      <th>LC/Local</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wrapper">
+                    <?php foreach ($data['suppliers'] as $res) { ?>
+                      <tr>
+                        <td>
+                          <input type="text" class="form-control form-control-sm" name="supplier_rank[]" value="<?= $res['rank'] ?>">
+                        </td>
+                        <td>
+                          <input type="text" class="form-control form-control-sm" name="supplier[]" value="<?= $res['supplier'] ?>">
+                        </td>
+                        <td><input type="text" class="form-control form-control-sm currency" name="bid_price[]" value="<?= number_format($res['price'], 2) ?>"></td>
+                        <td>
+                          <select name="local[]" class="form-control form-control-sm">
+                            <?php foreach ($data['default']['local'] as $subres) { ?>
+                              <option value="<?= $subres['id']; ?>" <?= $res['local_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        <td>
+                          <select name="supplier_status[]" class="form-control form-control-sm">
+                            <?php foreach ($data['default']['supplier_status'] as $subres) { ?>
+                              <option value="<?= $subres['id']; ?>" <?= $res['status_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
+                        </td>
+                      </tr>
+                    <?php } ?>
+                  </tbody>
+                </table>
               </div>
             </div>
           <?php } ?>
@@ -708,23 +697,33 @@
                     <div class="form-group">
                       <label>Retention Percentage</label>
                       <select class="form-control form-control-sm" name="retention_percentage" id="retention_percentage">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>6</option>
-                        <option>7</option>
-                        <option>8</option>
-                        <option>9</option>
-                        <option>10</option>
+                        <?php
+                        for ($i = 1; $i < 11; $i++) {  ?>
+                          <option <?= $default->retention_percent == $i ? 'selected' : '' ?>><?= $i ?></option>
+                        <?php } ?>
+
                       </select>
                     </div>
                   </div>
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>Retention Amount</label>
-                      <input type="number" class="form-control form-control-sm" name="retention_amount" id="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
+                      <input type="number" class="form-control form-control-sm" id="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>" disabled>
+                      <input type="hidden" name="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
+
+                      <script>
+                        $(document).on("change", '#retention_percentage,#contract_price',
+                          function(e) {
+                            $("#retention_amount").val()
+
+                            let total = (($("#retention_percentage").val() / 100) * parseFloat($("#contract_price").val().replace(",", ""))).toFixed(2);
+
+                            const numFor = Intl.NumberFormat('en-US');
+                            const new_for = numFor.format(total);
+                            $("#retention_amount").val(total).maskMoney();
+                            $("[name='retention_amount']").val(total);
+                          })
+                      </script>
                     </div>
                   </div>
                 </div>
@@ -739,13 +738,13 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>LD Amount</label>
-                      <input type="number" class="form-control form-control-sm" name="ld_amount" id="ld_amount" value="<?= number_format($default->ld_amount, 2)  ?>">
+                      <input type="number" class="form-control form-control-sm currency" name="ld_amount" id="ld_amount" value="<?= number_format($default->ld_amount, 2)  ?>">
                     </div>
                   </div>
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>Total</label>
-                      <input type="number" class="form-control form-control-sm" name="total" id="total" value="<?= number_format($default->total, 2)  ?>">
+                      <input type="number" class="form-control form-control-sm currency" name="total" id="total" value="<?= number_format($default->total, 2)  ?>">
                     </div>
                   </div>
                 </div>
@@ -1036,16 +1035,7 @@
     }
   });
 
-  $(document).on("change", "#contract_price,#abc", function(e) {
-    if (!$("#abc").val() || !$("#contract_price").val()) {
-      $("#residuals_display").val(0);
-      $("#residuals").val(0);
-    } else {
-      let total = parseInt($("#abc").val()) - parseInt($("#contract_price").val());
-      $("#residuals_display").val(total);
-      $("#residuals").val(total);
-    }
-  })
+
   $(document).on("change", "input[name='epa']:checked", function(e) {
     console.log($(this).val());
     if ($('input[name="epa"]:checked').val() == 1) {
