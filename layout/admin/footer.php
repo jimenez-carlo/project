@@ -58,6 +58,10 @@
       <script src="plugins/sparklines/sparkline.js"></script>
       <!-- <script src="plugins/jqvmap/jquery.vmap.min.js"></script>
       <script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script> -->
+      <!-- InputMask -->
+      <script src="plugins/moment/moment.min.js"></script>
+      <script src="plugins/inputmask/jquery.inputmask.min.js"></script>
+
       <script src="plugins/jquery-knob/jquery.knob.min.js"></script>
       <script src="plugins/moment/moment.min.js"></script>
       <script src="plugins/daterangepicker/daterangepicker.js"></script>
@@ -68,6 +72,9 @@
       <script src="js/demo.js"></script>
       <script src="plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
       <script src="js/swal.js"></script>
+      <script src="js/money.js"></script>
+      <script src="js/datepicker.js"></script>
+      <link rel="stylesheet" href="css/datepicker.css" />
       <!-- <script src="js/pages/dashboard.js"></script> -->
 
 

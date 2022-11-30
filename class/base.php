@@ -181,16 +181,20 @@ class Base
     if (empty($id)) {
       return '';
     }
-    $list = $this->get_list("select * from tbl_project_status where id < $id+1 and deleted_flag = 0  and type = 1 order by id asc ");
+    $list = $this->get_list("select * from tbl_project_status where id < $id+1 and deleted_flag = 0  order by id asc ");
     $tmp = "";
     foreach ($list as $res) {
       $tmp .= '<li class="breadcrumb-item active text-' . $res['color'] . '">' . ucfirst(strtolower($res['name'])) . '</li>';
     }
     return $tmp;
   }
-  public function insert_project_status($project_id, $status_id, $remarks)
+  public function insert_project_status($project_id, $status_id, $remarks, $date)
   {
+    if (empty($date)) {
+      $date = date("Y-m-d");
+    }
     $created_by =  $_SESSION['user']->id;
-    $this->query("INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by) values($project_id, $status_id,'$remarks', $created_by)");
+
+    $this->query("INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date) values($project_id, $status_id,'$remarks', $created_by, '$date')");
   }
 }

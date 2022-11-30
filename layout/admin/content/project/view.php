@@ -968,8 +968,8 @@
 </div>
 <script>
   //Date picker
-  $('.datepicker').datetimepicker({
-    format: 'yyyy-MM-DD'
+  $('.datepicker').datepicker({
+    format: "yyyy-mm-dd",
   });
   $(function() {
     bsCustomFileInput.init();
@@ -1017,9 +1017,8 @@
     var tmp = $('.asa_date').length
     tmp++;
     $(wrapper3).append('<tr><td> <input disabled type="text" class="form-control form-control-sm" name="asa_nr[]"></td><td> <div class="input-group input-group-sm datepicker asa_date" id="asa_date_' + tmp + '" data-target-input="nearest"><input disabled type="text" class="form-control form-control-sm datetimepicker-input" data-target="#asa_date_' + tmp + '" name="asa_date_' + tmp + '" /><div class="input-group-append" data-target="#asa_date_' + tmp + '" data-toggle="datetimepicker"><div class="input-group-text"><i class="fa fa-calendar"></i></div></div></div></td></td> <td>  <input disabled type="text" class="form-control form-control-sm" name="asa_object[]"> </td><td> <input disabled type="text" class="form-control form-control-sm" name="asa_amount[]"> </td><td> <select name = "asa_expense_class[]" class="form-control form-control-sm"><?php foreach ($data['default']['expense_class'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
-
-    $('.datepicker').datetimepicker({
-      format: 'yyyy-MM-DD'
+    $('.datepicker').datepicker({
+      format: "yyyy-mm-dd",
     });
   });
 

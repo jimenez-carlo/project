@@ -55,7 +55,7 @@
                     <td class="flex">
                       <?php if (in_array($_SESSION['user']->access_id, array(1, 3))) { ?>
                         <?php if ($_SESSION['user']->access_id == 1) { ?>
-                          <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit_admin" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
+                          <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
                         <?php } else { ?>
                           <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
                         <?php } ?>
@@ -99,6 +99,14 @@
           }
         },
         {
+          text: '<i class="fa fa-use"></i> Advance Search</button>',
+          className: 'btn btn-sm btn-dark',
+          attr: {
+            'data-toggle': "modal",
+            'data-target': "#chronology_modal",
+          }
+        },
+        {
           extend: 'copy',
           text: '<i class="fa fa-export"></i> Copy</button>',
           className: 'btn btn-sm btn-dark'
@@ -125,3 +133,5 @@
 
   });
 </script>
+
+<?php include_once('layout/admin/content/project/modal/project_search.php') ?>

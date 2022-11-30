@@ -23,6 +23,7 @@ if (in_array($page, $pages)) {
       $data['data'] = $dashboard->get_data();
       break;
     case 'admin/user/list':
+
       $data['list'] = $base->get_list("Select 
       concat(ui.last_name, ', ', ui.first_name,' ', LEFT(ui.middle_name, 1), '[#',ui.id,']') as user_full_name,
       concat(v.last_name, ', ', v.first_name,' ', LEFT(v.middle_name, 1), '[#',v.id,']') as verifier_full_name,
@@ -51,6 +52,7 @@ if (in_array($page, $pages)) {
       break;
 
     case 'admin/project/my_list':
+      $data['default'] = $base->set_default_data();
       $data['list'] = $base->get_list("select concat(o.last_name, ', ', o.first_name,' ', LEFT(o.middle_name, 1), '[#',o.id,']') as officer_full_name, p.id,s.name as `status`,ui.name as `implementing_unit`,cm.name as`comodity`,pm.name as `program_manager`,p.created_date,p.updated_date from 
 tbl_project p  inner join 
 tbl_implementing_unit ui on ui.id = p.implementing_unit_id inner join 
@@ -61,6 +63,7 @@ tbl_users_info o on o.id = p.officer_id left join
 tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0 and (p.created_by = $id OR  find_in_set('$id',personell_ids) <> 0)");
       break;
     case 'admin/project/list':
+      $data['default'] = $base->set_default_data();
       $data['list'] = $base->get_list("select concat(o.last_name, ', ', o.first_name,' ', LEFT(o.middle_name, 1), '[#',o.id,']') as officer_full_name, p.id,s.name as `status`,ui.name as `implementing_unit`,cm.name as`comodity`,pm.name as `program_manager`,p.created_date,p.updated_date from 
 tbl_project p  inner join 
 tbl_implementing_unit ui on ui.id = p.implementing_unit_id inner join 

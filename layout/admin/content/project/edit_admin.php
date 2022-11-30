@@ -27,9 +27,11 @@
         <div id="result">
         </div>
 
-        <form method="post" name="project_update" refresh="admin/project/edit_admin&id=<?= $default->id ?>" enctype="multipart/form-data">
+        <form method="post" name="project_update" refresh="admin/project/edit&id=<?= $default->id ?>" enctype="multipart/form-data">
           <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#chronology_modal" style="right: 251px;z-index: 99;position: fixed;bottom: 20px;">Chronology</button>
-          <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#change_status_modal" style="right: 137px;z-index: 99;position: fixed;bottom: 20px;">Change Status</button>
+          <?php if ($default->status_id < 14) { ?>
+            <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#change_status_modal" style="right: 137px;z-index: 99;position: fixed;bottom: 20px;">Change Status</button>
+          <?php } ?>
           <button type="submit" class="btn btn-dark pull-right" name="update" confirmation="Save Changes To Project?" style="right: 20px;z-index: 99;position: fixed;bottom: 20px;">Update Project</button>
           <input type="submit" name="change_status" id="change_status" confirmation="Change Status Confirmation?" style="display:none">
           <input type="hidden" name="status_id" value="<?= $default->status_id ?>">
@@ -101,12 +103,13 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Date of UPR:</label>
-                    <div class="input-group input-group-sm datepicker" id="upr_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#upr_date" name="upr_date" value="<?= $default->upr_date ?>" />
-                      <div class="input-group-append" data-target="#upr_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-clock"></i></span>
                       </div>
+                      <input type="text" class="form-control float-right daterange" id="upr_date" name="upr_date" value="<?= $default->upr_date ?>">
                     </div>
+
                   </div>
                 </div>
                 <div class="col-sm-3">
@@ -164,11 +167,7 @@
 
                           <td><input type="text" class="form-control form-control-sm" name="asa_nr[]" value="<?= $res['asa_nr'] ?>"></td>
                           <td>
-                            <div class="input-group input-group-sm datepicker asa_date" id="asa_date_<?= $asa_ctr ?>" data-target-input="nearest"><input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#asa_date_<?= $asa_ctr ?>" name="asa_date_<?= $asa_ctr ?>" value="<?= $res['asa_date'] ?>" />
-                              <div class="input-group-append" data-target="#asa_date_<?= $asa_ctr ?>" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                              </div>
-                            </div>
+                            <input type="text" class="form-control form-control-sm datepicker" name="asa_date_<?= $asa_ctr ?>" id="asa_date_<?= $asa_ctr ?>" value="<?= date("d/m/Y", strtotime($res['asa_date'])) ?>">
                           </td>
                           <td><input type="text" class="form-control form-control-sm" name="asa_object[]" value="<?= $res['object_code'] ?>"></td>
                           <td><input type="text" class="form-control form-control-sm" name="asa_amount[]" value="<?= $res['asa_amount'] ?>"></td>
@@ -224,19 +223,19 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>ABC</label>
-                    <input type="text" class="form-control form-control-sm" name="abc" id="abc" value="<?= $default->abc ?>">
+                    <input type="text" class="form-control form-control-sm currency" name="abc" id="abc" value="<?= number_format($default->abc, 2) ?>">
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Contract Price</label>
-                    <input type="number" class="form-control form-control-sm" name="contract_price" id="contract_price" value="<?= $default->contract_price ?>">
+                    <input type="number" class="form-control form-control-sm currency" name="contract_price" id="contract_price" value="<?= number_format($default->contract_price, 2) ?>">
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Residuals</label>
-                    <input type="text" class="form-control form-control-sm" id="residuals_display" value="<?= $default->residuals ?>" disabled>
+                    <input type="text" class="form-control form-control-sm currency" id="residuals_display" value="<?= number_format($default->residuals, 2) ?>" disabled>
                     <input type="hidden" class="form-control form-control-sm" name="residuals" value="<?= $default->residuals ?>" id="residuals">
                   </div>
                 </div>
@@ -257,34 +256,28 @@
                       $("#residuals_display").val(0);
                       $("#residuals").val(0);
                     } else {
-                      let total = parseInt($("#abc").val()) - parseInt($("#contract_price").val());
-                      $("#residuals_display").val(total);
+                      let total = parseFloat($("#abc").val().replace(",", "")) - parseFloat($("#contract_price").val().replace(",", ""));
+                      $("#residuals_display").val(total).maskMoney();
                       $("#residuals").val(total);
                     }
                   })
                 </script>
-
               </div>
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Mode Of Proc</label>
-                    <div class="form-group" style="display:flex">
-                      <div class="form-check" style="width:50%">
-                        <input class="form-check-input" type="radio" name="mode_of_proc" value="1" <?= ($default->mode_of_proc_id == 1) ? 'checked' : '' ?>>
-                        <label class="form-check-label">PUBLIC BIDDING</label>
-                      </div>
-                      <div class="form-check" style="width:25%">
-                        <input class="form-check-input" type="radio" name="mode_of_proc" value="2" <?= ($default->mode_of_proc_id == 2) ? 'checked' : '' ?>>
-                        <label class="form-check-label">NEGOTATION</label>
-                      </div>
-                    </div>
+                    <select class="form-control form-control-sm" name="mode_of_proc" id="mode_of_proc">
+                      <?php foreach ($data['default']['mode_of_proc'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>" <?= $default->mode_of_proc_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
+                      <?php } ?>
+                    </select>
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
 
           <div class="card card-dark card-outline card-tabs">
             <div class="card-header">
@@ -297,23 +290,14 @@
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label>*Target Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="preproc_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#preproc_target_date" name="preproc_target_date" value="<?= $default->preproc_target_date ?>" />
-                      <div class="input-group-append" data-target="#preproc_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="preproc_target_date" id="preproc_target_date" value="<?= date("d/m/Y", strtotime($default->preproc_target_date)) ?>">
                   </div>
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="preproc_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#preproc_conducted_date" name="preproc_conducted_date" value="<?= $default->preproc_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#preproc_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="preproc_conducted_date" id="preproc_conducted_date" value="<?= date("d/m/Y", strtotime($default->preproc_conducted_date)) ?>">
+
                   </div>
                 </div>
               </div>
@@ -331,24 +315,15 @@
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label>*Target Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="prebid_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#prebid_target_date" name="prebid_target_date" value="<?= $default->prebid_target_date ?>" />
-                      <!-- <input type="text" name="prebid_target_date" id="actual_prebid_target_date"> -->
-                      <div class="input-group-append" data-target="#prebid_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="prebid_target_date" id="prebid_target_date" value="<?= date("d/m/Y", strtotime($default->prebid_target_date)) ?>">
+
                   </div>
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="prebid_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#prebid_conducted_date" name="prebid_conducted_date" value="<?= $default->prebid_conducted_date ?>" id="test" />
-                      <div class="input-group-append" data-target="#prebid_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="prebid_conducted_date" id="prebid_conducted_date" value="<?= date("d/m/Y", strtotime($default->prebid_conducted_date)) ?>">
+
                   </div>
                 </div>
               </div>
@@ -378,23 +353,16 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>*Target Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="sobe_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#sobe_target_date" name="sobe_target_date" value="<?= $default->sobe_target_date ?>" />
-                      <div class="input-group-append" data-target="#sobe_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="sobe_target_date" id="sobe_target_date" value="<?= date("d/m/Y", strtotime($default->sobe_target_date)) ?>">
+
+
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="sobe_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#sobe_conducted_date" name="sobe_conducted_date" value="<?= $default->sobe_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#sobe_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="sobe_conducted_date" id="sobe_conducted_date" value="<?= date("d/m/Y", strtotime($default->sobe_conducted_date)) ?>">
+
                   </div>
                 </div>
                 <div class="col-sm-4">
@@ -476,28 +444,23 @@
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label>*Target Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="pq_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pq_target_date" name="pq_target_date" value="<?= $default->pq_target_date ?>" />
-                      <div class="input-group-append" data-target="#pq_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="pq_target_date" id="pq_target_date" value="<?= date("d/m/Y", strtotime($default->pq_target_date)) ?>">
+
+
                   </div>
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="pq_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pq_conducted_date" name="pq_conducted_date" value="<?= $default->pqr_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#pq_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date" value="<?= date("d/m/Y", strtotime($default->pq_conducted_date)) ?>">
+
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
 
           <div class="card card-dark card-outline card-tabs">
             <div class="card-header">
@@ -510,12 +473,8 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="pqr_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#pqr_conducted_date" name="pqr_conducted_date" value="<?= $default->pqr_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#pqr_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="pqr_conducted_date" id="pqr_conducted_date" value="<?= date("d/m/Y", strtotime($default->pqr_conducted_date)) ?>">
+
                   </div>
                 </div>
               </div>
@@ -533,17 +492,16 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="noa_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#noa_conducted_date" name="noa_conducted_date" value="<?= $default->noa_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#noa_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="noa_conducted_date" id="noa_conducted_date" value="<?= date("d/m/Y", strtotime($default->noa_conducted_date)) ?>">
+
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+
 
           <div class="card card-dark card-outline card-tabs">
             <div class="card-header">
@@ -556,12 +514,9 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="ors_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ors_conducted_date" name="ors_conducted_date" value="<?= $default->ors_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#ors_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="ors_conducted_date" id="ors_conducted_date" value="<?= date("d/m/Y", strtotime($default->ors_conducted_date)) ?>">
+
+
                   </div>
                 </div>
               </div>
@@ -578,18 +533,13 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="ntp_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ntp_conducted_date" name="ntp_conducted_date" value="<?= $default->ntp_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#ntp_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="ntp_conducted_date" id="ntp_conducted_date" value="<?= date("d/m/Y", strtotime($default->ntp_conducted_date)) ?>">
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="card card-dark card-outline card-tabs">
             <div class="card-header">
               <h3 class="card-title">
@@ -601,29 +551,22 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="ntp_conforme_conducted_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ntp_conforme_conducted_date" name="ntp_conforme_conducted_date" value="<?= $default->ntp_conducted_date ?>" />
-                      <div class="input-group-append" data-target="#ntp_conforme_conducted_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date" id="ntp_conforme_conducted_date" value="<?= date("d/m/Y", strtotime($default->$ntp_conforme_conducted_date)) ?>">
+
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>*Delivery Period</label>
-                    <input type="number" class="form-control form-control-sm" name="ntp_delivery_period" id="ntp_delivery_period" value="<?= $default->delivery_period ?>">
+                    <input type="text" class="form-control form-control-sm datepicker" name="ntp_delivery_period" id="ntp_delivery_period" value="<?= date("d/m/Y", strtotime($default->delivery_period)) ?>">
+
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>*LDD:</label>
-                    <div class="input-group input-group-sm datepicker" id="ldd_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#ldd_date" name="ldd_date" value="<?= $default->ldd ?>" />
-                      <div class="input-group-append" data-target="#ldd_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= date("d/m/Y", strtotime($default->ldd)) ?>">
+
                   </div>
                 </div>
               </div>
@@ -642,13 +585,9 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="delivery_conducted_date" id="delivery_conducted_date" value="<?= date("d/m/Y", strtotime($default->delivery_conducted_date)) ?>">
 
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i></span>
-                      </div>
-                      <input type="text" class="form-control float-right daterange" id="delivery_conducted_date" name="delivery_conducted_date" value="<?= $default->delivery_conducted_date ?>">
-                    </div>
+
 
                   </div>
                 </div>
@@ -668,12 +607,9 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i></span>
-                      </div>
-                      <input type="text" class="form-control float-right daterange" id="inspected_conducted_date" name="inspected_conducted_date" value="<?= $default->inspected_conducted_date ?>">
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="inspected_conducted_date" id="inspected_conducted_date" value="<?= date("d/m/Y", strtotime($default->inspected_conducted_date)) ?>">
+
+
                   </div>
                 </div>
               </div>
@@ -691,12 +627,9 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>*Conducted Date:</label>
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i></span>
-                      </div>
-                      <input type="text" class="form-control float-right daterange" id="accepted_conducted_date" name="accepted_conducted_date" value="<?= $default->accepted_conducted_date ?>">
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="accepted_conducted_date" id="accepted_conducted_date" value="<?= date("d/m/Y", strtotime($default->accepted_conducted_date)) ?>">
+
+
                   </div>
                 </div>
                 <div class="col-sm-4">
@@ -717,7 +650,7 @@
                 <div class="col-sm-4">
                   <div class="form-group ">
                     <label>Amount</label>
-                    <input type="number" class="form-control form-control-sm" name="amount" value="<?= $default->amount ?>">
+                    <input type="number" class="form-control form-control-sm" name="amount" value="<?= number_format($default->amount, 2) ?>">
                   </div>
                 </div>
               </div>
@@ -725,12 +658,8 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="accepted_date_1" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#accepted_date_1" name="accepted_date_1" value="<?= $default->accepted_date_1 ?>" />
-                      <div class="input-group-append" data-target="#accepted_date_1" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_1" id="accepted_date_1" value="<?= date("d/m/Y", strtotime($default->accepted_date_1)) ?>">
+
                   </div>
                 </div>
                 <div class="col-sm-4">
@@ -753,7 +682,7 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Retention Amount</label>
-                    <input type="number" class="form-control form-control-sm" name="retention_amount" id="retention_amount" value="<?= $default->retention_amount ?>">
+                    <input type="number" class="form-control form-control-sm" name="retention_amount" id="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
                   </div>
                 </div>
               </div>
@@ -761,24 +690,20 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Date:</label>
-                    <div class="input-group input-group-sm datepicker" id="accepted_date_2" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#accepted_date_2" name="accepted_date_2" value="<?= $default->accepted_date_2 ?>" />
-                      <div class="input-group-append" data-target="#accepted_date_2" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_2" id="accepted_date_2" value="<?= date("d/m/Y", strtotime($default->accepted_date_2)) ?>">
+
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>LD Amount</label>
-                    <input type="number" class="form-control form-control-sm" name="ld_amount" id="ld_amount" value="<?= $default->ld_amount ?>">
+                    <input type="number" class="form-control form-control-sm" name="ld_amount" id="ld_amount" value="<?= number_format($default->ld_amount, 2)  ?>">
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Total</label>
-                    <input type="number" class="form-control form-control-sm" name="total" id="total" value="<?= $default->total ?>">
+                    <input type="number" class="form-control form-control-sm" name="total" id="total" value="<?= number_format($default->total, 2)  ?>">
                   </div>
                 </div>
               </div>
@@ -786,77 +711,79 @@
           </div>
 
 
-          <div class="card card-dark card-outline card-tabs">
-            <div class="card-header">
-              <h3 class="card-title">
-                TWG
-              </h3>
-              <button type="button" class="btn btn-sm btn-dark float-right" id="add_twg">Add TWG Entry</button>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <table id="example1" class="table table-bordered table-striped table-sm">
-                  <thead>
-                    <tr>
-                      <th>Rank</th>
-                      <th>Last Name</th>
-                      <th>First Name</th>
-                      <th>Middle Initial</th>
-                      <th>Suffix</th>
-                      <th>Branch of Service</th>
-                      <th>Serial No</th>
-                      <th>Designation</th>
-                      <th>Authority</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="wrapper2">
-                    <?php foreach ($data['twgs'] as $res) { ?>
-                      <tr>
-                        <td>
-                          <select name="twg_rank[]" class="form-control form-control-sm">
-                            <?php foreach ($data['default']['rank'] as $subres) { ?>
-                              <option value="<?= $subres['id']; ?>" <?= $res['rank_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                            <?php } ?>
-                          </select>
-                        </td>
-                        <td><input type="text" class="form-control form-control-sm" name="last_name[]" value="<?= $res['last_name'] ?>"></td>
-                        <td><input type="text" class="form-control form-control-sm" name="first_name[]" value="<?= $res['first_name'] ?>"></td>
-                        <td><input type="text" class="form-control form-control-sm" name="middle_name[]" value="<?= $res['middle_name'] ?>"></td>
-                        <td>
-                          <select name="suffix[]" class="form-control form-control-sm">
-                            <?php foreach ($data['default']['suffix'] as $subres) { ?>
-                              <option value="<?= $subres['id']; ?>" <?= $res['suffix_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                            <?php } ?>
-                          </select>
-                        </td>
-                        <td>
-                          <select name="branch[]" class="form-control form-control-sm">
-                            <?php foreach ($data['default']['branch'] as $subres) { ?>
-                              <option value="<?= $subres['id']; ?>" <?= $res['branch_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                            <?php } ?>
-                          </select>
-                        </td>
-                        <td><input type="text" class="form-control form-control-sm" name="serial_no[]" value="<?= $res['serial_no'] ?>"></td>
-                        <td>
-                          <select name="designation[]" class="form-control form-control-sm">
-                            <?php foreach ($data['default']['designation'] as $subres) { ?>
-                              <option value="<?= $subres['id']; ?>" <?= $res['designation_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                            <?php } ?>
-                          </select>
-                        </td>
-                        <td><input type="text" class="form-control form-control-sm" name="authority[]" value="<?= $res['authority'] ?>"></td>
-                        <td>
-                          <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
-                        </td>
-                      </tr>
-                    <?php } ?>
-                  </tbody>
-                </table>
+          <?php if ($default->status_id >= 15) { ?>
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  TWG
+                </h3>
+                <button type="button" class="btn btn-sm btn-dark float-right" id="add_twg">Add TWG Entry</button>
               </div>
+              <div class="card-body">
+                <div class="row">
+                  <table id="example1" class="table table-bordered table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>Rank</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Middle Initial</th>
+                        <th>Suffix</th>
+                        <th>Branch of Service</th>
+                        <th>Serial No</th>
+                        <th>Designation</th>
+                        <th>Authority</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="wrapper2">
+                      <?php foreach ($data['twgs'] as $res) { ?>
+                        <tr>
+                          <td>
+                            <select name="twg_rank[]" class="form-control form-control-sm">
+                              <?php foreach ($data['default']['rank'] as $subres) { ?>
+                                <option value="<?= $subres['id']; ?>" <?= $res['rank_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                              <?php } ?>
+                            </select>
+                          </td>
+                          <td><input type="text" class="form-control form-control-sm" name="last_name[]" value="<?= $res['last_name'] ?>"></td>
+                          <td><input type="text" class="form-control form-control-sm" name="first_name[]" value="<?= $res['first_name'] ?>"></td>
+                          <td><input type="text" class="form-control form-control-sm" name="middle_name[]" value="<?= $res['middle_name'] ?>"></td>
+                          <td>
+                            <select name="suffix[]" class="form-control form-control-sm">
+                              <?php foreach ($data['default']['suffix'] as $subres) { ?>
+                                <option value="<?= $subres['id']; ?>" <?= $res['suffix_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                              <?php } ?>
+                            </select>
+                          </td>
+                          <td>
+                            <select name="branch[]" class="form-control form-control-sm">
+                              <?php foreach ($data['default']['branch'] as $subres) { ?>
+                                <option value="<?= $subres['id']; ?>" <?= $res['branch_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                              <?php } ?>
+                            </select>
+                          </td>
+                          <td><input type="text" class="form-control form-control-sm" name="serial_no[]" value="<?= $res['serial_no'] ?>"></td>
+                          <td>
+                            <select name="designation[]" class="form-control form-control-sm">
+                              <?php foreach ($data['default']['designation'] as $subres) { ?>
+                                <option value="<?= $subres['id']; ?>" <?= $res['designation_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                              <?php } ?>
+                            </select>
+                          </td>
+                          <td><input type="text" class="form-control form-control-sm" name="authority[]" value="<?= $res['authority'] ?>"></td>
+                          <td>
+                            <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
+                          </td>
+                        </tr>
+                      <?php } ?>
+                    </tbody>
+                  </table>
+                </div>
 
+              </div>
             </div>
-          </div>
+          <?php } ?>
           <div class="card card-dark card-outline card-tabs">
             <div class="card-header">
               <h3 class="card-title">
@@ -998,9 +925,11 @@
   </div>
 </div>
 <script>
+  $('.currency').maskMoney();
+
   //Date picker
-  $('.datepicker').datetimepicker({
-    format: 'yyyy-MM-DD'
+  $('.datepicker').datepicker({
+    format: "yyyy-mm-dd",
   });
   $(function() {
     bsCustomFileInput.init();
@@ -1047,10 +976,10 @@
     e.preventDefault();
     var tmp = $('.asa_date').length
     tmp++;
-    $(wrapper3).append('<tr><td> <input type="text" class="form-control form-control-sm" name="asa_nr[]"></td><td> <div class="input-group input-group-sm datepicker asa_date" id="asa_date_' + tmp + '" data-target-input="nearest"><input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#asa_date_' + tmp + '" name="asa_date_' + tmp + '" /><div class="input-group-append" data-target="#asa_date_' + tmp + '" data-toggle="datetimepicker"><div class="input-group-text"><i class="fa fa-calendar"></i></div></div></div></td></td> <td>  <input type="text" class="form-control form-control-sm" name="asa_object[]"> </td><td> <input type="text" class="form-control form-control-sm" name="asa_amount[]"> </td><td> <select name = "asa_expense_class[]" class="form-control form-control-sm"><?php foreach ($data['default']['expense_class'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $(wrapper3).append('<tr><td> <input type="text" class="form-control form-control-sm" name="asa_nr[]"></td><td> <input type="text" class="form-control form-control-sm datepicker" name="asa_date_' + tmp + '" asa_date_' + tmp + ' ></td></td> <td>  <input type="text" class="form-control form-control-sm" name="asa_object[]"> </td><td> <input type="text" class="form-control form-control-sm" name="asa_amount[]"> </td><td> <select name = "asa_expense_class[]" class="form-control form-control-sm"><?php foreach ($data['default']['expense_class'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
 
-    $('.datepicker').datetimepicker({
-      format: 'yyyy-MM-DD'
+    $('.datepicker').datepicker({
+      format: "yyyy-mm-dd",
     });
   });
 
