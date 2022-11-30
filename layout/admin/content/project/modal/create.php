@@ -12,12 +12,8 @@
                 <div class="col-sm-12">
                   <div class="form-group">
                     <label>*Target Date:</label>
-                    <div class="input-group datepicker" id="preproc_target_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#preproc_target_date" name="preproc_target_date">
-                      <div class="input-group-append" data-target="#preproc_target_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="preproc_target_date" id="preproc_target_date">
+
                   </div>
                 </div>
 

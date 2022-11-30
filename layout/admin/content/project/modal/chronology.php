@@ -16,7 +16,7 @@
                         <i class="fas fa-clock bg-gray"></i>
                         <div class="timeline-item">
                           <span class="time"><i class="fas fa-clock"></i> <?= date("Y-m-d", strtotime($res['created_date'])) . " At " . date("H:i", strtotime($res['created_date']));  ?></span>
-                          <h3 class="timeline-header"><a href="#"><?= ucwords($res['full_name']) ?></a> changed the status to <?= strtoupper($res['name']) ?></h3>
+                          <h3 class="timeline-header"><a href="#"><?= ucwords($res['full_name']) ?></a> changed the status to <?= strtoupper($res['name']) ?> <?= $res['conducted_date'] ?> </h3>
                           <?php if (!empty($res['remarks'])) { ?>
                             <div class="timeline-body">
                               <?= $res['remarks'] ?>

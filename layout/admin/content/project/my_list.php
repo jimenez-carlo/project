@@ -99,25 +99,12 @@
           }
         },
         {
-          extend: 'copy',
-          text: '<i class="fa fa-export"></i> Copy</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'csv',
-          text: '<i class="fa fa-export"></i> CSV</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'excel',
-          text: '<i class="fa fa-export"></i> Excel</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'pdf',
-          text: '<i class="fa fa-export"></i> PDF</button>',
-          className: 'btn btn-sm btn-dark'
-        }, {
-          extend: 'print',
-          text: '<i class="fa fa-export"></i> Print</button>',
-          className: 'btn btn-sm btn-dark'
+          text: '<i class="fa fa-use"></i> Advance Search</button>',
+          className: 'btn btn-sm btn-dark',
+          attr: {
+            'data-toggle': "modal",
+            'data-target': "#chronology_modal",
+          }
         }
       ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
@@ -125,3 +112,5 @@
 
   });
 </script>
+
+<?php include_once('layout/admin/content/project/modal/project_search.php') ?>

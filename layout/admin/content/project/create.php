@@ -91,11 +91,11 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Date of UPR:</label>
-                    <div class="input-group input-group-sm datepicker" id="upr_date" data-target-input="nearest">
-                      <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#upr_date" name="upr_date" />
-                      <div class="input-group-append" data-target="#upr_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-clock"></i></span>
                       </div>
+                      <input type="text" class="form-control float-right daterange" id="upr_date" name="upr_date">
                     </div>
                   </div>
                 </div>
@@ -187,19 +187,19 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>ABC</label>
-                    <input type="text" class="form-control form-control-sm" name="abc" id="abc">
+                    <input type="text" class="form-control form-control-sm currency" name="abc" id="abc">
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Contract Price</label>
-                    <input type="number" class="form-control form-control-sm" name="contract_price" id="contract_price">
+                    <input type="text" class="form-control form-control-sm currency" name="contract_price" id="contract_price">
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Residuals</label>
-                    <input type="text" class="form-control form-control-sm" id="residuals_display" disabled>
+                    <input type="text" class="form-control form-control-sm currency" id="residuals_display" disabled>
                     <input type="hidden" class="form-control form-control-sm" name="residuals" id="residuals">
                   </div>
                 </div>
@@ -220,8 +220,8 @@
                       $("#residuals_display").val(0);
                       $("#residuals").val(0);
                     } else {
-                      let total = parseInt($("#abc").val()) - parseInt($("#contract_price").val());
-                      $("#residuals_display").val(total);
+                      let total = parseFloat($("#abc").val().replace(",", "")) - parseFloat($("#contract_price").val().replace(",", ""));
+                      $("#residuals_display").val(total).maskMoney();
                       $("#residuals").val(total);
                     }
                   })
@@ -232,23 +232,50 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>*Mode Of Proc</label>
-                    <div class="form-group" style="display:flex">
-                      <div class="form-check" style="width:50%">
-                        <input class="form-check-input" type="radio" name="mode_of_proc" value="1" checked>
-                        <label class="form-check-label">PUBLIC BIDDING</label>
-                      </div>
-                      <div class="form-check" style="width:25%">
-                        <input class="form-check-input" type="radio" name="mode_of_proc" value="2">
-                        <label class="form-check-label">NEGOTATION</label>
-                      </div>
-                    </div>
+                    <select class="form-control form-control-sm" name="mode_of_proc" id="mode_of_proc">
+                      <?php foreach ($data['default']['mode_of_proc'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
+                      <?php } ?>
+                    </select>
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                TWG
+              </h3>
+              <button type="button" class="btn btn-sm btn-dark float-right" id="add_twg">Add TWG Entry</button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <table id="example1" class="table table-bordered table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Last Name</th>
+                      <th>First Name</th>
+                      <th>Middle Initial</th>
+                      <th>Suffix</th>
+                      <th>Branch of Service</th>
+                      <th>Serial No</th>
+                      <th>Designation</th>
+                      <th>Authority</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wrapper2">
 
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
 
           <div class="card card-dark card-outline card-tabs">
             <div class="card-header">
@@ -390,10 +417,13 @@
   </div>
 </div>
 <script>
+  $('.currency').maskMoney();
+
   //Date picker
-  $('.datepicker').datetimepicker({
-    format: 'yyyy-MM-DD'
+  $('.datepicker').datepicker({
+    format: "dd-mm-yyyy",
   });
+
   $(function() {
     bsCustomFileInput.init();
     $('.select2bs4').select2({
@@ -402,6 +432,19 @@
     $("input[name='epa']").trigger("change");
   });
 
+  var wrapper2 = $("#wrapper2");
+  var add_button2 = $("#add_twg");
+
+  $(add_button2).click(function(e) {
+    e.preventDefault();
+
+    $(wrapper2).append('<tr><td> <select name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+  });
+
+  $(wrapper2).on("click", ".btn-remove-user", function(e) {
+    e.preventDefault();
+    $(this).parent().parent().remove();
+  })
 
   var wrapper3 = $("#wrapper3");
   var add_button3 = $("#add_asa");
@@ -410,11 +453,11 @@
     e.preventDefault();
     var tmp = $('.asa_date').length
     tmp++;
-    $(wrapper3).append('<tr><td> <input type="text" class="form-control form-control-sm" name="asa_nr[]"></td><td> <div class="input-group input-group-sm datepicker asa_date" id="asa_date_' + tmp + '" data-target-input="nearest"><input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#asa_date_' + tmp + '" name="asa_date_' + tmp + '" /><div class="input-group-append" data-target="#asa_date_' + tmp + '" data-toggle="datetimepicker"><div class="input-group-text"><i class="fa fa-calendar"></i></div></div></div></td></td> <td>  <input type="text" class="form-control form-control-sm" name="asa_object[]"> </td><td> <input type="text" class="form-control form-control-sm" name="asa_amount[]"> </td><td> <select name = "asa_expense_class[]" class="form-control form-control-sm"><?php foreach ($data['default']['expense_class'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
-
-    $('.datepicker').datetimepicker({
-      format: 'yyyy-MM-DD'
+    $(wrapper3).append('<tr><td> <input type="text" class="form-control form-control-sm" name="asa_nr[]"></td><td> <input type="text" class="form-control form-control-sm datepicker" name="asa_date_' + tmp + '" asa_date_' + tmp + ' ></td></td> <td>  <input type="text" class="form-control form-control-sm" name="asa_object[]"> </td><td> <input type="text" class="form-control form-control-sm currency" name="asa_amount[]"> </td><td> <select name = "asa_expense_class[]" class="form-control form-control-sm"><?php foreach ($data['default']['expense_class'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $('.datepicker').datepicker({
+      format: "dd-mm-yyyy",
     });
+    $('.currency').maskMoney();
   });
 
   $(wrapper3).on("click", ".btn-remove-user", function(e) {
@@ -423,7 +466,11 @@
   })
 
 
-  $('.daterange').daterangepicker();
+  $('.daterange').daterangepicker({
+    locale: {
+      format: 'DD-MM-YYYY'
+    }
+  });
 
 
   $(document).on("change", "input[name='epa']:checked", function(e) {
