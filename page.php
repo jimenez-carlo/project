@@ -144,7 +144,7 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       $data['list'] = $base->get_list("SELECT * FROM $table WHERE deleted_flag = 0");
       break;
 
-    case "admin/maintenance/dropdown/edit":
+    case 'admin/maintenance/dropdown/edit':
       switch ($_GET['table']) {
         case 'COMMODITY':
           $table = 'tbl_comodity';
@@ -169,6 +169,10 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       }
       $data['table_title'] = $table_title;
       $data['default'] = $base->get_one("SELECT id, name FROM $table WHERE id = $id AND deleted_flag = 0");
+      break;
+
+    case 'admin/report':
+      $data['default'] = $base->set_default_data();
       break;
   }
   echo get_contents(page_url($page), $data);
