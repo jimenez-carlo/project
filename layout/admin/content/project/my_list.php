@@ -30,7 +30,7 @@
                 <tr>
                   <th>Reference#</th>
                   <th>Status</th>
-                  <th>Officer</th>
+                  <!-- <th>Officer</th> -->
                   <th>EPA</th>
                   <th>Implementing Unit</th>
                   <th>Comodity</th>
@@ -45,7 +45,7 @@
                   <tr>
                     <td><?= $res['id'] ?></td>
                     <td><?= $res['status'] ?></td>
-                    <td><?= $res['officer_full_name'] ?></td>
+                    <!-- <td><?= $res['officer_full_name'] ?></td> -->
                     <td><?= ($res['epa']) ? 'YES' : 'NO'; ?></td>
                     <td><?= $res['implementing_unit'] ?></td>
                     <td><?= $res['comodity'] ?></td>
