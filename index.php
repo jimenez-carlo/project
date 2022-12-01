@@ -18,7 +18,11 @@ if (isset($_SESSION['is_logged_in'])) {
       include('layout/admin/footer.php');
       break;
   }
-} else {
+} elseif (isset($_SESSION['force_change_password'])) {
+  include('layout/landing_page/header.php');
+  include('layout/landing_page/change_password.php');
+  include('layout/landing_page/footer.php');
+}else {
   // Landing page here
   include('layout/landing_page/header.php');
   include('layout/landing_page/body.php');

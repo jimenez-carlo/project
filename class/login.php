@@ -57,6 +57,15 @@ class Login extends Base
       //   $result->message = $msg;
       //   return $result;
       // }
+
+      if (($_POST['password'] === "12345678")) {
+        $_SESSION['force_change_password'] = ($_POST['password'] === "12345678");
+        $_SESSION['user_id'] = $user->id;
+        $result->result = $this->response_success("Please wait...", "Force change password.");
+        $result->refresh = true;
+        return $result;
+      }
+
       $_SESSION['user'] = $user;
       $_SESSION['is_logged_in'] = true;
       $result->status = true;
@@ -70,5 +79,28 @@ class Login extends Base
       $result->message = $msg;
       return $result;
     }
+  }
+
+  public function change_password()
+  {
+    extract($this->escape_data($_POST));
+
+    $result = $this->response_obj();
+    if ($password !== $password_confirmation) {
+      $result->result = $this->response_error("Password not match!", "");
+      return $result;
+    }
+
+    if (strlen($password) < 8) {
+      $result->result = $this->response_error("Password must be at least 8 characters!", "");
+      return $result;
+    }
+
+    $new_password = password_hash($password, PASSWORD_DEFAULT);
+    $this->query("UPDATE tbl_users SET `password` = '$new_password', updated_date = NOW() WHERE id = {$_SESSION['user_id']}");
+    session_destroy();
+    $result->result = $this->response_success("Success!!!", "Password updated successfully.");
+    $result->refresh = true;
+    return $result;
   }
 }

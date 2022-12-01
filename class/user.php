@@ -143,7 +143,7 @@ class User extends Base
 
       if (isset($reset_password)) {
         $new_password = password_hash("12345678", PASSWORD_DEFAULT);
-        $this->query("UPDATE tbl_users SET `password` = '$new_password' WHERE id = $id");
+        $this->query("UPDATE tbl_users SET `password` = '$new_password', updated_date = NOW() WHERE id = $id");
       }
 
       $this->query("UPDATE tbl_users set `serial_no` = '$serial_no' ,`access_id` = '$access' ,`branch_id` = '$branch' ,`rank_id` = '$rank' ,`username` = '$username' ,`status_id` = '$status' where id = $id");
@@ -183,7 +183,7 @@ class User extends Base
 
     $this->start_transaction();
     try {
-      $this->query("UPDATE tbl_users set `verified_flag` = 1 where id = $id");
+      $this->query("UPDATE tbl_users set `verified_flag` = 1, updated_date = NOW(), approved_by = {$_SESSION['user']->id} WHERE id = $id");
       $this->commit_transaction();
       $result->status = true;
       $result->result = $this->response_swal("User Verified Successfully!", 'Successfull!');
