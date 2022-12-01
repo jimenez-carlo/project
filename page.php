@@ -52,6 +52,9 @@ if (in_array($page, $pages)) {
       break;
 
     case 'admin/project/my_list':
+      $where_status = (isset($_GET['status_id'])) ? " AND p.status_id = {$_GET['status_id']} " : "";
+      $is_admin = ($_SESSION['user']->access_id !== "1") ? " AND (p.created_by = $id OR  find_in_set('$id',personell_ids) <> 0) " : "";
+
       $data['default'] = $base->set_default_data();
       $data['list'] = $base->get_list("select concat(o.last_name, ', ', o.first_name,' ', LEFT(o.middle_name, 1), '[#',o.id,']') as officer_full_name, p.id,s.name as `status`,ui.name as `implementing_unit`,cm.name as`comodity`,pm.name as `program_manager`,p.created_date,p.updated_date from 
 tbl_project p  inner join 
@@ -60,7 +63,7 @@ tbl_comodity cm on cm.id = p.comodity_id inner join
 tbl_program_manager pm on pm.id = p.program_manager_id inner join 
 tbl_project_status s on s.id = p.status_id left join 
 tbl_users_info o on o.id = p.officer_id left join 
-tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0 and (p.created_by = $id OR  find_in_set('$id',personell_ids) <> 0)");
+tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0 $is_admin  $where_status");
       break;
     case 'admin/project/list':
       $data['default'] = $base->set_default_data();
