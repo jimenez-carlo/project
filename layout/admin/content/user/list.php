@@ -50,7 +50,7 @@
                     <td><?= $res['id'] ?></td>
                     <td><?= $res['access'] ?></td>
                     <td><?= $res['branch'] ?></td>
-                    <td><?= ($res['verified_flag']) ? 'VEIRIFED' : 'PENDING' ?></td>
+                    <td><?= ($res['verified_flag']) ? 'VERIFIED' : 'PENDING' ?></td>
                     <td><?= $res['status'] ?></td>
                     <td><?= $res['serial_no'] ?></td>
                     <td><?= $res['user_full_name'] ?></td>

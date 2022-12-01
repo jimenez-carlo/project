@@ -6,38 +6,28 @@ class Dashboard extends Base
   {
     parent::__construct($db);
     $this->conn = $db;
+    $this->is_admin = $_SESSION['user']->access_id !== "1" ? " AND  created_by = {$_SESSION['user']->id} " : "";
   }
 
   public function get_data()
   {
     $data = new stdClass();
-    $data->resident = $this->get_one("select count(*) as count from tbl_users where access_id = 3 and status_id = 2 and deleted_flag = 0");
-    $data->resident_pending = $this->get_one("select count(*) as count from tbl_users where access_id = 3 and status_id = 1 and deleted_flag = 0");
-    $data->members = $this->get_one("select count(*) as count from tbl_users where access_id = 2 and deleted_flag = 0");
-    $data->request = $this->get_one("select count(*) as count from tbl_request where deleted_flag = 0");
+    $data->for_preproc = $this->get_one("select count(*) as count from tbl_project where status_id = 1 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->preproc_passed = $this->get_one("select count(*) as count from tbl_project where status_id = 2 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->preproc_failed = $this->get_one("select count(*) as count from tbl_project where status_id = 3 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->prebid = $this->get_one("select count(*) as count from tbl_project where status_id = 4 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->sobe_passed = $this->get_one("select count(*) as count from tbl_project where status_id = 5 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->sobe_failed = $this->get_one("select count(*) as count from tbl_project where status_id = 6 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->pq = $this->get_one("select count(*) as count from tbl_project where status_id = 7 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->pqr = $this->get_one("select count(*) as count from tbl_project where status_id = 8 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->noa = $this->get_one("select count(*) as count from tbl_project where status_id = 9 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->ors = $this->get_one("select count(*) as count from tbl_project where status_id = 10 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->ntp = $this->get_one("select count(*) as count from tbl_project where status_id = 11 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->ntp_conforme = $this->get_one("select count(*) as count from tbl_project where status_id = 12 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->delivery = $this->get_one("select count(*) as count from tbl_project where status_id = 13 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->inspected = $this->get_one("select count(*) as count from tbl_project where status_id = 14 and deleted_flag = 0 {$this->is_admin}")->count;
+    $data->accepted = $this->get_one("select count(*) as count from tbl_project where status_id = 15 and deleted_flag = 0 {$this->is_admin}")->count;
 
-    $data->barangay_total = $this->get_one("select count(*) as count from tbl_request_barangay where deleted_flag = 0 and request_status_id  in (1,2,4,5)");
-    $data->barangay_pending = $this->get_one("select count(*) as count from tbl_request_barangay where deleted_flag = 0 and request_status_id = 1");
-    $data->barangay_approved = $this->get_one("select count(*) as count from tbl_request_barangay where deleted_flag = 0 and request_status_id = 2");
-    $data->barangay_printing = $this->get_one("select count(*) as count from tbl_request_barangay where deleted_flag = 0 and request_status_id = 4");
-    $data->barangay_released = $this->get_one("select count(*) as count from tbl_request_barangay where deleted_flag = 0 and request_status_id = 5");
-
-    $data->business_total = $this->get_one("select count(*) as count from tbl_request_business where deleted_flag = 0 and request_status_id  in (1,2,4,5)");
-    $data->business_pending = $this->get_one("select count(*) as count from tbl_request_business where deleted_flag = 0 and request_status_id = 1");
-    $data->business_approved = $this->get_one("select count(*) as count from tbl_request_business where deleted_flag = 0 and request_status_id = 2");
-    $data->business_printing = $this->get_one("select count(*) as count from tbl_request_business where deleted_flag = 0 and request_status_id = 4");
-    $data->business_released = $this->get_one("select count(*) as count from tbl_request_business where deleted_flag = 0 and request_status_id = 5");
-
-    $data->id_total = $this->get_one("select count(*) as count from tbl_request_id where deleted_flag = 0 and request_status_id  in (1,2,4,5)");
-    $data->id_pending = $this->get_one("select count(*) as count from tbl_request_id where deleted_flag = 0 and request_status_id = 1");
-    $data->id_approved = $this->get_one("select count(*) as count from tbl_request_id where deleted_flag = 0 and request_status_id = 2");
-    $data->id_printing = $this->get_one("select count(*) as count from tbl_request_id where deleted_flag = 0 and request_status_id = 4");
-    $data->id_released = $this->get_one("select count(*) as count from tbl_request_id where deleted_flag = 0 and request_status_id = 5");
-    $data->announcement = $this->get_one("select count(*) as count from tbl_announcement where deleted_flag = 0");
-
-    $data->blotter_total = $this->get_one("select count(*) as count from tbl_blotter where deleted_flag = 0");
-    $data->blotter_pending = $this->get_one("select count(*) as count from tbl_blotter where deleted_flag = 0 and blotter_status_id = 1");
-    $data->blotter_solved = $this->get_one("select count(*) as count from tbl_blotter where deleted_flag = 0 and blotter_status_id = 2");
     return $data;
   }
 }

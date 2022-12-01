@@ -27,6 +27,9 @@ switch ($form) {
   case 'login':
     $result = $login->index();
     break;
+  case 'change_password':
+    $result = $login->change_password();
+    break;
   case 'user_update':
     $result = $user->update();
     break;
