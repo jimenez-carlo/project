@@ -76,7 +76,7 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*PABAC</label>
+                    <label>PABAC</label>
                     <select class="form-control form-control-sm" name="pabac" id="pabac">
                       <?php foreach ($data['default']['pabac'] as $res) { ?>
                         <option value="<?= $res['id'] ?>" <?= $default->pabac_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
@@ -88,26 +88,23 @@
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*PABAC Nr</label>
+                    <label>PABAC Nr</label>
                     <input type="text" class="form-control form-control-sm" name="pabac_nr" id="pabac_nr" value="<?= $default->pabac_nr ?>">
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*UPR Nr</label>
+                    <label>UPR Nr</label>
                     <input type="text" class="form-control form-control-sm" name="upr_nr" id="upr_nr" value="<?= $default->upr_nr ?>">
                   </div>
                 </div>
 
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*Date of UPR:</label>
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i></span>
-                      </div>
-                      <input type="text" class="form-control float-right daterange" id="upr_date" name="upr_date" value="<?= $default->upr_date ?>">
-                    </div>
+                    <label>Date of UPR:</label>
+
+                    <input type="text" class="form-control form-control-sm datepicker" name="upr_date" id="upr_date" value="<?= date("d-m-Y", strtotime($default->upr_date)) ?>">
+
                   </div>
                 </div>
                 <div class="col-sm-3">
@@ -297,7 +294,7 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="preproc_conducted_date" id="preproc_conducted_date" value="<?= date("d-m-Y", strtotime($default->preproc_conducted_date)) ?>">
+                      <input type="text" class="form-control form-control-sm datepicker" name="preproc_conducted_date" id="preproc_conducted_date" value="<?= !empty($default->preproc_conducted_date) ? date("d-m-Y", strtotime($default->preproc_conducted_date)) : "" ?>">
 
                     </div>
                   </div>
@@ -320,9 +317,9 @@
                       <input type="text" class="form-control form-control-sm datepicker" name="prebid_target_date" id="prebid_target_date" value="<?= date("d-m-Y", strtotime($default->prebid_target_date)) ?>" disabled>
                       <input type="hidden" name="prebid_target_date" value="<?= date("d-m-Y", strtotime($default->prebid_target_date)) ?>">
                       <script>
-                        $(document).on("change", '#prebid_conducted_date',
+                        $(document).on("change", '#preproc_conducted_date',
                           function(e) {
-                            var tmp = $("#prebid_conducted_date").val().split("-");
+                            var tmp = $("#preproc_conducted_date").val().split("-");
                             var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
                             result.setDate(result.getDate() + 8);
                             console.log(result);
@@ -336,7 +333,7 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="prebid_conducted_date" id="prebid_conducted_date" value="<?= date("d-m-Y", strtotime($default->prebid_conducted_date)) ?>">
+                      <input type="text" class="form-control form-control-sm datepicker" name="prebid_conducted_date" id="prebid_conducted_date" value="<?= !empty($default->prebid_conducted_date) ? date("d-m-Y", strtotime($default->prebid_conducted_date)) : "" ?>">
 
                     </div>
                   </div>
@@ -360,9 +357,9 @@
                       <input type="text" class="form-control form-control-sm datepicker" id="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->sobe_target_date)) ?>" disabled>
                       <input type="hidden" name="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->sobe_target_date)) ?>">
                       <script>
-                        $(document).on("change", '#sobe_conducted_date',
+                        $(document).on("change", '#prebid_conducted_date',
                           function(e) {
-                            var tmp = $("#sobe_conducted_date").val().split("-");
+                            var tmp = $("#prebid_conducted_date").val().split("-");
                             var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
                             result.setDate(result.getDate() + 14);
                             console.log(result);
@@ -376,7 +373,7 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="sobe_conducted_date" id="sobe_conducted_date" value="<?= date("d-m-Y", strtotime($default->sobe_conducted_date)) ?>">
+                      <input type="text" class="form-control form-control-sm datepicker" name="sobe_conducted_date" id="sobe_conducted_date" value="<?= !empty($default->sobe_conducted_date) ? date("d-m-Y", strtotime($default->sobe_conducted_date)) : "" ?>">
 
                     </div>
                   </div>
@@ -411,9 +408,9 @@
                       <input type="text" class="form-control form-control-sm datepicker" name="pq_target_date" id="pq_target_date" value="<?= date("d-m-Y", strtotime($default->pq_target_date)) ?>" disabled>
                       <input type="hidden" name="pq_target_date" value="<?= date("d-m-Y", strtotime($default->pq_target_date)) ?>">
                       <script>
-                        $(document).on("change", '#pq_conducted_date',
+                        $(document).on("change", '#sobe_conducted_date',
                           function(e) {
-                            var tmp = $("#pq_conducted_date").val().split("-");
+                            var tmp = $("#sobe_conducted_date").val().split("-");
                             var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
                             result.setDate(result.getDate() + 14);
                             console.log(result);
@@ -428,7 +425,7 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date" value="<?= date("d-m-Y", strtotime($default->pq_conducted_date)) ?>">
+                      <input type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date" value="<?= !empty($default->pq_conducted_date) ? date("d-m-Y", strtotime($default->pq_conducted_date)) : "" ?>">
                     </div>
                   </div>
                 </div>
@@ -593,7 +590,7 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*LDD:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= date("d-m-Y", strtotime($default->ldd)) ?>">
+                      <input type="text" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>">
 
                     </div>
                   </div>
@@ -932,7 +929,7 @@
                   <div class="form-group">
                     <label>*Assigned Officer
                     </label>
-                    <select class="form-control select2bs4 form-control-sm" name="assigned_officer" id="assigned_officer">
+                    <select class="form-control select2bs4 form-control-sm" name="assigned_officer[]" id="assigned_officer" multiple="multiple">
                       <?php foreach ($data['default']['officers'] as $res) { ?>
                         <option value="<?= $res['id'] ?>" <?= $default->officer_id == $res['id'] ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
                       <?php } ?>
@@ -1037,7 +1034,7 @@
 
 
   $(document).on("change", "input[name='epa']:checked", function(e) {
-    console.log($(this).val());
+
     if ($('input[name="epa"]:checked').val() == 1) {
       $('#asa_table').hide();
       $(add_button3).hide();
@@ -1046,4 +1043,14 @@
       $(add_button3).show();
     }
   })
+
+  // $(document).on("change", "input[name='no_bidder']:checked", function(e) {
+  //   if ($('input[name="no_bidder"]:checked').val() == 1) {
+  //     $("#new_status_id option[value='5']").remove();
+  //   } else {
+  //     var o = new Option("SOBE - PASSED", "5");
+  //     $(o).html("option text");
+  //     $("#new_status_id").append(o);
+  //   }
+  // })
 </script>
