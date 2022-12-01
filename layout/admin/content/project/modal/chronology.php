@@ -10,27 +10,78 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-sm-12">
-                  <div class="timeline">
-                    <?php foreach ($data['chronology'] as $res) { ?>
-                      <div>
-                        <i class="fas fa-clock bg-gray"></i>
-                        <div class="timeline-item">
-                          <span class="time"><i class="fas fa-clock"></i> <?= date("Y-m-d", strtotime($res['created_date'])) . " At " . date("H:i", strtotime($res['created_date']));  ?></span>
-                          <h3 class="timeline-header"><a href="#"><?= ucwords($res['full_name']) ?></a> changed the status to <?= strtoupper($res['name']) ?> <?= $res['conducted_date'] ?> </h3>
-                          <?php if (!empty($res['remarks'])) { ?>
-                            <div class="timeline-body">
-                              <?= $res['remarks'] ?>
-                            </div>
-                          <?php } ?>
+                  <div class="card card-dark card-outline card-tabs">
+                    <div class="card-header p-0 pt-1 border-bottom-0">
+                      <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <?php foreach ($data['chronology'] as $res) { ?>
+                          <li class="nav-item">
+                            <a class="nav-link" id="tab_<?= $res['id'] ?>" data-toggle="pill" href="#target_tab_<?= $res['id'] ?>" role="tab" aria-controls="target_tab_<?= $res['id'] ?>"><?= strtoupper($res['name']) ?>[<?= date("d-M-Y", strtotime($res['conducted_date'])) ?>]</a>
+                          </li>
+                        <?php } ?>
+                      </ul>
+                    </div>
 
-                        </div>
+                    <div class="card-body">
+
+
+                      <?php $ctr = 1; ?>
+                      <div class="tab-content" id="custom-tabs-three-tabContent">
+                        <?php foreach ($data['chronology'] as $res) { ?>
+                          <div class="tab-pane fade <?= $ctr == 1 ? "active show" : "" ?>" id="target_tab_<?= $res['id'] ?>" role="tabpanel" aria-labelledby="tab_<?= $res['id'] ?>">
+
+
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Conducted Date</label>
+                                  <input type="text" class="form-control form-control-sm" value="<?= date("d-m-Y", strtotime($res['conducted_date'])) ?>" disabled>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label>Date Created</label>
+                                  <input type="text" class="form-control form-control-sm" value="<?= date("d-m-Y", strtotime($res['created_date'])) ?>" disabled>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                <label>Status</label>
+                                <input type="text" class="form-control form-control-sm" value="<?= $res['name'] ?>" disabled>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                <label>Created By</label>
+                                <input type="text" class="form-control form-control-sm" value="<?= ucwords($res['full_name']) ?>" disabled>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea class="form-control form-control-sm" rows="3" disabled> <?= $res['remarks'] ?></textarea>
+                              </div>
+                            </div>
+                            <div class="col-sm-12">
+                              <div class="form-group">
+                                <label>Other Details</label>
+                                <textarea class="form-control form-control-sm" rows="3" disabled> <?= $res['other_details'] ?></textarea>
+                              </div>
+                            </div>
+                          </div>
+
+                          <?php $ctr++; ?>
+
+                        <?php } ?>
                       </div>
-                    <?php } ?>
-                    <div>
-                      <i class="fas fa-clock bg-gray"></i>
 
                     </div>
+
                   </div>
+
+
                 </div>
 
               </div>

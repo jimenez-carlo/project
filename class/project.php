@@ -251,7 +251,6 @@ class Project extends Base
       }
 
       if ($new_status_id == 5) {
-
         if (isset($no_bidder)) {
           $msg .= "Cant Change Status To SOBE PASSED No Bidder Checked!";
           $result->result = $this->response_swal($msg, "System Error", "error");
@@ -264,22 +263,23 @@ class Project extends Base
         $where .=  ", `pq_target_date` = '$pq_target_date'";
       }
 
-      if ($new_status_id == 7) {
+      if ($new_status_id == 7 || $new_status_id == 17) {
         $required_fields[] = 'pq_conducted_date';
+        $required_fields[] = 'pq_supplier';
+        $required_fields[] = 'pq_price';
+        $required_fields[] = 'pq_local';
       }
 
-      if ($new_status_id == 8) {
-        $required_fields[] = 'pqr_conducted_date';
-        if (!isset($supplier)) {
-          $msg .= "No Supplier Entry!";
-          $result->result = $this->response_swal($msg, "System Error", "error");
-          $result->items = implode(',', array('supplier'));
-          return $result;
-        }
-      }
 
       if ($new_status_id == 9) {
-        $required_fields += array('abc', 'contract_nr', 'contract_price', 'residuals', 'noa_conducted_date');
+        $abc = floatval(str_replace(",", "", $abc));
+        $contract_price = floatval(str_replace(",", "", $contract_price));
+        $residuals = floatval(str_replace(",", "", $residuals));
+
+
+        if (empty($residuals)) {
+          $required_fields[] = 'residuals_display';
+        }
         $required_fields[] = 'abc';
         $required_fields[] = 'contract_nr';
         $required_fields[] = 'contract_price';
@@ -305,22 +305,27 @@ class Project extends Base
         $required_fields[] = 'delivery_conducted_date';
       }
 
-      if ($new_status_id == 14) {
-        // $required_fields[] = 'accepted_conducted_date';
-        // $required_fields[] = 'dv';
-        // $required_fields[] = 'amount';
-        // $required_fields[] = 'accepted_date_1';
-        // $required_fields[] = 'retention_percent';
-        // $required_fields[] = 'retention_amount';
-        // $required_fields[] = 'accepted_date_2';
-        // $required_fields[] = 'ld_amount';
-        // $required_fields[] = 'total';
-        // if ($status_id == 14 && !isset($twg_rank)) {
-        //   $msg .= "No TWG Entry!";
-        //   $result->result = $this->response_swal($msg);
-        //   $result->items = implode(',', array('twg_rank'));
-        //   return $result;
-        // }
+      if ($new_status_id == 15) {
+        $amount = floatval(str_replace(",", "", $amount));
+        $retention_amount = floatval(str_replace(",", "", $retention_amount));
+        $ld_amount = floatval(str_replace(",", "", $ld_amount));
+        $total = floatval(str_replace(",", "", $total));
+
+        if (empty($total)) {
+          $required_fields[] = 'total_display';
+        }
+        if (empty($retention_amount)) {
+          $required_fields[] = 'retention_display';
+        }
+
+        $required_fields[] = 'accepted_conducted_date';
+        $required_fields[] = 'amount';
+        $required_fields[] = 'accepted_date_1';
+        $required_fields[] = 'retention_percent';
+        $required_fields[] = 'retention_amount';
+        $required_fields[] = 'accepted_date_2';
+        $required_fields[] = 'ld_amount';
+        $required_fields[] = 'total';
       }
     } else {
       // If status PREPROC PASSED/FAILED
@@ -352,28 +357,26 @@ class Project extends Base
       }
 
       if ($status_id >= 5) {
-        $required_fields[] = 'supplier';
+        // $required_fields[] = 'supplier';
         $required_fields[] = 'sobe_conducted_date';
         $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
         $where .=  ", `pq_target_date` = '$pq_target_date'";
       }
 
-      if ($status_id >= 7) {
+      if ($status_id == 7 || $status_id == 17) {
         $required_fields[] = 'pq_conducted_date';
+        $required_fields[] = 'pq_supplier';
+        $required_fields[] = 'pq_price';
+        $required_fields[] = 'pq_local';
       }
 
-      if ($status_id >= 8) {
-        $required_fields[] = 'pqr_conducted_date';
-        if (!isset($supplier)) {
-          $msg .= "No Supplier Entry!";
-          $result->result = $this->response_swal($msg, "System Error", "error");
-          $result->items = implode(',', array('supplier'));
-          return $result;
-        }
-      }
 
       if ($status_id >= 9) {
-        $required_fields += array('abc', 'contract_nr', 'contract_price', 'residuals', 'noa_conducted_date');
+
+        if (empty($residuals)) {
+          $required_fields[] = 'residuals_display';
+        }
+
         $required_fields[] = 'abc';
         $required_fields[] = 'contract_nr';
         $required_fields[] = 'contract_price';
@@ -399,16 +402,27 @@ class Project extends Base
         $required_fields[] = 'delivery_conducted_date';
       }
 
-      if ($status_id >= 14) {
-        // $required_fields[] = 'accepted_conducted_date';
-        // $required_fields[] = 'dv';
-        // $required_fields[] = 'amount';
-        // $required_fields[] = 'accepted_date_1';
-        // $required_fields[] = 'retention_percent';
-        // $required_fields[] = 'retention_amount';
-        // $required_fields[] = 'accepted_date_2';
-        // $required_fields[] = 'ld_amount';
-        // $required_fields[] = 'total';
+      if ($status_id >= 15) {
+        $amount = floatval(str_replace(",", "", $amount));
+        $retention_amount = floatval(str_replace(",", "", $retention_amount));
+        $ld_amount = floatval(str_replace(",", "", $ld_amount));
+        $total = floatval(str_replace(",", "", $total));
+
+        if (empty($total)) {
+          $required_fields[] = 'total_display';
+        }
+        if (empty($retention_amount)) {
+          $required_fields[] = 'retention_display';
+        }
+
+        $required_fields[] = 'accepted_conducted_date';
+        $required_fields[] = 'amount';
+        $required_fields[] = 'accepted_date_1';
+        $required_fields[] = 'retention_percent';
+        $required_fields[] = 'retention_amount';
+        $required_fields[] = 'accepted_date_2';
+        $required_fields[] = 'ld_amount';
+        $required_fields[] = 'total';
         // if ($status_id == 14 && !isset($twg_rank)) {
         //   $msg .= "No TWG Entry!";
         //   $result->result = $this->response_swal($msg);
@@ -473,7 +487,7 @@ class Project extends Base
       $this->query("UPDATE tbl_project set id = id $where , updated_by = '$updated_by', updated_date = '$updated_date' where id = $id");
 
       $this->query("DELETE FROM tbl_project_asa where project_id = $id");
-      $this->query("DELETE FROM tbl_project_supplier where project_id = $id");
+      // $this->query("DELETE FROM tbl_project_supplier where project_id = $id");
       $this->query("DELETE FROM tbl_project_twg where project_id = $id");
 
       if (isset($asa_nr)) {
@@ -490,15 +504,10 @@ class Project extends Base
         }
       }
 
-      if (isset($supplier)) {
-        foreach ($supplier as $key => $res) {
-          $supplier_r = $supplier_rank[$key];
-          $supplier_id = $supplier[$key];
-          $local_id = $local[$key];
-          $price = floatval(str_replace(",", "", $bid_price[$key]));
-          $new_supplier_status = $supplier_status[$key];
-          $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,`rank`,created_by)  values ('$id','$price', '$local_id','$supplier_id','$new_supplier_status','$supplier_r','$updated_by')");
-        }
+      if (isset($change_status) && ($new_status_id == 7 || $new_status_id == 17)) {
+        $price = floatval(str_replace(",", "", $pq_price));
+        $pq_final_date = date("Y-m-d", strtotime($pq_conducted_date));
+        $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,created_by,`conducted_date`)  values ('$id','$price', '$pq_local','$pq_supplier','$new_status_id','$updated_by','$pq_final_date')");
       }
 
       if (isset($twg_rank)) {
@@ -518,15 +527,20 @@ class Project extends Base
 
       if (isset($change_status)) {
 
-        $tbl = array(2 => "preproc_conducted_date", 4 => "prebid_conducted_date", 5 => "sobe_conducted_date", 7 => "pq_conducted_date", 8 => "pqr_conducted_date", 9 => "noa_conducted_date", 12 => "ntp_conducted_date", "ntp_conforme_conducted_date", 13 => "delivery_conducted_date", 14 => "inspected_conducted_date", 15 => "accepted_conducted_date");
+        $tbl = array(2 => "preproc_conducted_date", 3 => "preproc_conducted_date", 4 => "prebid_conducted_date", 5 => "sobe_conducted_date", 6 => "sobe_conducted_date", 7 => "pq_conducted_date", 17 => "pq_conducted_date", 8 => "pqr_conducted_date", 9 => "noa_conducted_date", 10 => "ors_conducted_date", 11 => "ntp_conducted_date", 12 => "ntp_conforme_conducted_date",  13 => "delivery_conducted_date", 14 => "inspected_conducted_date", 15 => "accepted_conducted_date");
         $conducted_date = date("Y-m-d");
+
         if (in_array($new_status_id, array_keys($tbl))) {
           $tmp = ${$tbl[$new_status_id]};
           $conducted_date = ((!empty($tmp) && DateTime::createFromFormat('d-m-Y', $tmp) !== false) ?  date("Y-m-d", strtotime($tmp)) : $tmp);
         }
+        $other_details = "null";
+        if ($new_status_id == 7 || $new_status_id == 8) {
+          $other_details = "'$pq_supplier'";
+        }
 
 
-        $this->insert_project_status($id, $new_status_id, $remarks, $conducted_date);
+        $this->insert_project_status($id, $new_status_id, $remarks, $conducted_date, $other_details);
         $this->query("UPDATE tbl_project set status_id = $new_status_id where id = $id");
         $this->commit_transaction();
         $result->status = true;

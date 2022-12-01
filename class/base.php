@@ -191,13 +191,13 @@ class Base
     }
     return $tmp;
   }
-  public function insert_project_status($project_id, $status_id, $remarks, $date)
+  public function insert_project_status($project_id, $status_id, $remarks, $date, $other = "null")
   {
     if (empty($date)) {
       $date = date("Y-m-d");
     }
     $created_by =  $_SESSION['user']->id;
-
-    $this->query("INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date) values($project_id, $status_id,'$remarks', $created_by, '$date')");
+    // echo "INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date, other_details) values($project_id, $status_id,'$remarks', $created_by, '$date',$other)";
+    $this->query("INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date, other_details) values($project_id, $status_id,'$remarks', $created_by, '$date',$other)");
   }
 }

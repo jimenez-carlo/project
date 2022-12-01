@@ -73,7 +73,7 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*PABAC</label>
+                    <label>PABAC</label>
                     <select disabled class="form-control form-control-sm" name="pabac" id="pabac">
                       <?php foreach ($data['default']['pabac'] as $res) { ?>
                         <option value="<?= $res['id'] ?>" <?= $default->pabac_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
@@ -85,21 +85,22 @@
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*PABAC Nr</label>
+                    <label>PABAC Nr</label>
                     <input disabled type="text" class="form-control form-control-sm" name="pabac_nr" id="pabac_nr" value="<?= $default->pabac_nr ?>">
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*UPR Nr</label>
+                    <label>UPR Nr</label>
                     <input disabled type="text" class="form-control form-control-sm" name="upr_nr" id="upr_nr" value="<?= $default->upr_nr ?>">
                   </div>
                 </div>
 
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*Date of UPR:</label>
-                    <input type="text" class="form-control form-control-sm datepicker" name="upr_date" id="upr_date" value="<?= date("d-m-Y", strtotime($default->upr_date)) ?>">
+                    <label>Date of UPR:</label>
+
+                    <input disabled type="text" class="form-control form-control-sm datepicker" name="upr_date" id="upr_date" value="<?= !empty($default->upr_date) ? date("d-m-Y", strtotime($default->upr_date)) : "" ?>">
 
                   </div>
                 </div>
@@ -171,7 +172,7 @@
                             </select>
                           </td>
                           <td>
-                            <button disabled type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
+                            <button type="button" class="btn btn-dark btn-remove-user btn-sm" disabled> <i class="fa fa-times"></i> </button>
                           </td>
                         </tr>
                         <?php $asa_ctr++; ?>
@@ -226,7 +227,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Residuals</label>
-                    <input disabled type="text" class="form-control form-control-sm currency" id="residuals_display" value="<?= number_format($default->residuals, 2) ?>" disabled>
+                    <input disabled type="text" class="form-control form-control-sm currency" id="residuals_display" name="residuals_display" value="<?= number_format($default->residuals, 2) ?>" disabled>
                     <input disabled type="hidden" class="form-control form-control-sm" name="residuals" value="<?= $default->residuals ?>" id="residuals">
                   </div>
                 </div>
@@ -271,29 +272,34 @@
             </div>
           </div>
 
-          <div class="card card-dark card-outline card-tabs">
-            <div class="card-header">
-              <h3 class="card-title">
-                PREPROC Details
-              </h3>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>*Target Date:</label>
-                    <input disabled type="text" class="form-control form-control-sm datepicker" name="preproc_target_date" id="preproc_target_date" value="<?= date("d-m-Y", strtotime($default->preproc_target_date)) ?>">
+          <?php if ($default->status_id >= 1) { ?>
+
+            <div class="card card-dark card-outline card-tabs">
+              <div class="card-header">
+                <h3 class="card-title">
+                  PREPROC Details
+                </h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>*Target Date:</label>
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="preproc_target_date" id="preproc_target_date" value="<?= !empty($default->preproc_target_date) ? date("d-m-Y", strtotime($default->preproc_target_date)) : "" ?>">
+                    </div>
                   </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="form-group">
-                    <label>*Conducted Date:</label>
-                    <input type="text" class="form-control form-control-sm datepicker" name="preproc_conducted_date" id="preproc_conducted_date" value="<?= !empty($default->preproc_conducted_date) ? date("d-m-Y", strtotime($default->preproc_conducted_date)) : "" ?>" disabled>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>*Conducted Date:</label>
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="preproc_conducted_date" id="preproc_conducted_date" value="<?= !empty($default->preproc_conducted_date) ? date("d-m-Y", strtotime($default->preproc_conducted_date)) : "" ?>">
+
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
+          <?php } ?>
+          <?php if ($default->status_id >= 2) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
@@ -305,12 +311,12 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>*Target Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="prebid_target_date" id="prebid_target_date" value="<?= date("d-m-Y", strtotime($default->prebid_target_date)) ?>" disabled>
-                      <input disabled type="hidden" name="prebid_target_date" value="<?= date("d-m-Y", strtotime($default->prebid_target_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="prebid_target_date" id="prebid_target_date" value="<?= !empty($default->prebid_target_date) ? date("d-m-Y", strtotime($default->prebid_target_date)) : "" ?>" disabled>
+                      <input disabled type="hidden" name="prebid_target_date" value="<?= !empty($default->prebid_target_date) ? date("d-m-Y", strtotime($default->prebid_target_date)) : "" ?>">
                       <script>
-                        $(document).on("change", '#prebid_conducted_date',
+                        $(document).on("change", '#preproc_conducted_date',
                           function(e) {
-                            var tmp = $("#prebid_conducted_date").val().split("-");
+                            var tmp = $("#preproc_conducted_date").val().split("-");
                             var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
                             result.setDate(result.getDate() + 8);
                             console.log(result);
@@ -324,7 +330,7 @@
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="prebid_conducted_date" id="prebid_conducted_date" value="<?= date("d-m-Y", strtotime($default->prebid_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="prebid_conducted_date" id="prebid_conducted_date" value="<?= !empty($default->prebid_conducted_date) ? date("d-m-Y", strtotime($default->prebid_conducted_date)) : "" ?>">
 
                     </div>
                   </div>
@@ -332,6 +338,8 @@
               </div>
             </div>
 
+          <?php } ?>
+          <?php if ($default->status_id >= 4) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
@@ -346,9 +354,9 @@
                       <input disabled type="text" class="form-control form-control-sm datepicker" id="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->sobe_target_date)) ?>" disabled>
                       <input disabled type="hidden" name="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->sobe_target_date)) ?>">
                       <script>
-                        $(document).on("change", '#sobe_conducted_date',
+                        $(document).on("change", '#prebid_conducted_date',
                           function(e) {
-                            var tmp = $("#sobe_conducted_date").val().split("-");
+                            var tmp = $("#prebid_conducted_date").val().split("-");
                             var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
                             result.setDate(result.getDate() + 14);
                             console.log(result);
@@ -362,7 +370,7 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="sobe_conducted_date" id="sobe_conducted_date" value="<?= date("d-m-Y", strtotime($default->sobe_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="sobe_conducted_date" id="sobe_conducted_date" value="<?= !empty($default->sobe_conducted_date) ? date("d-m-Y", strtotime($default->sobe_conducted_date)) : "" ?>">
 
                     </div>
                   </div>
@@ -378,25 +386,55 @@
 
 
 
+          <?php } ?>
+
+          <?php if ($default->status_id >= 5) { ?>
 
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
                   PQ Details
                 </h3>
-                <button type="button" class="btn btn-sm btn-dark float-right" id="add_supplier" disabled>Add Supplier Entry</button>
               </div>
               <div class="card-body">
+
+                <table id="example1" class="table table-bordered table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>SUPPLIER</th>
+                      <th>BID Price</th>
+                      <th>LC/Local</th>
+                      <th>Conducted Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wrapper">
+                    <?php $ctr = 1 ?>
+                    <?php foreach ($data['suppliers'] as $res) { ?>
+                      <tr>
+                        <td><?= $ctr ?></td>
+                        <td><?= $res['supplier'] ?></td>
+                        <td><?= number_format($res['price'], 2) ?></td>
+                        <td><?= $res['type'] ?></td>
+                        <td><?= date("d-m-Y", strtotime($res['conducted_date'])) ?></td>
+                        <td><?= $res['status'] ?></td>
+                      </tr>
+                      <?php $ctr++; ?>
+                    <?php } ?>
+                  </tbody>
+                </table>
+                <br>
                 <div class="row">
-                  <div class="col-sm-6">
+                  <div class="col-sm-3">
                     <div class="form-group">
                       <label>*Target Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="pq_target_date" id="pq_target_date" value="<?= date("d-m-Y", strtotime($default->pq_target_date)) ?>" disabled>
-                      <input disabled type="hidden" name="pq_target_date" value="<?= date("d-m-Y", strtotime($default->pq_target_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="pq_target_date" id="pq_target_date" value="<?= !empty($default->pq_target_date) ? date("d-m-Y", strtotime($default->pq_target_date)) : "" ?>" disabled>
+                      <input disabled type="hidden" name="pq_target_date" value="<?= !empty($default->pq_target_date) ? date("d-m-Y", strtotime($default->pq_target_date)) : "" ?>">
                       <script>
-                        $(document).on("change", '#pq_conducted_date',
+                        $(document).on("change", '#sobe_conducted_date',
                           function(e) {
-                            var tmp = $("#pq_conducted_date").val().split("-");
+                            var tmp = $("#sobe_conducted_date").val().split("-");
                             var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
                             result.setDate(result.getDate() + 14);
                             console.log(result);
@@ -408,58 +446,45 @@
 
                     </div>
                   </div>
-                  <div class="col-sm-6">
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-3">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date" value="<?= date("d-m-Y", strtotime($default->pq_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date">
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Supplier:</label>
+                      <input disabled type="text" class="form-control form-control-sm" name="pq_supplier" id="pq_supplier">
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Bid Price:</label>
+                      <input disabled type="text" class="form-control form-control-sm currency" name="pq_price">
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>LC/Local:</label>
+                      <select disabled class="form-control form-control-sm" name="pq_local" id="pq_local">
+                        <?php foreach ($data['default']['local'] as $res) { ?>
+                          <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
+                        <?php } ?>
+                      </select>
                     </div>
                   </div>
                 </div>
 
-                <table id="example1" class="table table-bordered table-striped table-sm">
-                  <thead>
-                    <tr>
-                      <th>Rank</th>
-                      <th>SUPPLIER</th>
-                      <th>BID Price</th>
-                      <th>LC/Local</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="wrapper">
-                    <?php foreach ($data['suppliers'] as $res) { ?>
-                      <tr>
-                        <td>
-                          <input disabled type="text" class="form-control form-control-sm" name="supplier_rank[]" value="<?= $res['rank'] ?>">
-                        </td>
-                        <td>
-                          <input disabled type="text" class="form-control form-control-sm" name="supplier[]" value="<?= $res['supplier'] ?>">
-                        </td>
-                        <td><input disabled type="text" class="form-control form-control-sm currency" name="bid_price[]" value="<?= number_format($res['price'], 2) ?>"></td>
-                        <td>
-                          <select disabled name="local[]" class="form-control form-control-sm">
-                            <?php foreach ($data['default']['local'] as $subres) { ?>
-                              <option value="<?= $subres['id']; ?>" <?= $res['local_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                            <?php } ?>
-                          </select>
-                        </td>
-                        <td>
-                          <select disabled name="supplier_status[]" class="form-control form-control-sm">
-                            <?php foreach ($data['default']['supplier_status'] as $subres) { ?>
-                              <option value="<?= $subres['id']; ?>" <?= $res['status_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                            <?php } ?>
-                          </select>
-                        </td>
-                        <td>
-                          <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
-                        </td>
-                      </tr>
-                    <?php } ?>
-                  </tbody>
-                </table>
+
               </div>
             </div>
+          <?php } ?>
+
+          <?php if ($default->status_id >= 7 && $default->status_id != 17) { ?>
 
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
@@ -472,13 +497,16 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>*Submitted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="pqr_conducted_date" id="pqr_conducted_date" value="<?= date("d-m-Y", strtotime($default->pqr_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="pqr_conducted_date" id="pqr_conducted_date" value="<?= !empty($default->pqr_conducted_date) ? date("d-m-Y", strtotime($default->pqr_conducted_date)) : "" ?>">
 
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          <?php } ?>
+
+          <?php if ($default->status_id >= 8 && $default->status_id != 17) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
@@ -490,7 +518,7 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>*Date Approved:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="noa_conducted_date" id="noa_conducted_date" value="<?= date("d-m-Y", strtotime($default->noa_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="noa_conducted_date" id="noa_conducted_date" value="<?= !empty($default->noa_conducted_date) ? date("d-m-Y", strtotime($default->noa_conducted_date)) : "" ?>">
 
 
                     </div>
@@ -499,6 +527,8 @@
               </div>
             </div>
 
+          <?php } ?>
+          <?php if ($default->status_id >= 9 && $default->status_id != 17) { ?>
 
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
@@ -511,7 +541,7 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ors_conducted_date" id="ors_conducted_date" value="<?= date("d-m-Y", strtotime($default->ors_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ors_conducted_date" id="ors_conducted_date" value="<?= !empty($default->ors_conducted_date) ? date("d-m-Y", strtotime($default->ors_conducted_date)) : "" ?>">
 
 
 
@@ -520,6 +550,8 @@
                 </div>
               </div>
             </div>
+          <?php } ?>
+          <?php if ($default->status_id >= 10 && $default->status_id != 17) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
@@ -531,13 +563,16 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ntp_conducted_date" id="ntp_conducted_date" value="<?= date("d-m-Y", strtotime($default->ntp_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ntp_conducted_date" id="ntp_conducted_date" value="<?= !empty($default->ntp_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conducted_date)) : "" ?>">
 
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          <?php } ?>
+
+          <?php if ($default->status_id >= 11 && $default->status_id != 17) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
@@ -549,21 +584,33 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date" id="ntp_conforme_conducted_date" value="<?= date("d-m-Y", strtotime($default->ntp_conforme_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date_display" id="ntp_conforme_conducted_date_display" value="<?= !empty($default->ntp_conforme_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conforme_conducted_date)) : "" ?>" disabled>
+                      <input disabled type="hidden" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date" id="ntp_conforme_conducted_date" value="<?= !empty($default->ntp_conforme_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conforme_conducted_date)) : "" ?>">
 
+                      <script>
+                        $(document).on("change", '#ntp_delivery_period,#ntp_conducted_date',
+                          function(e) {
+                            var tmp = $("#ntp_conducted_date").val().split("-");
+                            var result = new Date(tmp[2], tmp[1], +tmp[0]);
+                            result.setDate(result.getDate() + parseInt($("#ntp_delivery_period").val()));
+                            var month = result.getMonth();
+                            $("#ntp_conforme_conducted_date_display").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                            $("[name='ntp_conforme_conducted_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                          })
+                      </script>
                     </div>
                   </div>
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*Delivery Period</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ntp_delivery_period" id="ntp_delivery_period" value="<?= date("d-m-Y", strtotime($default->delivery_period)) ?>">
+                      <input disabled type="number" class="form-control form-control-sm" name="ntp_delivery_period" id="ntp_delivery_period" value="<?= $default->delivery_period ?>">
 
                     </div>
                   </div>
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*LDD:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= date("d-m-Y", strtotime($default->ldd)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>">
 
                     </div>
                   </div>
@@ -571,7 +618,9 @@
               </div>
             </div>
 
+          <?php } ?>
 
+          <?php if ($default->status_id >= 12 && $default->status_id != 17) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
@@ -582,8 +631,8 @@
                 <div class="row">
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="delivery_conducted_date" id="delivery_conducted_date" value="<?= $default->delivery_conducted_date ?>">
+                      <label>*Date Delivered:</label>
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="delivery_conducted_date" id="delivery_conducted_date" value="<?= !empty($default->delivery_conducted_date) ? date("d-m-Y", strtotime($default->delivery_conducted_date)) : "" ?>">
 
 
 
@@ -593,7 +642,9 @@
               </div>
             </div>
 
+          <?php } ?>
 
+          <?php if ($default->status_id >= 13 && $default->status_id != 17) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
@@ -605,13 +656,15 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="inspected_conducted_date" id="inspected_conducted_date" value="<?= date("d-m-Y", strtotime($default->inspected_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="inspected_conducted_date" id="inspected_conducted_date" value="<?= !empty($default->inspected_conducted_date) ? date("d-m-Y", strtotime($default->inspected_conducted_date)) : "" ?>">
 
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          <?php } ?>
+          <?php if ($default->status_id >= 14 && $default->status_id != 17) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
@@ -623,7 +676,7 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="accepted_conducted_date" id="accepted_conducted_date" value="<?= date("d-m-Y", strtotime($default->accepted_conducted_date)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="accepted_conducted_date" id="accepted_conducted_date" value="<?= !empty($default->accepted_conducted_date) ? date("d-m-Y", strtotime($default->accepted_conducted_date)) : "" ?>">
 
 
                     </div>
@@ -646,7 +699,7 @@
                   <div class="col-sm-4">
                     <div class="form-group ">
                       <label>Amount</label>
-                      <input disabled type="number" class="form-control form-control-sm" name="amount" value="<?= number_format($default->amount, 2) ?>">
+                      <input disabled type="text" class="form-control form-control-sm currency" name="amount" id="amount" value="<?= number_format($default->amount, 2) ?>">
                     </div>
                   </div>
                 </div>
@@ -654,7 +707,7 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="accepted_date_1" id="accepted_date_1" value="<?= date("d-m-Y", strtotime($default->accepted_date_1)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="accepted_date_1" id="accepted_date_1" value="<?= !empty($default->accepted_date_1) ? date("d-m-Y", strtotime($default->accepted_date_1)) : "" ?>">
                     </div>
                   </div>
                   <div class="col-sm-4">
@@ -672,19 +725,18 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>Retention Amount</label>
-                      <input disabled type="number" class="form-control form-control-sm" id="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>" disabled>
+                      <input disabled type="text" class="form-control form-control-sm" id="retention_display" name="retention_display" value="<?= number_format($default->retention_amount, 2) ?>" disabled>
                       <input disabled type="hidden" name="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
 
                       <script>
                         $(document).on("change", '#retention_percentage,#contract_price',
                           function(e) {
-                            $("#retention_amount").val()
 
                             let total = (($("#retention_percentage").val() / 100) * parseFloat($("#contract_price").val().replace(",", ""))).toFixed(2);
 
                             const numFor = Intl.NumberFormat('en-US');
                             const new_for = numFor.format(total);
-                            $("#retention_amount").val(total).maskMoney();
+                            $("#retention_display").val(total).maskMoney();
                             $("[name='retention_amount']").val(total);
                           })
                       </script>
@@ -695,230 +747,241 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>Date:</label>
-                      <input disabled type="text" class="form-control form-control-sm datepicker" name="accepted_date_2" id="accepted_date_2" value="<?= date("d-m-Y", strtotime($default->accepted_date_2)) ?>">
+                      <input disabled type="text" class="form-control form-control-sm datepicker" name="accepted_date_2" id="accepted_date_2" value="<?= !empty($default->accepted_date_2) ? date("d-m-Y", strtotime($default->accepted_date_2)) : "" ?>">
 
                     </div>
                   </div>
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>LD Amount</label>
-                      <input disabled type="number" class="form-control form-control-sm currency" name="ld_amount" id="ld_amount" value="<?= number_format($default->ld_amount, 2)  ?>">
+                      <input disabled type="text" class="form-control form-control-sm currency" name="ld_amount" id="ld_amount" value="<?= number_format($default->ld_amount, 2)  ?>">
                     </div>
                   </div>
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>Total</label>
-                      <input disabled type="number" class="form-control form-control-sm currency" name="total" id="total" value="<?= number_format($default->total, 2)  ?>">
+                      <input disabled type="text" class="form-control form-control-sm" id="total_display" name="total_display" value="<?= number_format($default->total, 2)  ?>" disabled>
+                      <input disabled type="hidden" name="total" value="<?= number_format($default->total, 2) ?>">
+
+                      <script>
+                        $(document).on("change", '#amount,#retention_amount',
+                          function(e) {
+
+                            let total = (parseFloat($("#amount").val().replace(",", "")) + parseFloat($("#retention_amount").val().replace(",", ""))).toFixed(2);
+                            $("#total_display").val(total).maskMoney();
+                            $("[name='total']").val(total);
+                          })
+                      </script>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          <?php } ?>
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  TWG
-                </h3>
-                <button type="button" class="btn btn-sm btn-dark float-right" id="add_twg" disabled>Add TWG Entry</button>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <table id="example1" class="table table-bordered table-striped table-sm">
-                    <thead>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                TWG
+              </h3>
+              <button type="button" class="btn btn-sm btn-dark float-right" id="add_twg" disabled>Add TWG Entry</button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <table id="example1" class="table table-bordered table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Last Name</th>
+                      <th>First Name</th>
+                      <th>Middle Initial</th>
+                      <th>Suffix</th>
+                      <th>Branch of Service</th>
+                      <th>Serial No</th>
+                      <th>Designation</th>
+                      <th>Authority</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wrapper2">
+                    <?php foreach ($data['twgs'] as $res) { ?>
                       <tr>
-                        <th>Rank</th>
-                        <th>Last Name</th>
-                        <th>First Name</th>
-                        <th>Middle Initial</th>
-                        <th>Suffix</th>
-                        <th>Branch of Service</th>
-                        <th>Serial No</th>
-                        <th>Designation</th>
-                        <th>Authority</th>
-                        <th>Actions</th>
+                        <td>
+                          <select disabled name="twg_rank[]" class="form-control form-control-sm">
+                            <?php foreach ($data['default']['rank'] as $subres) { ?>
+                              <option value="<?= $subres['id']; ?>" <?= $res['rank_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        <td><input disabled type="text" class="form-control form-control-sm" name="last_name[]" value="<?= $res['last_name'] ?>"></td>
+                        <td><input disabled type="text" class="form-control form-control-sm" name="first_name[]" value="<?= $res['first_name'] ?>"></td>
+                        <td><input disabled type="text" class="form-control form-control-sm" name="middle_name[]" value="<?= $res['middle_name'] ?>"></td>
+                        <td>
+                          <select disabled name="suffix[]" class="form-control form-control-sm">
+                            <?php foreach ($data['default']['suffix'] as $subres) { ?>
+                              <option value="<?= $subres['id']; ?>" <?= $res['suffix_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        <td>
+                          <select disabled name="branch[]" class="form-control form-control-sm">
+                            <?php foreach ($data['default']['branch'] as $subres) { ?>
+                              <option value="<?= $subres['id']; ?>" <?= $res['branch_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        <td><input disabled type="text" class="form-control form-control-sm" name="serial_no[]" value="<?= $res['serial_no'] ?>"></td>
+                        <td>
+                          <select disabled name="designation[]" class="form-control form-control-sm">
+                            <?php foreach ($data['default']['designation'] as $subres) { ?>
+                              <option value="<?= $subres['id']; ?>" <?= $res['designation_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        <td><input disabled type="text" class="form-control form-control-sm" name="authority[]" value="<?= $res['authority'] ?>"></td>
+                        <td>
+                          <button type="button" class="btn btn-dark btn-remove-user btn-sm" disabled> <i class="fa fa-times"></i> </button>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody id="wrapper2">
-                      <?php foreach ($data['twgs'] as $res) { ?>
-                        <tr>
-                          <td>
-                            <select disabled name="twg_rank[]" class="form-control form-control-sm">
-                              <?php foreach ($data['default']['rank'] as $subres) { ?>
-                                <option value="<?= $subres['id']; ?>" <?= $res['rank_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                              <?php } ?>
-                            </select>
-                          </td>
-                          <td><input disabled type="text" class="form-control form-control-sm" name="last_name[]" value="<?= $res['last_name'] ?>"></td>
-                          <td><input disabled type="text" class="form-control form-control-sm" name="first_name[]" value="<?= $res['first_name'] ?>"></td>
-                          <td><input disabled type="text" class="form-control form-control-sm" name="middle_name[]" value="<?= $res['middle_name'] ?>"></td>
-                          <td>
-                            <select disabled name="suffix[]" class="form-control form-control-sm">
-                              <?php foreach ($data['default']['suffix'] as $subres) { ?>
-                                <option value="<?= $subres['id']; ?>" <?= $res['suffix_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                              <?php } ?>
-                            </select>
-                          </td>
-                          <td>
-                            <select disabled name="branch[]" class="form-control form-control-sm">
-                              <?php foreach ($data['default']['branch'] as $subres) { ?>
-                                <option value="<?= $subres['id']; ?>" <?= $res['branch_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                              <?php } ?>
-                            </select>
-                          </td>
-                          <td><input disabled type="text" class="form-control form-control-sm" name="serial_no[]" value="<?= $res['serial_no'] ?>"></td>
-                          <td>
-                            <select disabled name="designation[]" class="form-control form-control-sm">
-                              <?php foreach ($data['default']['designation'] as $subres) { ?>
-                                <option value="<?= $subres['id']; ?>" <?= $res['designation_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
-                              <?php } ?>
-                            </select>
-                          </td>
-                          <td><input type="text" class="form-control form-control-sm" name="authority[]" value="<?= $res['authority'] ?>"></td>
-                          <td>
-                            <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
-                          </td>
-                        </tr>
+                    <?php } ?>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                Allied Documents
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="app_file">APP/IAPP/AAPP (<a href="files/app/<?= $default->app_file ?>" target="_blank">Preview</a>)</label>
+                    <div class="input-group input-group-sm">
+                      <div class="custom-file">
+                        <input disabled type="file" class="custom-file-input" accept="application/pdf" id="app_file" name="app_file">
+                        <label class="custom-file-label" for="app_file">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="ppmp_file">PPMP/APPMP (<a href="files/ppmp/<?= $default->ppmp_file ?>" target="_blank">Preview</a>)
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <div class="custom-file">
+                        <input disabled type="file" class="custom-file-input" accept="application/pdf" id="ppmp_file" name="ppmp_file">
+                        <label class="custom-file-label" for="ppmp_file">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="procurement_file">Procurement Directive (<a href="files/procurement/<?= $default->procurement_file ?>" target="_blank">Preview</a>)
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <div class="custom-file">
+                        <input disabled type="file" class="custom-file-input" accept="application/pdf" id="procurement_file" name="procurement_file">
+                        <label class="custom-file-label" for="procurement_file">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="tech_specs_file">Tech Specs (<a href="files/tech/<?= $default->tech_specs_file ?>" target="_blank">Preview</a>)
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <div class="custom-file">
+                        <input disabled type="file" class="custom-file-input" accept="application/pdf" id="tech_specs_file" name="tech_specs_file">
+                        <label class="custom-file-label" for="tech_specs_file">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="bidding_file">Bidding Directive (<a href="files/bidding/<?= $default->bidding_file ?>" target="_blank">Preview</a>)
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <div class="custom-file">
+                        <input disabled type="file" class="custom-file-input" accept="application/pdf" id="bidding_file" name="bidding_file">
+                        <label class="custom-file-label" for="bidding_file">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="upr_file">UPR (<a href="files/upr/<?= $default->upr_file ?>" target="_blank">Preview</a>)
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <div class="custom-file">
+                        <input disabled type="file" class="custom-file-input" accept="application/pdf" id="upr_file" name="upr_file">
+                        <label class="custom-file-label" for="upr_file">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="other_file">Other Documents (<a href="files/other/<?= $default->other_file ?>" target="_blank">Preview</a>)
+                    </label>
+                    <div class="input-group input-group-sm">
+                      <div class="custom-file">
+                        <input disabled type="file" class="custom-file-input" accept="application/pdf" id="other_file" name="other_file">
+                        <label class="custom-file-label" for="other_file">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                Project Team
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>*Assigned Officer
+                    </label>
+                    <select disabled class="form-control select2bs4 form-control-sm" name="assigned_officer[]" id="assigned_officer" multiple="multiple">
+                      <?php foreach ($data['default']['officers'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>" <?= $default->officer_id == $res['id'] ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
                       <?php } ?>
-                    </tbody>
-                  </table>
-                </div>
-
-              </div>
-            </div>
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Allied Documents
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="app_file">APP/IAPP/AAPP (<a href="files/app/<?= $default->app_file ?>" target="_blank">Preview</a>)</label>
-                      <div class="input-group input-group-sm">
-                        <div class="custom-file">
-                          <input disabled type="file" class="custom-file-input" accept="application/pdf" id="app_file" name="app_file">
-                          <label class="custom-file-label" for="app_file">Choose file</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="ppmp_file">PPMP/APPMP (<a href="files/ppmp/<?= $default->ppmp_file ?>" target="_blank">Preview</a>)
-                      </label>
-                      <div class="input-group input-group-sm">
-                        <div class="custom-file">
-                          <input disabled type="file" class="custom-file-input" accept="application/pdf" id="ppmp_file" name="ppmp_file">
-                          <label class="custom-file-label" for="ppmp_file">Choose file</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="procurement_file">Procurement Directive (<a href="files/procurement/<?= $default->procurement_file ?>" target="_blank">Preview</a>)
-                      </label>
-                      <div class="input-group input-group-sm">
-                        <div class="custom-file">
-                          <input disabled type="file" class="custom-file-input" accept="application/pdf" id="procurement_file" name="procurement_file">
-                          <label class="custom-file-label" for="procurement_file">Choose file</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="tech_specs_file">Tech Specs (<a href="files/tech/<?= $default->tech_specs_file ?>" target="_blank">Preview</a>)
-                      </label>
-                      <div class="input-group input-group-sm">
-                        <div class="custom-file">
-                          <input disabled type="file" class="custom-file-input" accept="application/pdf" id="tech_specs_file" name="tech_specs_file">
-                          <label class="custom-file-label" for="tech_specs_file">Choose file</label>
-                        </div>
-                      </div>
-                    </div>
+                    </select>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="bidding_file">Bidding Directive (<a href="files/bidding/<?= $default->bidding_file ?>" target="_blank">Preview</a>)
-                      </label>
-                      <div class="input-group input-group-sm">
-                        <div class="custom-file">
-                          <input disabled type="file" class="custom-file-input" accept="application/pdf" id="bidding_file" name="bidding_file">
-                          <label class="custom-file-label" for="bidding_file">Choose file</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="upr_file">UPR (<a href="files/upr/<?= $default->upr_file ?>" target="_blank">Preview</a>)
-                      </label>
-                      <div class="input-group input-group-sm">
-                        <div class="custom-file">
-                          <input disabled type="file" class="custom-file-input" accept="application/pdf" id="upr_file" name="upr_file">
-                          <label class="custom-file-label" for="upr_file">Choose file</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label for="other_file">Other Documents (<a href="files/other/<?= $default->other_file ?>" target="_blank">Preview</a>)
-                      </label>
-                      <div class="input-group input-group-sm">
-                        <div class="custom-file">
-                          <input disabled type="file" class="custom-file-input" accept="application/pdf" id="other_file" name="other_file">
-                          <label class="custom-file-label" for="other_file">Choose file</label>
-                        </div>
-                      </div>
-                    </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>*Assigned Personnel
+                    </label>
+                    <select disabled class="form-control select2bs4 form-control-sm" name="assigned_personell[]" id="assigned_personell" multiple="multiple">
+                      <?php foreach ($data['default']['personells'] as $res) { ?>
+                        <option value="<?= $res['id'] ?>" <?= in_array($res['id'], explode(",", $default->personell_ids))  ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
+                      <?php } ?>
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Project Team
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>*Assigned Officer
-                      </label>
-                      <select disabled class="form-control select2bs4 form-control-sm" name="assigned_officer" id="assigned_officer" multiple="multiple">
-                        <?php foreach ($data['default']['officers'] as $res) { ?>
-                          <option value="<?= $res['id'] ?>" <?= $default->officer_id == $res['id'] ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>*Assigned Personnel
-                      </label>
-                      <select disabled class="form-control select2bs4 form-control-sm" name="assigned_personell[]" id="assigned_personell" multiple="multiple">
-                        <?php foreach ($data['default']['personells'] as $res) { ?>
-                          <option value="<?= $res['id'] ?>" <?= in_array($res['id'], explode(",", $default->personell_ids))  ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <?php include_once('layout/admin/content/project/modal/chronology.php') ?>
-            <?php include_once('layout/admin/content/project/modal/change_status_admin.php') ?>
+          <?php include_once('layout/admin/content/project/modal/chronology.php') ?>
         </form>
       </div>
       <!-- /.col -->
@@ -941,29 +1004,13 @@
     $("input[name='epa']").trigger("change");
   });
 
-  var wrapper = $("#wrapper");
-  var add_button = $("#add_supplier");
-
-  $(add_button).click(function(e) {
-    e.preventDefault();
-    var supp = $('.supplier').length
-    supp++;
-    $(wrapper).append('<tr><td> <input disabled type="text" class="form-control form-control-sm supplier" name="supplier_rank[]" value="' + supp + '"></td><td> <input disabled type="text" class="form-control form-control-sm" name="supplier[]"></td> <td>  <input disabled type="text" class="form-control form-control-sm currency" name="bid_price[]"> </td><td> <select disabled name = "local[]" class="form-control form-control-sm"><?php foreach ($data['default']['local'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select disabled name = "supplier_status[]" class="form-control form-control-sm"><?php foreach ($data['default']['supplier_status'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
-    $('.currency').maskMoney();
-  });
-
-  $(wrapper).on("click", ".btn-remove-user", function(e) {
-    e.preventDefault();
-    $(this).parent().parent().remove();
-  })
-
   var wrapper2 = $("#wrapper2");
   var add_button2 = $("#add_twg");
 
   $(add_button2).click(function(e) {
     e.preventDefault();
 
-    $(wrapper2).append('<tr><td> <select disabled name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select disabled name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select disabled name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select disabled name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $(wrapper2).append('<tr><td> <select disabled name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input disabled type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input disabled type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input disabled type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select disabled name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select disabled name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input disabled type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select disabled name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input disabled type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
   });
 
   $(wrapper2).on("click", ".btn-remove-user", function(e) {
@@ -1000,7 +1047,7 @@
 
 
   $(document).on("change", "input[name='epa']:checked", function(e) {
-    console.log($(this).val());
+
     if ($('input[name="epa"]:checked').val() == 1) {
       $('#asa_table').hide();
       $(add_button3).hide();
@@ -1009,4 +1056,14 @@
       $(add_button3).show();
     }
   })
+
+  // $(document).on("change", "input[name='no_bidder']:checked", function(e) {
+  //   if ($('input[name="no_bidder"]:checked').val() == 1) {
+  //     $("#new_status_id option[value='5']").remove();
+  //   } else {
+  //     var o = new Option("SOBE - PASSED", "5");
+  //     $(o).html("option text");
+  //     $("#new_status_id").append(o);
+  //   }
+  // })
 </script>
