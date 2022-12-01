@@ -30,7 +30,7 @@
                 <tr>
                   <th>Reference#</th>
                   <th>Status</th>
-                  <th>Officer</th>
+                  <!-- <th>Officer</th> -->
                   <th>EPA</th>
                   <th>Implementing Unit</th>
                   <th>Comodity</th>
@@ -45,8 +45,8 @@
                   <tr>
                     <td><?= $res['id'] ?></td>
                     <td><?= $res['status'] ?></td>
-                    <td><?= $res['officer_full_name'] ?></td>
-                    <td><?= (!empty($res['epa'])) ? 'YES' : 'NO'; ?></td>
+                    <!-- <td><?= $res['officer_full_name'] ?></td> -->
+                    <td><?= ($res['epa']) ? 'YES' : 'NO'; ?></td>
                     <td><?= $res['implementing_unit'] ?></td>
                     <td><?= $res['comodity'] ?></td>
                     <td><?= $res['program_manager'] ?></td>
@@ -67,6 +67,7 @@
                         </form>
                       <?php } else { ?>
                         <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/view" value="<?= $res['id']; ?>"> <i class="fa fa-eye"></i> View</button>
+                        <button type="button" class="btn btn-sm btn-dark btn-view" name="admin/project/edit" value="<?= $res['id']; ?>"> <i class="fa fa-edit"></i> Edit</button>
                       <?php } ?>
                     </td>
                   </tr>

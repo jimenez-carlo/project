@@ -89,7 +89,7 @@ class Base
   public function response_swal($message = "Action Successfull!", $title = "Action Successfull!", $icon = "success")
   {
     return sprintf(
-      '<script> Swal.fire({title:"%s",text:"%s",icon:"%s",showConfirmButton: false,timer: 1500})</script>',
+      '<script> Swal.fire({title:"%s",text:"%s",icon:"%s",showConfirmButton: false})</script>',
       $title,
       $message,
       $icon
@@ -168,8 +168,8 @@ class Base
     $data['suffix'] = $this->get_list("select * from tbl_suffix where deleted_flag = 0");
     $data['branch'] = $this->get_list("select * from tbl_branch where deleted_flag = 0");
     $data['users'] = $this->get_list("select id,concat(last_name, ', ', first_name,' ', LEFT(middle_name, 1), '[#',id,']') as name from tbl_users_info where deleted_flag = 0");
-    $data['officers'] = $this->get_list("select u.id,u.access_id,concat(ui.last_name, ', ', ui.first_name,' ', LEFT(ui.middle_name, 1), '[#',u.id,']') as name from tbl_users_info ui inner join tbl_users u on u.id = ui.id  inner join tbl_classification c on c.id = u.rank_id where u.deleted_flag = 0 and u.access_id = 2  and c.id = 1");
-    $data['personells'] = $this->get_list("select u.id,u.access_id,concat(ui.last_name, ', ', ui.first_name,' ', LEFT(ui.middle_name, 1), '[#',u.id,']') as name from tbl_users_info ui inner join tbl_users u on u.id = ui.id inner join tbl_classification c on c.id = u.rank_id where u.deleted_flag = 0 and u.access_id = 3 and c.id = 2");
+    $data['officers'] = $this->get_list("select u.id,u.access_id,concat(ui.last_name, ', ', ui.first_name,' ', LEFT(ui.middle_name, 1)) as name from tbl_users_info ui inner join tbl_users u on u.id = ui.id   where u.deleted_flag = 0 and u.access_id = 3  ");
+    $data['personells'] = $this->get_list("select u.id,u.access_id,concat(ui.last_name, ', ', ui.first_name,' ', LEFT(ui.middle_name, 1)) as name from tbl_users_info ui inner join tbl_users u on u.id = ui.id  where u.deleted_flag = 0 and u.access_id = 2 ");
     // Project
     $data['end_user'] = $this->get_list("select * from tbl_end_user where deleted_flag = 0");
     $data['comodity'] = $this->get_list("select * from tbl_comodity where deleted_flag = 0");
@@ -195,17 +195,17 @@ class Base
     $list = $this->get_list("select * from tbl_project_status where id < $id+1 and deleted_flag = 0  order by id asc ");
     $tmp = "";
     foreach ($list as $res) {
-      $tmp .= '<li class="breadcrumb-item active text-' . $res['color'] . '">' . ucfirst(strtolower($res['name'])) . '</li>';
+      $tmp .= '<li class="breadcrumb-item active text-' . $res['color'] . '">' . ($res['name']) . '</li>';
     }
     return $tmp;
   }
-  public function insert_project_status($project_id, $status_id, $remarks, $date)
+  public function insert_project_status($project_id, $status_id, $remarks, $date, $other = "null")
   {
     if (empty($date)) {
       $date = date("Y-m-d");
     }
     $created_by =  $_SESSION['user']->id;
-
-    $this->query("INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date) values($project_id, $status_id,'$remarks', $created_by, '$date')");
+    // echo "INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date, other_details) values($project_id, $status_id,'$remarks', $created_by, '$date',$other)";
+    $this->query("INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date, other_details) values($project_id, $status_id,'$remarks', $created_by, '$date',$other)");
   }
 }

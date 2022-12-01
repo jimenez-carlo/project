@@ -118,7 +118,7 @@
               <ul class="nav nav-treeview">
 
                 <li class="nav-item">
-                  <a href="#" class="nav-link btn-view" name="admin/project/my_list" value="<?= $user->id ?>">
+                  <a href="#" class="nav-link btn-view" name="admin/project/my_list" <?= ($_SESSION['user']->access_id != 1) ? 'value="' . $user->id . '"' : '' ?>>
                     <i class="far fa-circle nav-icon"></i>
                     <p>My Projects</p>
                   </a>

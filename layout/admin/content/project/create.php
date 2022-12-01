@@ -21,7 +21,7 @@
         <div id="result">
         </div>
 
-        <form method="post" name="project_create" refresh="admin/project/create" enctype="multipart/form-data">
+        <form method="post" name="project_create" enctype="multipart/form-data" refresh="<?= ($_SESSION['user']->access_id != 1) ? 'admin/project/my_list&id' . $_SESSION['user']->id : '' ?>">
           <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#create_modal" style="right: 20px;z-index: 99;position: fixed;bottom: 20px;">Create Project</button>
           <input type="submit" name="create" id="create" confirmation="Create New Project?" style="display:none">
           <div class="card card-dark card-outline card-tabs">
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*PABAC</label>
+                    <label>PABAC</label>
                     <select class="form-control form-control-sm" name="pabac" id="pabac">
                       <?php foreach ($data['default']['pabac'] as $res) { ?>
                         <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
@@ -77,26 +77,22 @@
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*PABAC Nr</label>
+                    <label>PABAC Nr</label>
                     <input type="text" class="form-control form-control-sm" name="pabac_nr" id="pabac_nr">
                   </div>
                 </div>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*UPR Nr</label>
+                    <label>UPR Nr</label>
                     <input type="text" class="form-control form-control-sm" name="upr_nr" id="upr_nr">
                   </div>
                 </div>
 
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>*Date of UPR:</label>
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-clock"></i></span>
-                      </div>
-                      <input type="text" class="form-control float-right daterange" id="upr_date" name="upr_date">
-                    </div>
+                    <label>Date of UPR:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="upr_date" id="upr_date">
+
                   </div>
                 </div>
                 <div class="col-sm-3">
@@ -386,9 +382,9 @@
                   <div class="form-group">
                     <label>*Assigned Officer
                     </label>
-                    <select class="form-control select2bs4 form-control-sm" name="assigned_officer" id="assigned_officer">
+                    <select class="form-control select2bs4 form-control-sm" name="assigned_officer[]" id="assigned_officer" multiple="multiple">
                       <?php foreach ($data['default']['officers'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>"><?= strtoupper($res['name']) ?></option>
+                        <option value="<?= $res['id'] ?>" selected><?= strtoupper($res['name']) ?></option>
                       <?php } ?>
                     </select>
                   </div>
@@ -399,7 +395,7 @@
                     </label>
                     <select class="form-control select2bs4 form-control-sm" name="assigned_personell[]" id="assigned_personell" multiple="multiple">
                       <?php foreach ($data['default']['personells'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>"><?= strtoupper($res['name']) ?></option>
+                        <option value="<?= $res['id'] ?>" <?= ($_SESSION['user']->id == $res['id'] && $_SESSION['user']->access_id == 2) ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
                       <?php } ?>
                     </select>
                   </div>

@@ -17,7 +17,7 @@ class Project extends Base
     $errors = array();
     $msg = '';
 
-    $required_fields = array('pabac_nr', 'project_description', 'qty', 'assigned_officer', 'preproc_target_date');
+    $required_fields = array('project_description', 'qty', 'assigned_officer', 'preproc_target_date');
 
     // if ($implementing_unit == 2) {
     //   $required_fields[] = 'upr_nr';
@@ -60,11 +60,13 @@ class Project extends Base
     $this->start_transaction();
 
     try {
+
       $created_by = $_SESSION['user']->id;
       $personell_ids = implode(",", $assigned_personell);
+      $officer_ids = implode(",", $assigned_officer);
       $end_user_ids = implode(",", $end_user);
       $upr_date = (!empty($upr_date) && DateTime::createFromFormat('d-m-Y', $upr_date) !== false) ? "'" . date("Y-m-d", strtotime($upr_date)) . "'" : "null";
-      $preproc_target_date = (!empty($preproc_target_date) && DateTime::createFromFormat('d-m-Y', $preproc_target_date) !== false) ? "'$preproc_target_date'" : "null";
+      $preproc_target_date = (!empty($preproc_target_date) && DateTime::createFromFormat('d-m-Y', $preproc_target_date) !== false) ? "'" . date("Y-m-d", strtotime($preproc_target_date)) . "'" : null;
 
       $app_file_name = $this->upload_file($app_file, "app");
       $ppmp_file_name = $this->upload_file($ppmp_file, "ppmp");
@@ -73,11 +75,12 @@ class Project extends Base
       $bidding_file_name = $this->upload_file($bidding_file, "bidding");
       $upr_file_name = $this->upload_file($upr_file, "upr");
       $other_file_name = $this->upload_file($other_file, "other");
-
       $abc = floatval(str_replace(",", "", $abc));
       $contract_price = floatval(str_replace(",", "", $contract_price));
       $residuals = floatval(str_replace(",", "", $residuals));
-      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$assigned_officer','$personell_ids','$created_by','$preproc_target_date')");
+
+      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by','$preproc_target_date')");
+
 
       $this->insert_project_status($project_id, 1, "Project Initialize", date("Y-m-d"));
 
@@ -88,10 +91,12 @@ class Project extends Base
           $asa_nr_value = $asa_nr[$key];
           $asa_date = ${'asa_date_' . $tmp};
           $asa_code = $asa_object[$key];
-          $asa_amt = $asa_amount[$key];
-          $asa_class = floatval(str_replace(",", "", $asa_expense_class[$key]));;
-          $asa_date_final = (!empty($asa_date) && DateTime::createFromFormat('d-m-Y', $asa_date) !== false) ? "'$asa_date'" : "null";
-          $this->query("INSERT INTO tbl_project_asa (project_id,asa_nr,asa_date,object_code,asa_amount,expense_class_id,created_by)  values ($project_id,'$asa_nr_value','$asa_date_final', '$asa_code','$asa_amt','$asa_class','$created_by')");
+          $asa_amt = floatval(str_replace(",", "", $asa_amount[$key]));
+          $asa_amount[$key];
+          $asa_class =  $asa_expense_class[$key];
+          $asa_date_final = (!empty($upr_date) && DateTime::createFromFormat('d-m-Y', $asa_date) !== false) ? "'" . date("Y-m-d", strtotime($asa_date)) . "'" : null;
+
+          $this->query("INSERT INTO tbl_project_asa (project_id,asa_nr,asa_date,object_code,asa_amount,expense_class_id,created_by)  values ($project_id,'$asa_nr_value',$asa_date_final, '$asa_code','$asa_amt','$asa_class','$created_by')");
         }
       }
 
@@ -116,9 +121,8 @@ class Project extends Base
       $result->result = $this->response_swal("User Project Created Successfully!", 'Successfull!');
       return $result;
     } catch (mysqli_sql_exception $exception) {
-
       $this->roll_back();
-      $result->result = $this->response_swal();
+      $result->result = $this->response_error();
       return $result;
     }
   }
@@ -135,12 +139,13 @@ class Project extends Base
     $errors = array();
     $msg = '';
     $where = '';
-    $required_fields = array('project_description', 'qty', 'assigned_officer', 'preproc_target_date');
+    $required_fields = array('project_description', 'qty', 'preproc_target_date');
 
     $where .= isset($epa) ? ", `epa` = '$epa'" : "";
     $where .= isset($implementing_unit) ? ", `implementing_unit_id` = '$implementing_unit'" : "";
     $where .= isset($pabac) ? ", `pabac_id` = '$pabac'" : "";
-    $where .= isset($pabac_nr) ? ", `pabac_nr` = '" . ((!empty($pabac_nr) && DateTime::createFromFormat('d-m-Y', $pabac_nr) !== false) ? "'" . date("Y-m-d", strtotime($upr_date)) . "'" : null) . "'" : "";
+    $where .= isset($pabac_nr) ? ", `pabac_nr` = '$pabac_nr'" : "";
+    $where .= isset($upr_date) ? ", `upr_date` = " . ((!empty($upr_date) && DateTime::createFromFormat('d-m-Y', $upr_date) !== false) ? "'" . date("Y-m-d", strtotime($upr_date))  : null) . "'" : "";
     $where .= isset($upr_nr) ? ", `upr_nr` = '$upr_nr'" : "";
     $where .= isset($comodity) ? ", `comodity_id` = '$comodity'" : "";
     $where .= isset($program_manager) ? ", `program_manager_id` = '$program_manager'" : "";
@@ -158,39 +163,43 @@ class Project extends Base
     }
 
     $where .= isset($mode_of_proc) ? ", `mode_of_proc_id` = '$mode_of_proc'" : "";
-    $where .= isset($preproc_target_date) ? ", `preproc_target_date` = " . ((!empty($preproc_target_date) && DateTime::createFromFormat('d-m-Y', $preproc_target_date) !== false) ? "'" . date("Y-m-d", strtotime($preproc_target_date))  : null) . "'" : "";
-    $where .= isset($preproc_conducted_date) ? ", `preproc_conducted_date` = " . ((!empty($preproc_conducted_date) && DateTime::createFromFormat('d-m-Y', $preproc_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($preproc_conducted_date))  : null) . "'" : "";
-
-    $where .= isset($prebid_target_date) ? ", `prebid_target_date` = " . ((!empty($prebid_target_date) && DateTime::createFromFormat('d-m-Y', $prebid_target_date) !== false) ? "'" . date("Y-m-d", strtotime($prebid_target_date))  : null) . "'" : "";
-    $where .= isset($prebid_conducted_date) ? ", `prebid_conducted_date` = " . ((!empty($prebid_conducted_date) && DateTime::createFromFormat('d-m-Y', $prebid_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($prebid_conducted_date))  : null) . "'" : "";
-    $where .= isset($sobe_target_date) ? ", `sobe_target_date` = " . ((!empty($sobe_target_date) && DateTime::createFromFormat('d-m-Y', $sobe_target_date) !== false) ? "'" . date("Y-m-d", strtotime($sobe_target_date))  : null) . "'" : "";
-    $where .= isset($sobe_conducted_date) ? ", `sobe_conducted_date` = " . ((!empty($sobe_conducted_date) && DateTime::createFromFormat('d-m-Y', $sobe_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($sobe_conducted_date))  : null) . "'" : "";
+    $where .= isset($preproc_target_date) ? ", `preproc_target_date` = " . ((!empty($preproc_target_date) && DateTime::createFromFormat('d-m-Y', $preproc_target_date) !== false) ? "'" . date("Y-m-d", strtotime($preproc_target_date)) . "'"  : "preproc_target_date") : "";
+    $where .= isset($preproc_conducted_date) ? ", `preproc_conducted_date` = " . ((!empty($preproc_conducted_date) && DateTime::createFromFormat('d-m-Y', $preproc_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($preproc_conducted_date)) . "'"  : "preproc_conducted_date") : "";
+    $where .= isset($prebid_target_date) ? ", `prebid_target_date`= " . ((!empty($prebid_target_date) && DateTime::createFromFormat('d-m-Y', $prebid_target_date) !== false) ? "'" . date("Y-m-d", strtotime($prebid_target_date)) . "'"  : "prebid_target_date") : "";
+    $where .= isset($prebid_conducted_date) ? ", `prebid_conducted_date` = " . ((!empty($prebid_conducted_date) && DateTime::createFromFormat('d-m-Y', $prebid_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($prebid_conducted_date)) . "'"  : "prebid_conducted_date") : "";
+    $where .= isset($sobe_target_date) ? ", `sobe_target_date` = " . ((!empty($sobe_target_date) && DateTime::createFromFormat('d-m-Y', $sobe_target_date) !== false) ? "'" . date("Y-m-d", strtotime($sobe_target_date)) . "'"  : "sobe_target_date") : "";
+    $where .= isset($sobe_conducted_date) ? ", `sobe_conducted_date`= " . ((!empty($sobe_conducted_date) && DateTime::createFromFormat('d-m-Y', $sobe_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($sobe_conducted_date)) . "'"  : "sobe_conducted_date") : "";
     $where .= isset($no_bidder) ? ", `no_bidder` = '$no_bidder'" : "";
-    $where .= isset($pq_target_date) ? ", `pq_target_date` = " . ((!empty($pq_target_date) && DateTime::createFromFormat('d-m-Y', $pq_target_date) !== false) ? "'" . date("Y-m-d", strtotime($pq_target_date))  : null) . "'" : "";
-    $where .= isset($pq_conducted_date) ? ", `pq_conducted_date` = " . ((!empty($pq_conducted_date) && DateTime::createFromFormat('d-m-Y', $pq_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($pq_conducted_date))  : null) . "'" : "";
-    $where .= isset($pqr_conducted_date) ? ", `pqr_conducted_date` = " . ((!empty($pqr_conducted_date) && DateTime::createFromFormat('d-m-Y', $pqr_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($pqr_conducted_date))  : null) . "'" : "";
-    $where .= isset($noa_conducted_date) ? ", `noa_conducted_date` = " . ((!empty($noa_conducted_date) && DateTime::createFromFormat('d-m-Y', $noa_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($noa_conducted_date))  : null) . "'" : "";
-    $where .= isset($ors_conducted_date) ? ", `ors_conducted_date` = " . ((!empty($ors_conducted_date) && DateTime::createFromFormat('d-m-Y', $ors_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ors_conducted_date))  : null) . "'" : "";
-    $where .= isset($ntp_conducted_date) ? ", `ntp_conducted_date` = " . ((!empty($ntp_conducted_date) && DateTime::createFromFormat('d-m-Y', $ntp_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ntp_conducted_date))  : null) . "'" : "";
-    $where .= isset($ntp_conforme_conducted_date) ? ", `ntp_conforme_conducted_date` = " . ((!empty($ntp_conforme_conducted_date) && DateTime::createFromFormat('d-m-Y', $ntp_conforme_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ntp_conforme_conducted_date))  : null) . "'" : "";
-    $where .= isset($ntp_delivery_period) ? ", `delivery_period` = " . ((!empty($ntp_delivery_period) && DateTime::createFromFormat('d-m-Y', $ntp_delivery_period) !== false) ? "'" . date("Y-m-d", strtotime($ntp_delivery_period))  : null) . "'" : "";
-    $where .= isset($ldd_date) ? ", `ldd` = " . ((!empty($ldd_date) && DateTime::createFromFormat('d-m-Y', $ldd_date) !== false) ? "'" . date("Y-m-d", strtotime($ldd_date))  : null) . "'" : "";
-    $where .= isset($delivery_conducted_date) ? ", `delivery_conducted_date` = '$delivery_conducted_date'" : "";
-    $where .= isset($inspected_conducted_date) ? ", `inspected_conducted_date` = " . ((!empty($inspected_conducted_date) && DateTime::createFromFormat('d-m-Y', $inspected_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($inspected_conducted_date))  : null) . "'" : "";
-    $where .= isset($accepted_conducted_date) ? ", `accepted_conducted_date` = " . ((!empty($accepted_conducted_date) && DateTime::createFromFormat('d-m-Y', $accepted_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($accepted_conducted_date))  : null) . "'" : "";
+    $where .= isset($pq_target_date) ? ", `pq_target_date` = " . ((!empty($pq_target_date) && DateTime::createFromFormat('d-m-Y', $pq_target_date) !== false) ? "'" . date("Y-m-d", strtotime($pq_target_date)) . "'"  : "pq_target_date") : "";
+    $where .= isset($pq_conducted_date) ? ", `pq_conducted_date` = " . ((!empty($pq_conducted_date) && DateTime::createFromFormat('d-m-Y', $pq_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($pq_conducted_date)) . "'"  : "pq_conducted_date") : "";
+    $where .= isset($pqr_conducted_date) ? ", `pqr_conducted_date`= " . ((!empty($pqr_conducted_date) && DateTime::createFromFormat('d-m-Y', $pqr_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($pqr_conducted_date)) . "'"  : "pqr_conducted_date") : "";
+    $where .= isset($noa_conducted_date) ? ", `noa_conducted_date` = " . ((!empty($noa_conducted_date) && DateTime::createFromFormat('d-m-Y', $noa_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($noa_conducted_date)) . "'"  : "noa_conducted_date") : "";
+    $where .= isset($ors_conducted_date) ? ", `ors_conducted_date` = " . ((!empty($ors_conducted_date) && DateTime::createFromFormat('d-m-Y', $ors_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ors_conducted_date)) . "'"  : "ors_conducted_date") : "";
+    $where .= isset($ntp_conducted_date) ? ", `ntp_conducted_date` = " . ((!empty($ntp_conducted_date) && DateTime::createFromFormat('d-m-Y', $ntp_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ntp_conducted_date)) . "'"  : "ntp_conducted_date") : "";
+    $where .= isset($ntp_conforme_conducted_date) ? ", `ntp_conforme_conducted_date` = " . ((!empty($ntp_conforme_conducted_date) && DateTime::createFromFormat('d-m-Y', $ntp_conforme_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ntp_conforme_conducted_date)) . "'"  : "ntp_conforme_conducted_date") : "";
+    $where .= isset($ntp_delivery_period) ? ", `delivery_period` = " . ((!empty($ntp_delivery_period) && DateTime::createFromFormat('d-m-Y', $ntp_delivery_period) !== false) ? "'" . date("Y-m-d", strtotime($ntp_delivery_period)) . "'"  : "delivery_period") : "";
+    $where .= isset($ldd_date) ? ", `ldd` = " . ((!empty($ldd_date) && DateTime::createFromFormat('d-m-Y', $ldd_date) !== false) ? "'" . date("Y-m-d", strtotime($ldd_date)) . "'"  : "ldd") : "";
+    $where .= isset($delivery_conducted_date) ? ", `delivery_conducted_date` = " . ((!empty($delivery_conducted_date) && DateTime::createFromFormat('d-m-Y', $delivery_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($delivery_conducted_date)) . "'"  : "delivery_conducted_date") : "";
+    $where .= isset($inspected_conducted_date) ? ", `inspected_conducted_date`= " . ((!empty($inspected_conducted_date) && DateTime::createFromFormat('d-m-Y', $inspected_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($inspected_conducted_date)) . "'"  : "inspected_conducted_date") : "";
+    $where .= isset($accepted_conducted_date) ? ", `accepted_conducted_date`= " . ((!empty($accepted_conducted_date) && DateTime::createFromFormat('d-m-Y', $accepted_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($accepted_conducted_date)) . "'"  : "accepted_conducted_date") : "";
     $where .= isset($dv) ? ", `dv` = '$dv'" : "";
     $where .= isset($amount) ? ", `amount` = '" . floatval(str_replace(",", "", $amount)) . "'" : "";
-    $where .= isset($accepted_date_1) ? ", `accepted_date_1` = " . ((!empty($accepted_date_1) && DateTime::createFromFormat('d-m-Y', $accepted_date_1) !== false) ? "'" . date("Y-m-d", strtotime($accepted_date_1))  : null) . "'" : "";
+    $where .= isset($accepted_date_1) ? ", `accepted_date_1` = " . ((!empty($accepted_date_1) && DateTime::createFromFormat('d-m-Y', $accepted_date_1) !== false) ? "'" . date("Y-m-d", strtotime($accepted_date_1)) . "'"  : "accepted_date_1") : "";
     $where .= isset($retention_percentage) ? ", `retention_percent` = '$retention_percentage'" : "";
     $where .= isset($retention_amount) ? ", `retention_amount` = '$retention_amount'" : "";
-    $where .= isset($accepted_date_2) ? ", `accepted_date_2` = " . ((!empty($accepted_date_2) && DateTime::createFromFormat('d-m-Y', $accepted_date_2) !== false) ? "'" . date("Y-m-d", strtotime($accepted_date_2))  : null) . "'" : "";
+    $where .= isset($accepted_date_2) ? ", `accepted_date_2` = " . ((!empty($accepted_date_2) && DateTime::createFromFormat('d-m-Y', $accepted_date_2) !== false) ? "'" . date("Y-m-d", strtotime($accepted_date_2)) . "'"  : "accepted_date_2") : "";
     $where .= isset($ld_amount) ? ", `ld_amount` = '" . floatval(str_replace(",", "", $ld_amount)) . "'" : "";
     $where .= isset($total) ? ", `total` = '" . floatval(str_replace(",", "", $total)) . "'" : "";
-    $where .= isset($assigned_officer) ? ", `officer_id` = '$assigned_officer'" : "";
+
 
     if (isset($assigned_personell)) {
       $personell_ids = implode(",", $assigned_personell);
       $where .= isset($assigned_personell) ? ", `personell_ids` = '$personell_ids'" : "";
+    }
+
+    if (isset($assigned_officer)) {
+      $officer_ids = implode(",", $assigned_officer);
+      $where .= isset($assigned_officer) ? ", `officer_id` = '$officer_ids'" : "";
     }
 
     // Implementing unit = ASCOM
@@ -242,29 +251,35 @@ class Project extends Base
       }
 
       if ($new_status_id == 5) {
-
+        if (isset($no_bidder)) {
+          $msg .= "Cant Change Status To SOBE PASSED No Bidder Checked!";
+          $result->result = $this->response_swal($msg, "System Error", "error");
+          $result->items = implode(',', array('no_bidder'));
+          return $result;
+        }
 
         $required_fields[] = 'sobe_conducted_date';
         $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
         $where .=  ", `pq_target_date` = '$pq_target_date'";
       }
 
-      if ($new_status_id == 7) {
+      if ($new_status_id == 7 || $new_status_id == 17) {
         $required_fields[] = 'pq_conducted_date';
+        $required_fields[] = 'pq_supplier';
+        $required_fields[] = 'pq_price';
+        $required_fields[] = 'pq_local';
       }
 
-      if ($new_status_id == 8) {
-        $required_fields[] = 'pqr_conducted_date';
-        if (!isset($supplier)) {
-          $msg .= "No Supplier Entry!";
-          $result->result = $this->response_swal($msg, "System Error", "error");
-          $result->items = implode(',', array('supplier'));
-          return $result;
-        }
-      }
 
       if ($new_status_id == 9) {
-        $required_fields += array('abc', 'contract_nr', 'contract_price', 'residuals', 'noa_conducted_date');
+        $abc = floatval(str_replace(",", "", $abc));
+        $contract_price = floatval(str_replace(",", "", $contract_price));
+        $residuals = floatval(str_replace(",", "", $residuals));
+
+
+        if (empty($residuals)) {
+          $required_fields[] = 'residuals_display';
+        }
         $required_fields[] = 'abc';
         $required_fields[] = 'contract_nr';
         $required_fields[] = 'contract_price';
@@ -290,45 +305,50 @@ class Project extends Base
         $required_fields[] = 'delivery_conducted_date';
       }
 
-      if ($new_status_id == 14) {
-        // $required_fields[] = 'accepted_conducted_date';
-        // $required_fields[] = 'dv';
-        // $required_fields[] = 'amount';
-        // $required_fields[] = 'accepted_date_1';
-        // $required_fields[] = 'retention_percent';
-        // $required_fields[] = 'retention_amount';
-        // $required_fields[] = 'accepted_date_2';
-        // $required_fields[] = 'ld_amount';
-        // $required_fields[] = 'total';
-        // if ($status_id == 14 && !isset($twg_rank)) {
-        //   $msg .= "No TWG Entry!";
-        //   $result->result = $this->response_swal($msg);
-        //   $result->items = implode(',', array('twg_rank'));
-        //   return $result;
-        // }
+      if ($new_status_id == 15) {
+        $amount = floatval(str_replace(",", "", $amount));
+        $retention_amount = floatval(str_replace(",", "", $retention_amount));
+        $ld_amount = floatval(str_replace(",", "", $ld_amount));
+        $total = floatval(str_replace(",", "", $total));
+
+        if (empty($total)) {
+          $required_fields[] = 'total_display';
+        }
+        if (empty($retention_amount)) {
+          $required_fields[] = 'retention_display';
+        }
+
+        $required_fields[] = 'accepted_conducted_date';
+        $required_fields[] = 'amount';
+        $required_fields[] = 'accepted_date_1';
+        $required_fields[] = 'retention_percent';
+        $required_fields[] = 'retention_amount';
+        $required_fields[] = 'accepted_date_2';
+        $required_fields[] = 'ld_amount';
+        $required_fields[] = 'total';
       }
     } else {
       // If status PREPROC PASSED/FAILED
       $status_id = (int)$status_id;
-      if ($status_id == 2 || $status_id == 3) {
+      if ($status_id >= 2 || $status_id >= 3) {
         $required_fields[] = 'preproc_target_date';
         $required_fields[] = 'preproc_conducted_date';
 
-        if ($status_id == 2) {
+        if ($status_id >= 2) {
           $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
           $where .=  ", `prebid_target_date` = '$prebid_target_date'";
         }
       }
 
-      if ($status_id == 4) {
+      if ($status_id >= 4) {
         $required_fields[] = 'prebid_conducted_date';
         $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 14 days'));
         $where .=  ", `sobe_target_date` = '$sobe_target_date'";
       }
 
 
-      if ($status_id == 6) {
-        if ($status_id == 5) {
+      if ($status_id >= 6) {
+        if ($status_id >= 5) {
           $required_fields[] = 'no_bidder';
         } else {
           $required_fields[] = 'no_bidder';
@@ -336,29 +356,27 @@ class Project extends Base
         }
       }
 
-      if ($status_id == 5) {
-        $required_fields[] = 'supplier';
+      if ($status_id >= 5) {
+        // $required_fields[] = 'supplier';
         $required_fields[] = 'sobe_conducted_date';
         $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
         $where .=  ", `pq_target_date` = '$pq_target_date'";
       }
 
-      if ($status_id == 7) {
+      if ($status_id == 7 || $status_id == 17) {
         $required_fields[] = 'pq_conducted_date';
+        $required_fields[] = 'pq_supplier';
+        $required_fields[] = 'pq_price';
+        $required_fields[] = 'pq_local';
       }
 
-      if ($status_id == 8) {
-        $required_fields[] = 'pqr_conducted_date';
-        if (!isset($supplier)) {
-          $msg .= "No Supplier Entry!";
-          $result->result = $this->response_swal($msg, "System Error", "error");
-          $result->items = implode(',', array('supplier'));
-          return $result;
+
+      if ($status_id >= 9) {
+
+        if (empty($residuals)) {
+          $required_fields[] = 'residuals_display';
         }
-      }
 
-      if ($status_id == 9) {
-        $required_fields += array('abc', 'contract_nr', 'contract_price', 'residuals', 'noa_conducted_date');
         $required_fields[] = 'abc';
         $required_fields[] = 'contract_nr';
         $required_fields[] = 'contract_price';
@@ -366,34 +384,45 @@ class Project extends Base
         $required_fields[] = 'noa_conducted_date';
       }
 
-      if ($status_id == 10) {
+      if ($status_id >= 10) {
         $required_fields[] = 'ors_conducted_date';
       }
 
-      if ($status_id == 11) {
+      if ($status_id >= 11) {
         $required_fields[] = 'ntp_conducted_date';
       }
 
-      if ($status_id == 12) {
+      if ($status_id >= 12) {
         $required_fields[] = 'ntp_conforme_conducted_date';
         $required_fields[] = 'ntp_delivery_period';
         $required_fields[] = 'ldd_date';
       }
 
-      if ($status_id == 13) {
+      if ($status_id >= 13) {
         $required_fields[] = 'delivery_conducted_date';
       }
 
-      if ($status_id == 14) {
-        // $required_fields[] = 'accepted_conducted_date';
-        // $required_fields[] = 'dv';
-        // $required_fields[] = 'amount';
-        // $required_fields[] = 'accepted_date_1';
-        // $required_fields[] = 'retention_percent';
-        // $required_fields[] = 'retention_amount';
-        // $required_fields[] = 'accepted_date_2';
-        // $required_fields[] = 'ld_amount';
-        // $required_fields[] = 'total';
+      if ($status_id >= 15) {
+        $amount = floatval(str_replace(",", "", $amount));
+        $retention_amount = floatval(str_replace(",", "", $retention_amount));
+        $ld_amount = floatval(str_replace(",", "", $ld_amount));
+        $total = floatval(str_replace(",", "", $total));
+
+        if (empty($total)) {
+          $required_fields[] = 'total_display';
+        }
+        if (empty($retention_amount)) {
+          $required_fields[] = 'retention_display';
+        }
+
+        $required_fields[] = 'accepted_conducted_date';
+        $required_fields[] = 'amount';
+        $required_fields[] = 'accepted_date_1';
+        $required_fields[] = 'retention_percent';
+        $required_fields[] = 'retention_amount';
+        $required_fields[] = 'accepted_date_2';
+        $required_fields[] = 'ld_amount';
+        $required_fields[] = 'total';
         // if ($status_id == 14 && !isset($twg_rank)) {
         //   $msg .= "No TWG Entry!";
         //   $result->result = $this->response_swal($msg);
@@ -422,7 +451,7 @@ class Project extends Base
 
     if (!empty($errors)) {
       $msg .= "Please Fill Blank Fields!";
-      $result->result = $this->response_swal($msg);
+      $result->result = $this->response_swal($msg, "System Error", "error");
       $result->items = implode(',', $errors);
       return $result;
     }
@@ -458,7 +487,7 @@ class Project extends Base
       $this->query("UPDATE tbl_project set id = id $where , updated_by = '$updated_by', updated_date = '$updated_date' where id = $id");
 
       $this->query("DELETE FROM tbl_project_asa where project_id = $id");
-      $this->query("DELETE FROM tbl_project_supplier where project_id = $id");
+      // $this->query("DELETE FROM tbl_project_supplier where project_id = $id");
       $this->query("DELETE FROM tbl_project_twg where project_id = $id");
 
       if (isset($asa_nr)) {
@@ -475,15 +504,10 @@ class Project extends Base
         }
       }
 
-      if (isset($supplier)) {
-        foreach ($supplier as $key => $res) {
-          $supplier_r = $supplier_rank[$key];
-          $supplier_id = $supplier[$key];
-          $local_id = $local[$key];
-          $price = floatval(str_replace(",", "", $bid_price[$key]));
-          $new_supplier_status = $supplier_status[$key];
-          $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,`rank`,created_by)  values ('$id','$price', '$local_id','$supplier_id','$new_supplier_status','$supplier_r','$updated_by')");
-        }
+      if (isset($change_status) && ($new_status_id == 7 || $new_status_id == 17)) {
+        $price = floatval(str_replace(",", "", $pq_price));
+        $pq_final_date = date("Y-m-d", strtotime($pq_conducted_date));
+        $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,created_by,`conducted_date`)  values ('$id','$price', '$pq_local','$pq_supplier','$new_status_id','$updated_by','$pq_final_date')");
       }
 
       if (isset($twg_rank)) {
@@ -503,15 +527,20 @@ class Project extends Base
 
       if (isset($change_status)) {
 
-        $tbl = array(2 => "preproc_conducted_date", 4 => "prebid_conducted_date", 5 => "sobe_conducted_date", 7 => "pq_conducted_date", 8 => "pqr_conducted_date", 9 => "noa_conducted_date", 12 => "ntp_conducted_date", "ntp_conforme_conducted_date", 13 => "delivery_conducted_date", 14 => "inspected_conducted_date", 15 => "accepted_conducted_date");
+        $tbl = array(2 => "preproc_conducted_date", 3 => "preproc_conducted_date", 4 => "prebid_conducted_date", 5 => "sobe_conducted_date", 6 => "sobe_conducted_date", 7 => "pq_conducted_date", 17 => "pq_conducted_date", 8 => "pqr_conducted_date", 9 => "noa_conducted_date", 10 => "ors_conducted_date", 11 => "ntp_conducted_date", 12 => "ntp_conforme_conducted_date",  13 => "delivery_conducted_date", 14 => "inspected_conducted_date", 15 => "accepted_conducted_date");
         $conducted_date = date("Y-m-d");
+
         if (in_array($new_status_id, array_keys($tbl))) {
           $tmp = ${$tbl[$new_status_id]};
           $conducted_date = ((!empty($tmp) && DateTime::createFromFormat('d-m-Y', $tmp) !== false) ?  date("Y-m-d", strtotime($tmp)) : $tmp);
         }
+        $other_details = "null";
+        if ($new_status_id == 7 || $new_status_id == 8) {
+          $other_details = "'$pq_supplier'";
+        }
 
 
-        $this->insert_project_status($id, $new_status_id, $remarks, $conducted_date);
+        $this->insert_project_status($id, $new_status_id, $remarks, $conducted_date, $other_details);
         $this->query("UPDATE tbl_project set status_id = $new_status_id where id = $id");
         $this->commit_transaction();
         $result->status = true;
@@ -524,9 +553,8 @@ class Project extends Base
       $result->result = $this->response_swal("Project Updated Successfully!", 'Successfull!');
       return $result;
     } catch (mysqli_sql_exception $exception) {
-      print_r($exception);
       $this->roll_back();
-      $result->result = $this->response_swal();
+      $result->result = $this->response_error();
       return $result;
     }
   }
@@ -545,7 +573,7 @@ class Project extends Base
     } catch (mysqli_sql_exception $exception) {
       $this->roll_back();
 
-      $result->result = $this->response_swal();
+      $result->result = $this->response_error();
       return $result;
     }
   }
