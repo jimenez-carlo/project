@@ -1,9 +1,9 @@
 <?php
-  require('config/functions.php');
-  require('db/conn.php');
-  require('class/dashboard.php');
-  
-  $dashboard = new Dashboard($conn);
+require('config/functions.php');
+// require('db/conn.php');
+require('class/dashboard.php');
+
+$dashboard = new Dashboard($conn);
 ?>
 <script>
   var base_url = "<?= BASE_URL; ?>";
