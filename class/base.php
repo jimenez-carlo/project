@@ -185,6 +185,12 @@ class Base
     $data['supplier_status'] = $this->get_list("select * from tbl_supplier_status where deleted_flag = 0");
     $data['designation'] = $this->get_list("select * from tbl_designation where deleted_flag = 0");
     $data['project_status'] = $this->get_list("select * from tbl_project_status where deleted_flag = 0");
+    $this->get_list("select * from tbl_project_status where deleted_flag = 0");
+    $tmp = array();
+    foreach ($this->get_list("select * from tbl_project_status where deleted_flag = 0") as $res) {
+      $tmp[$res['id']] = strtoupper($res['name']);
+    }
+    $data['set_status'] = $tmp;
     return $data;
   }
   public function breadcrumb($id = null)

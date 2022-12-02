@@ -5,16 +5,14 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Editing Project #<?= $default->id ?></h1>
+          <h1 class="m-0">Reference No#<?= $default->id ?> - <?= $data['default']['set_status'][$default->status_id] ?></h1>
         </div><!-- /.col -->
 
 
       </div><!-- /.row -->
       <div class="row mb-2">
         <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-left">
-            <?= $data['bread_crumb'] ?>
-          </ol>
+
         </div><!-- /.col -->
 
       </div><!-- /.row -->
