@@ -300,7 +300,7 @@
               </div>
             </div>
           <?php } ?>
-          <?php if ($default->status_id >= 2) { ?>
+          <?php if ($default->status_id == 2 || $default->status_id >= 2) { ?>
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
                 <h3 class="card-title">
