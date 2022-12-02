@@ -17,8 +17,8 @@
                         <th>Conducted Date</th>
                         <th>Remarks</th>
                         <th>Others Details</th>
-                        <th>Created Date</th>
-                        <th>Created By</th>
+                        <th>Updated By</th>
+                        <th>Date Updated</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -28,8 +28,8 @@
                           <td><?= date("d-m-Y", strtotime($res['conducted_date'])) ?></td>
                           <td><?= strtoupper($res['remarks']) ?></td>
                           <td><?= strtoupper($res['other_details']) ?></td>
-                          <td><?= date("d-m-Y", strtotime($res['created_date'])) ?></td>
                           <td><?= ucwords($res['full_name']) ?></td>
+                          <td><?= date("d-m-Y", strtotime($res['created_date'])) ?></td>
                         </tr>
                       <?php } ?>
 
