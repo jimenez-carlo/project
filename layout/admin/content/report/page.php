@@ -310,7 +310,7 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['project_status'] as $res) { ?>
                         <div class="custom-control">
-                          <input class="form-check-input" id="status_<?= $res['id'] ?>" type="checkbox" name="project_status[]" value="<?= $res['id'] ?>" checked>
+                          <input class="form-check-input" id="status_<?= $res['id'] ?>" type="checkbox" name="project_status[]" value="<?= $res['id'] ?>">
                           <label for="status_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
@@ -323,7 +323,7 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['comodity'] as $res) { ?>
                         <div class="custom-control">
-                          <input class="form-check-input" id="commodity_<?= $res['id'] ?>" type="checkbox" name="commodity[]" value="<?= $res['id'] ?>" checked>
+                          <input class="form-check-input" id="commodity_<?= $res['id'] ?>" type="checkbox" name="commodity[]" value="<?= $res['id'] ?>">
                           <label for="commodity_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
@@ -334,7 +334,7 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['end_user'] as $res) { ?>
                         <div class="custom-control">
-                          <input class="form-check-input" id="end_user_<?= $res['id'] ?>" type="checkbox" name="end_user[]" value="<?= $res['id'] ?>" checked>
+                          <input class="form-check-input" id="end_user_<?= $res['id'] ?>" type="checkbox" name="end_user[]" value="<?= $res['id'] ?>">
                           <label for="end_user_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
@@ -347,7 +347,7 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['unit'] as $res) { ?>
                         <div class="custom-control">
-                          <input class="form-check-input" id="unit_<?= $res['id'] ?>" type="checkbox" name="unit[]" value="<?= $res['id'] ?>" checked>
+                          <input class="form-check-input" id="unit_<?= $res['id'] ?>" type="checkbox" name="unit[]" value="<?= $res['id'] ?>">
                           <label for="unit_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
@@ -358,7 +358,7 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['mode_of_proc'] as $res) { ?>
                         <div class="custom-control">
-                          <input class="form-check-input" id="mode_of_proc_<?= $res['id'] ?>" type="checkbox" name="mode_of_proc[]" value="<?= $res['id'] ?>" checked>
+                          <input class="form-check-input" id="mode_of_proc_<?= $res['id'] ?>" type="checkbox" name="mode_of_proc[]" value="<?= $res['id'] ?>">
                           <label for="mode_of_proc_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
@@ -368,11 +368,11 @@
                     <label>EPA</label>
                     <div class="form-group">
                       <div class="custom-control">
-                        <input class="form-check-input" id="epa_1" type="checkbox" name="epa[]" value="1" checked>
+                        <input class="form-check-input" id="epa_1" type="checkbox" name="epa[]" value="1">
                         <label for="epa_1" class="form-check-label">Yes</label>
                       </div>
                       <div class="custom-control">
-                        <input class="form-check-input" id="epa_0" type="checkbox" name="epa[]" value="0" checked>
+                        <input class="form-check-input" id="epa_0" type="checkbox" name="epa[]" value="0">
                         <label for="epa_0" class="form-check-label">No</label>
                       </div>
                     </div>
@@ -386,7 +386,7 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['pabac'] as $res) { ?>
                         <div class="custom-control">
-                          <input id="pabac_<?= $res['id'] ?>" class="form-check-input" type="checkbox" name="pabac[]" value="<?= $res['id'] ?>" checked>
+                          <input id="pabac_<?= $res['id'] ?>" class="form-check-input" type="checkbox" name="pabac[]" value="<?= $res['id'] ?>">
                           <label for="pabac_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
@@ -399,7 +399,7 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['program_manager'] as $res) { ?>
                         <div class="custom-control">
-                          <input id="progran_manager_<?= $res['id'] ?>" class="form-checkbox-input" type="checkbox" name="program_manager[]" value="<?= $res['id'] ?>" checked>
+                          <input id="progran_manager_<?= $res['id'] ?>" class="form-checkbox-input" type="checkbox" name="program_manager[]" value="<?= $res['id'] ?>">
                           <label for="progran_manager_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
@@ -412,7 +412,7 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['implementing_unit'] as $res) { ?>
                         <div class="custom-control">
-                          <input id="implementing_unit_<?= $res['id'] ?>" class="form-check-input" type="checkbox" name="implementing_unit[]" value="<?= $res['id'] ?>" checked>
+                          <input id="implementing_unit_<?= $res['id'] ?>" class="form-check-input" type="checkbox" name="implementing_unit[]" value="<?= $res['id'] ?>">
                           <label for="implementing_unit_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
