@@ -243,7 +243,7 @@ class Project extends Base
 
       if ($new_status_id == 6) {
         if ($status_id == 5) {
-          $required_fields[] = 'no_bidder';
+          // $required_fields[] = 'no_bidder';
         } else {
           $required_fields[] = 'no_bidder';
           $required_fields[] = 'sobe_conducted_date';
@@ -355,7 +355,7 @@ class Project extends Base
 
       if ($status_id == 6) {
         if ($status_id == 5) {
-          $required_fields[] = 'no_bidder';
+          // $required_fields[] = 'no_bidder';
         } else {
           $required_fields[] = 'no_bidder';
           $required_fields[] = 'sobe_conducted_date';
