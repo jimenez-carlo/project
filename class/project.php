@@ -78,8 +78,8 @@ class Project extends Base
       $abc = floatval(str_replace(",", "", $abc));
       $contract_price = floatval(str_replace(",", "", $contract_price));
       $residuals = floatval(str_replace(",", "", $residuals));
-
-      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by','$preproc_target_date')");
+      // echo "INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by','$preproc_target_date')";
+      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by',$preproc_target_date)");
 
 
       $this->insert_project_status($project_id, 1, "Project Initialize", date("Y-m-d"));
@@ -145,7 +145,7 @@ class Project extends Base
     $where .= isset($implementing_unit) ? ", `implementing_unit_id` = '$implementing_unit'" : "";
     $where .= isset($pabac) ? ", `pabac_id` = '$pabac'" : "";
     $where .= isset($pabac_nr) ? ", `pabac_nr` = '$pabac_nr'" : "";
-    $where .= isset($upr_date) ? ", `upr_date` = " . ((!empty($upr_date) && DateTime::createFromFormat('d-m-Y', $upr_date) !== false) ? "'" . date("Y-m-d", strtotime($upr_date))  : null) . "'" : "";
+    $where .= isset($upr_date) ? ", `upr_date` = " . ((!empty($upr_date) && DateTime::createFromFormat('d-m-Y', $upr_date) !== false) ? "'" . date("Y-m-d", strtotime($upr_date)) . "'"  : "upr_date") : "";
     $where .= isset($upr_nr) ? ", `upr_nr` = '$upr_nr'" : "";
     $where .= isset($comodity) ? ", `comodity_id` = '$comodity'" : "";
     $where .= isset($program_manager) ? ", `program_manager_id` = '$program_manager'" : "";
@@ -177,7 +177,7 @@ class Project extends Base
     $where .= isset($ors_conducted_date) ? ", `ors_conducted_date` = " . ((!empty($ors_conducted_date) && DateTime::createFromFormat('d-m-Y', $ors_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ors_conducted_date)) . "'"  : "ors_conducted_date") : "";
     $where .= isset($ntp_conducted_date) ? ", `ntp_conducted_date` = " . ((!empty($ntp_conducted_date) && DateTime::createFromFormat('d-m-Y', $ntp_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ntp_conducted_date)) . "'"  : "ntp_conducted_date") : "";
     $where .= isset($ntp_conforme_conducted_date) ? ", `ntp_conforme_conducted_date` = " . ((!empty($ntp_conforme_conducted_date) && DateTime::createFromFormat('d-m-Y', $ntp_conforme_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($ntp_conforme_conducted_date)) . "'"  : "ntp_conforme_conducted_date") : "";
-    $where .= isset($ntp_delivery_period) ? ", `delivery_period` = " . ((!empty($ntp_delivery_period) && DateTime::createFromFormat('d-m-Y', $ntp_delivery_period) !== false) ? "'" . date("Y-m-d", strtotime($ntp_delivery_period)) . "'"  : "delivery_period") : "";
+    $where .= isset($ntp_delivery_period) ? ", `delivery_period` = '$ntp_delivery_period'"   : "";
     $where .= isset($ldd_date) ? ", `ldd` = " . ((!empty($ldd_date) && DateTime::createFromFormat('d-m-Y', $ldd_date) !== false) ? "'" . date("Y-m-d", strtotime($ldd_date)) . "'"  : "ldd") : "";
     $where .= isset($delivery_conducted_date) ? ", `delivery_conducted_date` = " . ((!empty($delivery_conducted_date) && DateTime::createFromFormat('d-m-Y', $delivery_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($delivery_conducted_date)) . "'"  : "delivery_conducted_date") : "";
     $where .= isset($inspected_conducted_date) ? ", `inspected_conducted_date`= " . ((!empty($inspected_conducted_date) && DateTime::createFromFormat('d-m-Y', $inspected_conducted_date) !== false) ? "'" . date("Y-m-d", strtotime($inspected_conducted_date)) . "'"  : "inspected_conducted_date") : "";
@@ -270,6 +270,9 @@ class Project extends Base
         $required_fields[] = 'pq_local';
       }
 
+      if ($new_status_id == 8) {
+        $required_fields[] = 'pqr_conducted_date';
+      }
 
       if ($new_status_id == 9) {
         $abc = floatval(str_replace(",", "", $abc));
@@ -299,6 +302,9 @@ class Project extends Base
         $required_fields[] = 'ntp_conforme_conducted_date';
         $required_fields[] = 'ntp_delivery_period';
         $required_fields[] = 'ldd_date';
+        if (empty($ldd_date)) {
+          $required_fields[] = 'ldd_date_display';
+        }
       }
 
       if ($new_status_id == 13) {
@@ -321,7 +327,7 @@ class Project extends Base
         $required_fields[] = 'accepted_conducted_date';
         $required_fields[] = 'amount';
         $required_fields[] = 'accepted_date_1';
-        $required_fields[] = 'retention_percent';
+        $required_fields[] = 'retention_percentage';
         $required_fields[] = 'retention_amount';
         $required_fields[] = 'accepted_date_2';
         $required_fields[] = 'ld_amount';
@@ -347,8 +353,8 @@ class Project extends Base
       }
 
 
-      if ($status_id >= 6) {
-        if ($status_id >= 5) {
+      if ($status_id == 6) {
+        if ($status_id == 5) {
           $required_fields[] = 'no_bidder';
         } else {
           $required_fields[] = 'no_bidder';
@@ -369,7 +375,9 @@ class Project extends Base
         $required_fields[] = 'pq_price';
         $required_fields[] = 'pq_local';
       }
-
+      if ($status_id == 8) {
+        $required_fields[] = 'pqr_conducted_date';
+      }
 
       if ($status_id >= 9) {
 
@@ -393,9 +401,13 @@ class Project extends Base
       }
 
       if ($status_id >= 12) {
+
         $required_fields[] = 'ntp_conforme_conducted_date';
         $required_fields[] = 'ntp_delivery_period';
         $required_fields[] = 'ldd_date';
+        if (empty($ldd_date)) {
+          $required_fields[] = 'ldd_date_display';
+        }
       }
 
       if ($status_id >= 13) {
@@ -418,7 +430,7 @@ class Project extends Base
         $required_fields[] = 'accepted_conducted_date';
         $required_fields[] = 'amount';
         $required_fields[] = 'accepted_date_1';
-        $required_fields[] = 'retention_percent';
+        $required_fields[] = 'retention_percentage';
         $required_fields[] = 'retention_amount';
         $required_fields[] = 'accepted_date_2';
         $required_fields[] = 'ld_amount';
@@ -537,6 +549,10 @@ class Project extends Base
         $other_details = "null";
         if ($new_status_id == 7 || $new_status_id == 8) {
           $other_details = "'$pq_supplier'";
+        }
+        if (isset($no_bidder)) {
+          $other_details = "'No Bidder'";
+          $this->query("UPDATE tbl_project set id = id, no_bidder = 0, updated_by = '$updated_by', updated_date = '$updated_date' where id = $id");
         }
 
 

@@ -320,7 +320,7 @@
                         $(document).on("change", '#preproc_conducted_date',
                           function(e) {
                             var tmp = $("#preproc_conducted_date").val().split("-");
-                            var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
+                            var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
                             result.setDate(result.getDate() + 8);
                             console.log(result);
                             var month = result.getMonth() + 1;
@@ -360,7 +360,7 @@
                         $(document).on("change", '#prebid_conducted_date',
                           function(e) {
                             var tmp = $("#prebid_conducted_date").val().split("-");
-                            var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
+                            var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
                             result.setDate(result.getDate() + 14);
                             console.log(result);
                             var month = result.getMonth() + 1;
@@ -391,7 +391,7 @@
 
           <?php } ?>
 
-          <?php if ($default->status_id >= 5) { ?>
+          <?php if ($default->status_id == 5 || $default->status_id >= 7) { ?>
 
             <div class="card card-dark card-outline card-tabs">
               <div class="card-header">
@@ -438,7 +438,7 @@
                         $(document).on("change", '#sobe_conducted_date',
                           function(e) {
                             var tmp = $("#sobe_conducted_date").val().split("-");
-                            var result = new Date(tmp[2] + " " + tmp[1] + " " + tmp[0]);
+                            var result = new Date(tmp[2], (tmp[1] + 1), tmp[0]);
                             result.setDate(result.getDate() + 14);
                             console.log(result);
                             var month = result.getMonth() + 1;
@@ -587,20 +587,10 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date_display" id="ntp_conforme_conducted_date_display" value="<?= !empty($default->ntp_conforme_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conforme_conducted_date)) : "" ?>" disabled>
-                      <input type="hidden" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date" id="ntp_conforme_conducted_date" value="<?= !empty($default->ntp_conforme_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conforme_conducted_date)) : "" ?>">
 
-                      <script>
-                        $(document).on("change", '#ntp_delivery_period,#ntp_conducted_date',
-                          function(e) {
-                            var tmp = $("#ntp_conducted_date").val().split("-");
-                            var result = new Date(tmp[2], tmp[1], +tmp[0]);
-                            result.setDate(result.getDate() + parseInt($("#ntp_delivery_period").val()));
-                            var month = result.getMonth();
-                            $("#ntp_conforme_conducted_date_display").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                            $("[name='ntp_conforme_conducted_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                          })
-                      </script>
+                      <input type="text" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date" id="ntp_conforme_conducted_date" value="<?= !empty($default->ntp_conforme_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conforme_conducted_date)) : "" ?>">
+
+
                     </div>
                   </div>
                   <div class="col-sm-4">
@@ -613,8 +603,20 @@
                   <div class="col-sm-4">
                     <div class="form-group">
                       <label>*LDD:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>">
+                      <input type="text" class="form-control form-control-sm datepicker" name="ldd_date_display" id="ldd_date_display" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>" disabled>
+                      <input type="hidden" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>">
 
+                      <script>
+                        $(document).on("change", '#ntp_delivery_period,#ntp_conducted_date',
+                          function(e) {
+                            var tmp = $("#ntp_conducted_date").val().split("-");
+                            var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
+                            result.setDate(result.getDate() + parseInt($("#ntp_delivery_period").val()));
+                            var month = result.getMonth() + 1;
+                            $("#ldd_date_display").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                            $("[name='ldd_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                          })
+                      </script>
                     </div>
                   </div>
                 </div>
@@ -729,7 +731,7 @@
                     <div class="form-group">
                       <label>Retention Amount</label>
                       <input type="text" class="form-control form-control-sm" id="retention_display" name="retention_display" value="<?= number_format($default->retention_amount, 2) ?>" disabled>
-                      <input type="hidden" name="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
+                      <input type="hidden" name="retention_amount" id="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
 
                       <script>
                         $(document).on("change", '#retention_percentage,#contract_price',
@@ -771,6 +773,7 @@
                           function(e) {
 
                             let total = (parseFloat($("#amount").val().replace(",", "")) + parseFloat($("#retention_amount").val().replace(",", ""))).toFixed(2);
+                            console.log(total);
                             $("#total_display").val(total).maskMoney();
                             $("[name='total']").val(total);
                           })
@@ -964,7 +967,7 @@
                     </label>
                     <select class="form-control select2bs4 form-control-sm" name="assigned_officer[]" id="assigned_officer" multiple="multiple">
                       <?php foreach ($data['default']['officers'] as $res) { ?>
-                        <option value="<?= $res['id'] ?>" <?= $default->officer_id == $res['id'] ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
+                        <option value="<?= $res['id'] ?>" <?= in_array($res['id'], explode(",", $default->officer_id))  ? 'selected' : '' ?>><?= strtoupper($res['name']) ?></option>
                       <?php } ?>
                     </select>
                   </div>
