@@ -769,7 +769,7 @@
                       <input type="hidden" name="total" value="<?= number_format($default->total, 2) ?>">
 
                       <script>
-                        $(document).on("change", '#amount,#retention_amount',
+                        $(document).on("change", '#amount,#retention_amount,#retention_percentage,#contract_price',
                           function(e) {
 
                             let total = (parseFloat($("#amount").val().replace(",", "")) + parseFloat($("#retention_amount").val().replace(",", ""))).toFixed(2);
