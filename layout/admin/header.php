@@ -135,7 +135,7 @@
               </a>
             </li>
 
-            <?php if ($user->access_id == 1 || $user->access_id == 2) { ?>
+            <?php if (in_array($user->access_id, [1,2,3])) { ?>
               <li class="nav-item">
                 <a href="#" class="nav-link btn-view" name="admin/user/list">
                   <i class="nav-icon fas fa-user-cog"></i>
