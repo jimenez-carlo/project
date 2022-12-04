@@ -224,7 +224,7 @@
                     <input type="text" class="form-control form-control-sm currency" name="contract_price" id="contract_price" value="<?= number_format($default->contract_price, 2) ?>">
                   </div>
                 </div>
-                <?php if ($status_id >= 9) { ?>
+                <?php if ($default->status_id >= 9) { ?>
                   <div class="col-sm-3">
                     <div class="form-group">
                       <label>Residuals</label>
@@ -243,7 +243,7 @@
                     </select>
                   </div>
                 </div>
-                <?php if ($status_id >= 9) { ?>
+                <?php if ($default->status_id >= 9) { ?>
                   <script>
                     $(document).on("change", "#contract_price,#abc", function(e) {
                       // if (!$("#abc").val() || !$("#contract_price").val()) {
