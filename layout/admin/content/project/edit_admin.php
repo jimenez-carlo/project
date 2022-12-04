@@ -1074,7 +1074,7 @@
   $(add_button5).click(function(e) {
     e.preventDefault();
 
-    $(wrapper5).append('<tr><td> <input type="hidden" name="bidder_new[]"><input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[]"></td> <td>  <input type="text" class="form-control form-control-sm" name="bidder_supplier[]"> </td><td> <input type="text" class="form-control form-control-sm currency" name="bidder_price[]" value="0.00"> </td><td> <select name = "bidder_local[]" class="form-control form-control-sm"><?php foreach ($data['default']['local'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $(wrapper5).append('<tr><td> <input type="hidden" name="bidder_new[]"><input type="text" class="form-control form-control-sm bidder_rank" name="bidder_new_rank[]"></td> <td>  <input type="text" class="form-control form-control-sm" name="bidder_new_supplier[]"> </td><td> <input type="text" class="form-control form-control-sm currency" name="bidder_new_price[]" value="0.00"> </td><td> <select name = "bidder_new_local[]" class="form-control form-control-sm"><?php foreach ($data['default']['local'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
     $('.datepicker').datepicker({
       format: "dd-mm-yyyy",
     });
