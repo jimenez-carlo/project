@@ -88,10 +88,10 @@ class Project extends Base
 
       $abc = floatval(str_replace(",", "", $abc));
       $contract_price = floatval(str_replace(",", "", $contract_price));
-      // $residuals = floatval(str_replace(",", "", $residuals));
+      $residuals = $abc - $contract_price;
 
       // echo "INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by','$preproc_target_date')";
-      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by',$preproc_target_date)");
+      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`,`residuals`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by',$preproc_target_date,'$residuals')");
 
 
       $this->insert_project_status($project_id, 1, "Project Initialize", date("Y-m-d"));
@@ -167,7 +167,8 @@ class Project extends Base
     $where .= isset($abc) ? ", `abc` = '" . floatval(str_replace(",", "", $abc)) . "'" : "";
     $where .= isset($contract_nr) ? ", `contract_nr` = '$contract_nr'" : "";
     $where .= isset($contract_price) ? ", `contract_price` = '" . floatval(str_replace(",", "", $contract_price)) . "'" : "";
-    $where .= isset($residuals) ? ", `residuals` = '" . floatval(str_replace(",", "", $residuals)) . "'" : "";
+    $residuals = floatval(str_replace(",", "", $abc)) - floatval(str_replace(",", "", $contract_price));
+    $where .= isset($residuals) ? ", `residuals` = '$residuals'" : "";
 
     if (isset($end_user)) {
       $tmp_end_user = implode(",", $end_user);
