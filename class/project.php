@@ -272,7 +272,7 @@ class Project extends Base
           return $result;
         }
 
-        if (!isset($bidder_rank)) {
+        if (!isset($bidder_new_rank) && !isset($bidder_rank)) {
           $msg .= "No Supplier Entry!";
           $result->result = $this->response_swal($msg, "System Error", "error");
           $result->items = implode(',', array('bidder_supplier'));
