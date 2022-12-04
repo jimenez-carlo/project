@@ -413,7 +413,7 @@ class Project extends Base
 
       if ($status_id >= 9) {
 
-        if (empty($residuals)) {
+        if (empty($residuals) || $residuals <= 0) {
           $required_fields[] = 'residuals_display';
         }
 
