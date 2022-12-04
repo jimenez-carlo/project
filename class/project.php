@@ -17,7 +17,7 @@ class Project extends Base
     $errors = array();
     $msg = '';
 
-    $required_fields = array('project_description', 'qty', 'assigned_officer', 'preproc_target_date');
+    $required_fields = array('abc', 'project_description', 'qty', 'assigned_officer', 'preproc_target_date');
 
     // if ($implementing_unit == 2) {
     //   $required_fields[] = 'upr_nr';
@@ -53,6 +53,14 @@ class Project extends Base
       $msg .= "No ASA Entry!";
       $result->result = $this->response_swal($msg, "System Error", "error");
       $result->items = implode(',', array('asa_nr'));
+      return $result;
+    }
+
+    if (!isset($twg_rank)) {
+      $msg .= "No TWG Entry!";
+      $result->result = $this->response_swal($msg, "System Error", "error");
+      $result->items = implode(',', array('twg_rank'));
+      $result->status = false;
       return $result;
     }
 
@@ -139,13 +147,13 @@ class Project extends Base
     $errors = array();
     $msg = '';
     $where = '';
-    $required_fields = array('project_description', 'qty', 'preproc_target_date');
+    $required_fields = array('abc', 'project_description', 'qty', 'preproc_target_date');
 
     $where .= isset($epa) ? ", `epa` = '$epa'" : "";
     $where .= isset($implementing_unit) ? ", `implementing_unit_id` = '$implementing_unit'" : "";
     $where .= isset($pabac) ? ", `pabac_id` = '$pabac'" : "";
     $where .= isset($pabac_nr) ? ", `pabac_nr` = '$pabac_nr'" : "";
-    $where .= isset($upr_date) ? ", `upr_date` = " . ((!empty($upr_date) && DateTime::createFromFormat('d-m-Y', $upr_date) !== false) ? "'" . date("Y-m-d", strtotime($upr_date)) . "'"  : "upr_date") : "";
+    $where .= isset($upr_date) ? ", `upr_date` = '$upr_date'" : "";
     $where .= isset($upr_nr) ? ", `upr_nr` = '$upr_nr'" : "";
     $where .= isset($comodity) ? ", `comodity_id` = '$comodity'" : "";
     $where .= isset($program_manager) ? ", `program_manager_id` = '$program_manager'" : "";
@@ -216,7 +224,13 @@ class Project extends Base
       return $result;
     }
 
-
+    if (!isset($twg_rank)) {
+      $msg .= "No TWG Entry!";
+      $result->result = $this->response_swal($msg, "System Error", "error");
+      $result->items = implode(',', array('twg_rank'));
+      $result->status = false;
+      return $result;
+    }
 
     # CHANGE STATUS
     if (isset($change_status)) {
@@ -229,15 +243,15 @@ class Project extends Base
         $required_fields[] = 'preproc_conducted_date';
 
         if ($new_status_id == 2) {
-          $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
-          $where .=  ", `prebid_target_date` = '$prebid_target_date'";
+          // $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
+          // $where .=  ", `prebid_target_date` = '$prebid_target_date'";
         }
       }
 
       if ($new_status_id == 4) {
         $required_fields[] = 'prebid_conducted_date';
-        $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 8 days'));
-        $where .=  ", `sobe_target_date` = '$sobe_target_date'";
+        // $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 8 days'));
+        // $where .=  ", `sobe_target_date` = '$sobe_target_date'";
       }
 
 
@@ -258,6 +272,13 @@ class Project extends Base
           return $result;
         }
 
+        if (!isset($bidder_rank)) {
+          $msg .= "No Supplier Entry!";
+          $result->result = $this->response_swal($msg, "System Error", "error");
+          $result->items = implode(',', array('bidder_supplier'));
+          return $result;
+        }
+
         $required_fields[] = 'sobe_conducted_date';
         $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
         $where .=  ", `pq_target_date` = '$pq_target_date'";
@@ -266,8 +287,8 @@ class Project extends Base
       if ($new_status_id == 7 || $new_status_id == 17) {
         $required_fields[] = 'pq_conducted_date';
         $required_fields[] = 'pq_supplier';
-        $required_fields[] = 'pq_price';
-        $required_fields[] = 'pq_local';
+        // $required_fields[] = 'pq_price';
+        // $required_fields[] = 'pq_local';
       }
 
       if ($new_status_id == 8) {
@@ -341,21 +362,27 @@ class Project extends Base
         $required_fields[] = 'preproc_conducted_date';
 
         if ($status_id >= 2) {
-          $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
-          $where .=  ", `prebid_target_date` = '$prebid_target_date'";
+          // $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
+          // $where .=  ", `prebid_target_date` = '$prebid_target_date'";
         }
       }
 
       if ($status_id >= 4) {
         $required_fields[] = 'prebid_conducted_date';
-        $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 14 days'));
-        $where .=  ", `sobe_target_date` = '$sobe_target_date'";
+        // $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 14 days'));
+        // $where .=  ", `sobe_target_date` = '$sobe_target_date'";
       }
 
 
       if ($status_id == 6) {
         if ($status_id == 5) {
           // $required_fields[] = 'no_bidder';
+          if (!isset($bidder_rank)) {
+            $msg .= "No Supplier Entry!";
+            $result->result = $this->response_swal($msg, "System Error", "error");
+            $result->items = implode(',', array('bidder_supplier'));
+            return $result;
+          }
         } else {
           $required_fields[] = 'no_bidder';
           $required_fields[] = 'sobe_conducted_date';
@@ -365,15 +392,15 @@ class Project extends Base
       if ($status_id >= 5) {
         // $required_fields[] = 'supplier';
         $required_fields[] = 'sobe_conducted_date';
-        $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
-        $where .=  ", `pq_target_date` = '$pq_target_date'";
+        // $pq_target_date = date('Y-m-d', strtotime($sobe_conducted_date . ' + 5 days'));
+        // $where .=  ", `pq_target_date` = '$pq_target_date'";
       }
 
       if ($status_id == 7 || $status_id == 17) {
         $required_fields[] = 'pq_conducted_date';
         $required_fields[] = 'pq_supplier';
-        $required_fields[] = 'pq_price';
-        $required_fields[] = 'pq_local';
+        // $required_fields[] = 'pq_price';
+        // $required_fields[] = 'pq_local';
       }
       if ($status_id == 8) {
         $required_fields[] = 'pqr_conducted_date';
@@ -500,7 +527,6 @@ class Project extends Base
 
       $this->query("DELETE FROM tbl_project_asa where project_id = $id");
       // $this->query("DELETE FROM tbl_project_supplier where project_id = $id");
-      $this->query("DELETE FROM tbl_project_twg where project_id = $id");
 
       if (isset($asa_nr)) {
         $tmp = 0;
@@ -517,12 +543,24 @@ class Project extends Base
       }
 
       if (isset($change_status) && ($new_status_id == 7 || $new_status_id == 17)) {
-        $price = floatval(str_replace(",", "", $pq_price));
         $pq_final_date = date("Y-m-d", strtotime($pq_conducted_date));
-        $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,created_by,`conducted_date`)  values ('$id','$price', '$pq_local','$pq_supplier','$new_status_id','$updated_by','$pq_final_date')");
+        $tmp_supp = $this->get_one("SELECT * from tbl_project_bidder where id = $pq_supplier");
+        $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,created_by,`conducted_date`)  values ('$id','$tmp_supp->price', '$tmp_supp->local_id','$tmp_supp->supplier','$new_status_id','$updated_by','$pq_final_date')");
+      }
+
+      if (isset($bidder_rank) && !isset($change_status)) {
+        $this->query("DELETE FROM tbl_project_bidder where project_id = $id");
+        foreach ($bidder_rank as $key => $res) {
+          $b_rank = $bidder_rank[$key];
+          $b_supplier = $bidder_supplier[$key];
+          $b_price = floatval(str_replace(",", "", $bidder_price[$key]));
+          $b_local = $bidder_local[$key];
+          $this->query("INSERT INTO tbl_project_bidder (project_id,`rank`,supplier,price,`local_id`)  values ('$id','$b_rank', '$b_supplier','$b_price','$b_local')");
+        }
       }
 
       if (isset($twg_rank)) {
+        $this->query("DELETE FROM tbl_project_twg where project_id = $id");
         foreach ($twg_rank as $key => $res) {
           $rank_id = $twg_rank[$key];
           $ln = $last_name[$key];

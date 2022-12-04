@@ -100,8 +100,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Date of UPR:</label>
-
-                    <input type="text" class="form-control form-control-sm datepicker" name="upr_date" id="upr_date" value="<?= !empty($default->upr_date) ? date("d-m-Y", strtotime($default->upr_date)) : "" ?>">
+                    <input type="text" class="form-control form-control-sm multidate" name="upr_date" id="upr_date" value="<?= !empty($default->upr_date) ? $default->upr_date : "" ?>">
 
                   </div>
                 </div>
@@ -215,7 +214,7 @@
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>ABC</label>
+                    <label>*ABC</label>
                     <input type="text" class="form-control form-control-sm currency" name="abc" id="abc" value="<?= number_format($default->abc, 2) ?>">
                   </div>
                 </div>
@@ -245,14 +244,20 @@
 
                 <script>
                   $(document).on("change", "#contract_price,#abc", function(e) {
-                    if (!$("#abc").val() || !$("#contract_price").val()) {
-                      $("#residuals_display").val(0);
-                      $("#residuals").val(0);
-                    } else {
-                      let total = parseFloat($("#abc").val().replace(",", "")) - parseFloat($("#contract_price").val().replace(",", ""));
-                      $("#residuals_display").val(total).maskMoney();
-                      $("#residuals").val(total);
-                    }
+                    // if (!$("#abc").val() || !$("#contract_price").val()) {
+                    //   $("#residuals_display").val(0);
+                    //   $("#residuals").val(0);
+                    // } else {
+                    // }
+                    let total = parseFloat($("#abc").val().trim().replace(/,/g, '')) - parseFloat($("#contract_price").val().trim().replace(/,/g, ''));
+
+                    let numFor = Intl.NumberFormat('en-US');
+                    let new_for = numFor.format(total);
+
+                    $("#residuals_display").val(Number(parseFloat(total).toFixed(2)).toLocaleString('en', {
+                      minimumFractionDigits: 2
+                    }));
+                    $("#residuals").val(total);
                   })
                 </script>
 
@@ -319,7 +324,7 @@
                           function(e) {
                             var tmp = $("#preproc_conducted_date").val().split("-");
                             var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
-                            result.setDate(result.getDate() + 8);
+                            result.setDate(result.getDate() + 7);
                             console.log(result);
                             var month = result.getMonth() + 1;
                             $("#prebid_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
@@ -346,6 +351,7 @@
                 <h3 class="card-title">
                   SOBE Details
                 </h3>
+                <button type="button" class="btn btn-sm btn-dark float-right" id="add_supplier">Add Supplier</button>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -359,7 +365,7 @@
                           function(e) {
                             var tmp = $("#prebid_conducted_date").val().split("-");
                             var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
-                            result.setDate(result.getDate() + 14);
+                            result.setDate(result.getDate() + 13);
                             console.log(result);
                             var month = result.getMonth() + 1;
                             $("#sobe_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
@@ -381,6 +387,55 @@
                       <input type="checkbox" class="form-check-input" id="no_bidder" name="no_bidder" value="1" <?= $default->no_bidder ? 'checked' : '' ?>>
                     </div>
                   </div>
+                </div>
+
+                <script>
+                  $(document).on("change", '#no_bidder',
+                    function(e) {
+
+                      if ($('#no_bidder').is(":checked")) {
+                        $("#supplier_list").hide();
+                      } else {
+                        $("#supplier_list").show();
+
+                      }
+                    })
+                </script>
+                <div class="row" id="supplier_list">
+
+                  <table id="example1" class="table table-bordered table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>Rank</th>
+                        <th>SUPPLIER</th>
+                        <th>BID Price</th>
+                        <th>LC/Local</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="wrapper5">
+                      <?php $ctr = 1 ?>
+                      <?php foreach ($data['bidders'] as $res) { ?>
+                        <tr>
+                          <td><input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[]" value="<?= $res['rank'] ?>"></td>
+                          <td><input type="text" class="form-control form-control-sm" name="bidder_supplier[]" value="<?= $res['supplier'] ?>"></td>
+                          <td><input type="text" class="form-control form-control-sm currency" name="bidder_price[]" value="<?= number_format($res['price'], 2) ?>"></td>
+                          <td>
+                            <select name="bidder_local[]" class="form-control form-control-sm">
+                              <?php foreach ($data['default']['local'] as $subres) { ?>
+                                <option value="<?= $subres['id']; ?>" <?= $res['local_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                              <?php } ?>
+                            </select>
+                          </td>
+                          <td>
+                            <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
+                          </td>
+                        </tr>
+                        <?php $ctr++; ?>
+                      <?php } ?>
+                    </tbody>
+                  </table>
+
                 </div>
               </div>
             </div>
@@ -447,38 +502,24 @@
 
                     </div>
                   </div>
-                </div>
-
-                <div class="row">
                   <div class="col-sm-3">
                     <div class="form-group">
                       <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date">
+                      <input type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date" <?= !empty($default->pq_conducted_date) ? date("d-m-Y", strtotime($default->pq_conducted_date)) : "" ?>>
                     </div>
                   </div>
                   <div class="col-sm-3">
                     <div class="form-group">
                       <label>Supplier:</label>
-                      <input type="text" class="form-control form-control-sm" name="pq_supplier" id="pq_supplier">
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>Bid Price:</label>
-                      <input type="text" class="form-control form-control-sm currency" name="pq_price">
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>LC/Local:</label>
-                      <select class="form-control form-control-sm" name="pq_local" id="pq_local">
-                        <?php foreach ($data['default']['local'] as $res) { ?>
-                          <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
+                      <select class="form-control form-control-sm" name="pq_supplier" id="pq_supplier">
+                        <?php foreach ($data['bidders'] as $res) { ?>
+                          <option value="<?= $res['bidder_id'] ?>"><?= strtoupper($res['supplier'] . " - (" . number_format($res['price'], 2) . ")") ?></option>
                         <?php } ?>
                       </select>
                     </div>
                   </div>
                 </div>
+
 
 
               </div>
@@ -735,11 +776,14 @@
                         $(document).on("change", '#retention_percentage,#contract_price',
                           function(e) {
 
-                            let total = (($("#retention_percentage").val() / 100) * parseFloat($("#contract_price").val().replace(",", ""))).toFixed(2);
+                            let total = (($("#retention_percentage").val() / 100) * parseFloat($("#contract_price").val().trim().replace(/,/g, '')));
 
-                            const numFor = Intl.NumberFormat('en-US');
-                            const new_for = numFor.format(total);
-                            $("#retention_display").val(total).maskMoney();
+
+
+
+                            $("#retention_display").val(Number(parseFloat(total).toFixed(2)).toLocaleString('en', {
+                              minimumFractionDigits: 2
+                            }));
                             $("[name='retention_amount']").val(total);
                           })
                       </script>
@@ -770,9 +814,10 @@
                         $(document).on("change", '#amount,#retention_amount,#retention_percentage,#contract_price',
                           function(e) {
 
-                            let total = (parseFloat($("#amount").val().replace(",", "")) + parseFloat($("#retention_amount").val().replace(",", ""))).toFixed(2);
-                            console.log(total);
-                            $("#total_display").val(total).maskMoney();
+                            let total = (parseFloat($("#amount").val().replace(",", "")) + parseFloat($("#retention_amount").val().replace(",", "")));
+                            $("#total_display").val(Number(parseFloat(total).toFixed(2)).toLocaleString('en', {
+                              minimumFractionDigits: 2
+                            }));
                             $("[name='total']").val(total);
                           })
                       </script>
@@ -995,11 +1040,17 @@
   </div>
 </div>
 <script>
-  $('.currency').maskMoney();
+  $('.currency').maskMoney({
+    allowZero: true,
+  });
 
   //Date picker
   $('.datepicker').datepicker({
     format: "dd-mm-yyyy",
+  });
+  $('.multidate').datepicker({
+    format: "dd-mm-yyyy",
+    multidate: true
   });
   $(function() {
     bsCustomFileInput.init();
@@ -1041,6 +1092,36 @@
   $(wrapper3).on("click", ".btn-remove-user", function(e) {
     e.preventDefault();
     $(this).parent().parent().remove();
+  })
+
+  var wrapper5 = $("#wrapper5");
+  var add_button5 = $("#add_supplier");
+
+  $(add_button5).click(function(e) {
+    e.preventDefault();
+
+    $(wrapper5).append('<tr><td> <input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[]"></td> <td>  <input type="text" class="form-control form-control-sm" name="bidder_supplier[]"> </td><td> <input type="text" class="form-control form-control-sm currency" name="bidder_price[]" value="0.00"> </td><td> <select name = "bidder_local[]" class="form-control form-control-sm"><?php foreach ($data['default']['local'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $('.datepicker').datepicker({
+      format: "dd-mm-yyyy",
+    });
+    let ctr = 1;
+    $(".bidder_rank").each(function(index) {
+      $(this).val(ctr);
+      ctr++;
+    });
+    $('.currency').maskMoney({
+      allowZero: true
+    });
+  });
+
+  $(wrapper5).on("click", ".btn-remove-user", function(e) {
+    e.preventDefault();
+    $(this).parent().parent().remove();
+    let ctr = 1;
+    $(".bidder_rank").each(function(index) {
+      $(this).val(ctr);
+      ctr++;
+    });
   })
 
 

@@ -12,7 +12,7 @@
       </div><!-- /.row -->
       <div class="row mb-2">
         <div class="col-sm-6">
- 
+
         </div><!-- /.col -->
 
       </div><!-- /.row -->
@@ -100,8 +100,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Date of UPR:</label>
-
-                    <input type="text" class="form-control form-control-sm datepicker" name="upr_date" id="upr_date" value="<?= !empty($default->upr_date) ? date("d-m-Y", strtotime($default->upr_date)) : "" ?>">
+                    <input type="text" class="form-control form-control-sm multidate" name="upr_date" id="upr_date" value="<?= !empty($default->upr_date) ? $default->upr_date : "" ?>">
 
                   </div>
                 </div>
@@ -215,7 +214,7 @@
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>ABC</label>
+                    <label>*ABC</label>
                     <input type="text" class="form-control form-control-sm currency" name="abc" id="abc" value="<?= number_format($default->abc, 2) ?>">
                   </div>
                 </div>
@@ -245,14 +244,20 @@
 
                 <script>
                   $(document).on("change", "#contract_price,#abc", function(e) {
-                    if (!$("#abc").val() || !$("#contract_price").val()) {
-                      $("#residuals_display").val(0);
-                      $("#residuals").val(0);
-                    } else {
-                      let total = parseFloat($("#abc").val().replace(",", "")) - parseFloat($("#contract_price").val().replace(",", ""));
-                      $("#residuals_display").val(total).maskMoney();
-                      $("#residuals").val(total);
-                    }
+                    // if (!$("#abc").val() || !$("#contract_price").val()) {
+                    //   $("#residuals_display").val(0);
+                    //   $("#residuals").val(0);
+                    // } else {
+                    // }
+                    let total = parseFloat($("#abc").val().trim().replace(/,/g, '')) - parseFloat($("#contract_price").val().trim().replace(/,/g, ''));
+
+                    let numFor = Intl.NumberFormat('en-US');
+                    let new_for = numFor.format(total);
+
+                    $("#residuals_display").val(Number(parseFloat(total).toFixed(2)).toLocaleString('en', {
+                      minimumFractionDigits: 2
+                    }));
+                    $("#residuals").val(total);
                   })
                 </script>
 
@@ -274,122 +279,124 @@
           </div>
 
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  PREPROC Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>*Target Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="preproc_target_date" id="preproc_target_date" value="<?= !empty($default->preproc_target_date) ? date("d-m-Y", strtotime($default->preproc_target_date)) : "" ?>">
-                    </div>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                PREPROC Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>*Target Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="preproc_target_date" id="preproc_target_date" value="<?= !empty($default->preproc_target_date) ? date("d-m-Y", strtotime($default->preproc_target_date)) : "" ?>">
                   </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="preproc_conducted_date" id="preproc_conducted_date" value="<?= !empty($default->preproc_conducted_date) ? date("d-m-Y", strtotime($default->preproc_conducted_date)) : "" ?>">
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="preproc_conducted_date" id="preproc_conducted_date" value="<?= !empty($default->preproc_conducted_date) ? date("d-m-Y", strtotime($default->preproc_conducted_date)) : "" ?>">
 
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  PREBID Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>*Target Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="prebid_target_date" id="prebid_target_date" value="<?= !empty($default->prebid_target_date) ? date("d-m-Y", strtotime($default->prebid_target_date)) : "" ?>" disabled>
-                      <input type="hidden" name="prebid_target_date" value="<?= !empty($default->prebid_target_date) ? date("d-m-Y", strtotime($default->prebid_target_date)) : "" ?>">
-                      <script>
-                        $(document).on("change", '#preproc_conducted_date',
-                          function(e) {
-                            var tmp = $("#preproc_conducted_date").val().split("-");
-                            var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
-                            result.setDate(result.getDate() + 8);
-                            console.log(result);
-                            var month = result.getMonth() + 1;
-                            $("#prebid_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                            $("[name='prebid_target_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                          })
-                      </script>
-                    </div>
+          </div>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                PREBID Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>*Target Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="prebid_target_date" id="prebid_target_date" value="<?= !empty($default->prebid_target_date) ? date("d-m-Y", strtotime($default->prebid_target_date)) : "" ?>" disabled>
+                    <input type="hidden" name="prebid_target_date" value="<?= !empty($default->prebid_target_date) ? date("d-m-Y", strtotime($default->prebid_target_date)) : "" ?>">
+                    <script>
+                      $(document).on("change", '#preproc_conducted_date',
+                        function(e) {
+                          var tmp = $("#preproc_conducted_date").val().split("-");
+                          var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
+                          result.setDate(result.getDate() + 7);
+                          console.log(result);
+                          var month = result.getMonth() + 1;
+                          $("#prebid_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                          $("[name='prebid_target_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                        })
+                    </script>
                   </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="prebid_conducted_date" id="prebid_conducted_date" value="<?= !empty($default->prebid_conducted_date) ? date("d-m-Y", strtotime($default->prebid_conducted_date)) : "" ?>">
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="prebid_conducted_date" id="prebid_conducted_date" value="<?= !empty($default->prebid_conducted_date) ? date("d-m-Y", strtotime($default->prebid_conducted_date)) : "" ?>">
 
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  SOBE Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>*Target Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" id="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->sobe_target_date)) ?>" disabled>
-                      <input type="hidden" name="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->sobe_target_date)) ?>">
-                      <script>
-                        $(document).on("change", '#prebid_conducted_date',
-                          function(e) {
-                            var tmp = $("#prebid_conducted_date").val().split("-");
-                            var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
-                            result.setDate(result.getDate() + 14);
-                            console.log(result);
-                            var month = result.getMonth() + 1;
-                            $("#sobe_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                            $("[name='sobe_target_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                          })
-                      </script>
-                    </div>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                SOBE Details
+              </h3>
+              <button type="button" class="btn btn-sm btn-dark float-right" id="add_supplier">Add Supplier</button>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>*Target Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" id="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->sobe_target_date)) ?>" disabled>
+                    <input type="hidden" name="sobe_target_date" value="<?= date("d-m-Y", strtotime($default->sobe_target_date)) ?>">
+                    <script>
+                      $(document).on("change", '#prebid_conducted_date',
+                        function(e) {
+                          var tmp = $("#prebid_conducted_date").val().split("-");
+                          var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
+                          result.setDate(result.getDate() + 13);
+                          console.log(result);
+                          var month = result.getMonth() + 1;
+                          $("#sobe_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                          $("[name='sobe_target_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                        })
+                    </script>
                   </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="sobe_conducted_date" id="sobe_conducted_date" value="<?= !empty($default->sobe_conducted_date) ? date("d-m-Y", strtotime($default->sobe_conducted_date)) : "" ?>">
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="sobe_conducted_date" id="sobe_conducted_date" value="<?= !empty($default->sobe_conducted_date) ? date("d-m-Y", strtotime($default->sobe_conducted_date)) : "" ?>">
 
-                    </div>
                   </div>
-                  <div class="col-sm-4">
-                    <label>*No Bidder:</label>
-                    <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="no_bidder" name="no_bidder" value="1" <?= $default->no_bidder ? 'checked' : '' ?>>
-                    </div>
+                </div>
+                <div class="col-sm-4">
+                  <label>*No Bidder:</label>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="no_bidder" name="no_bidder" value="1" <?= $default->no_bidder ? 'checked' : '' ?>>
                   </div>
                 </div>
               </div>
-            </div>
 
+              <script>
+                $(document).on("change", '#no_bidder',
+                  function(e) {
 
+                    if ($('#no_bidder').is(":checked")) {
+                      $("#supplier_list").hide();
+                    } else {
+                      $("#supplier_list").show();
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  PQ Details
-                </h3>
-              </div>
-              <div class="card-body">
+                    }
+                  })
+              </script>
+              <div class="row" id="supplier_list">
 
                 <table id="example1" class="table table-bordered table-striped table-sm">
                   <thead>
@@ -398,364 +405,402 @@
                       <th>SUPPLIER</th>
                       <th>BID Price</th>
                       <th>LC/Local</th>
-                      <th>Conducted Date</th>
-                      <th>Status</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
-                  <tbody id="wrapper">
+                  <tbody id="wrapper5">
                     <?php $ctr = 1 ?>
-                    <?php foreach ($data['suppliers'] as $res) { ?>
+                    <?php foreach ($data['bidders'] as $res) { ?>
                       <tr>
-                        <td><?= $ctr ?></td>
-                        <td><?= $res['supplier'] ?></td>
-                        <td><?= number_format($res['price'], 2) ?></td>
-                        <td><?= $res['type'] ?></td>
-                        <td><?= date("d-m-Y", strtotime($res['conducted_date'])) ?></td>
-                        <td><?= $res['status'] ?></td>
+                        <td><input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[]" value="<?= $res['rank'] ?>"></td>
+                        <td><input type="text" class="form-control form-control-sm" name="bidder_supplier[]" value="<?= $res['supplier'] ?>"></td>
+                        <td><input type="text" class="form-control form-control-sm currency" name="bidder_price[]" value="<?= number_format($res['price'], 2) ?>"></td>
+                        <td>
+                          <select name="bidder_local[]" class="form-control form-control-sm">
+                            <?php foreach ($data['default']['local'] as $subres) { ?>
+                              <option value="<?= $subres['id']; ?>" <?= $res['local_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
+                            <?php } ?>
+                          </select>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-dark btn-remove-user btn-sm"> <i class="fa fa-times"></i> </button>
+                        </td>
                       </tr>
                       <?php $ctr++; ?>
                     <?php } ?>
                   </tbody>
                 </table>
-                <br>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>*Target Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="pq_target_date" id="pq_target_date" value="<?= !empty($default->pq_target_date) ? date("d-m-Y", strtotime($default->pq_target_date)) : "" ?>" disabled>
-                      <input type="hidden" name="pq_target_date" value="<?= !empty($default->pq_target_date) ? date("d-m-Y", strtotime($default->pq_target_date)) : "" ?>">
-                      <script>
-                        $(document).on("change", '#sobe_conducted_date',
-                          function(e) {
-                            var tmp = $("#sobe_conducted_date").val().split("-");
-                            var result = new Date(tmp[2], (tmp[1] + 1), tmp[0]);
-                            result.setDate(result.getDate() + 14);
-                            console.log(result);
-                            var month = result.getMonth() + 1;
-                            $("#pq_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                            $("[name='pq_target_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                          })
-                      </script>
-
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date">
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>Supplier:</label>
-                      <input type="text" class="form-control form-control-sm" name="pq_supplier" id="pq_supplier">
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>Bid Price:</label>
-                      <input type="text" class="form-control form-control-sm currency" name="pq_price">
-                    </div>
-                  </div>
-                  <div class="col-sm-3">
-                    <div class="form-group">
-                      <label>LC/Local:</label>
-                      <select class="form-control form-control-sm" name="pq_local" id="pq_local">
-                        <?php foreach ($data['default']['local'] as $res) { ?>
-                          <option value="<?= $res['id'] ?>"><?= $res['name'] ?></option>
-                        <?php } ?>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
 
               </div>
             </div>
+          </div>
 
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  PQR Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label>*Submitted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="pqr_conducted_date" id="pqr_conducted_date" value="<?= !empty($default->pqr_conducted_date) ? date("d-m-Y", strtotime($default->pqr_conducted_date)) : "" ?>">
 
-                    </div>
+
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                PQ Details
+              </h3>
+            </div>
+            <div class="card-body">
+
+              <table id="example1" class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>SUPPLIER</th>
+                    <th>BID Price</th>
+                    <th>LC/Local</th>
+                    <th>Conducted Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="wrapper">
+                  <?php $ctr = 1 ?>
+                  <?php foreach ($data['suppliers'] as $res) { ?>
+                    <tr>
+                      <td><?= $ctr ?></td>
+                      <td><?= $res['supplier'] ?></td>
+                      <td><?= number_format($res['price'], 2) ?></td>
+                      <td><?= $res['type'] ?></td>
+                      <td><?= date("d-m-Y", strtotime($res['conducted_date'])) ?></td>
+                      <td><?= $res['status'] ?></td>
+                    </tr>
+                    <?php $ctr++; ?>
+                  <?php } ?>
+                </tbody>
+              </table>
+              <br>
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>*Target Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="pq_target_date" id="pq_target_date" value="<?= !empty($default->pq_target_date) ? date("d-m-Y", strtotime($default->pq_target_date)) : "" ?>" disabled>
+                    <input type="hidden" name="pq_target_date" value="<?= !empty($default->pq_target_date) ? date("d-m-Y", strtotime($default->pq_target_date)) : "" ?>">
+                    <script>
+                      $(document).on("change", '#sobe_conducted_date',
+                        function(e) {
+                          var tmp = $("#sobe_conducted_date").val().split("-");
+                          var result = new Date(tmp[2], (tmp[1] + 1), tmp[0]);
+                          result.setDate(result.getDate() + 14);
+                          console.log(result);
+                          var month = result.getMonth() + 1;
+                          $("#pq_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                          $("[name='pq_target_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                        })
+                    </script>
+
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="pq_conducted_date" id="pq_conducted_date" <?= !empty($default->pq_conducted_date) ? date("d-m-Y", strtotime($default->pq_conducted_date)) : "" ?>>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>Supplier:</label>
+                    <select class="form-control form-control-sm" name="pq_supplier" id="pq_supplier">
+                      <?php foreach ($data['bidders'] as $res) { ?>
+                        <option value="<?= $res['bidder_id'] ?>"><?= strtoupper($res['supplier'] . " - (" . number_format($res['price'], 2) . ")") ?></option>
+                      <?php } ?>
+                    </select>
                   </div>
                 </div>
               </div>
+
+
+
             </div>
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  NOA Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label>*Date Approved:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="noa_conducted_date" id="noa_conducted_date" value="<?= !empty($default->noa_conducted_date) ? date("d-m-Y", strtotime($default->noa_conducted_date)) : "" ?>">
+          </div>
 
 
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                PQR Details
+              </h3>
             </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label>*Submitted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="pqr_conducted_date" id="pqr_conducted_date" value="<?= !empty($default->pqr_conducted_date) ? date("d-m-Y", strtotime($default->pqr_conducted_date)) : "" ?>">
 
- 
-
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  ORS Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="ors_conducted_date" id="ors_conducted_date" value="<?= !empty($default->ors_conducted_date) ? date("d-m-Y", strtotime($default->ors_conducted_date)) : "" ?>">
-
-
-
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  NTP Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="ntp_conducted_date" id="ntp_conducted_date" value="<?= !empty($default->ntp_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conducted_date)) : "" ?>">
+          </div>
 
-                    </div>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                NOA Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label>*Date Approved:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="noa_conducted_date" id="noa_conducted_date" value="<?= !empty($default->noa_conducted_date) ? date("d-m-Y", strtotime($default->noa_conducted_date)) : "" ?>">
+
+
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  NTP CONFORME Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-
-                      <input type="text" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date" id="ntp_conforme_conducted_date" value="<?= !empty($default->ntp_conforme_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conforme_conducted_date)) : "" ?>">
+          </div>
 
 
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>*Delivery Period</label>
-                      <input type="number" class="form-control form-control-sm" name="ntp_delivery_period" id="ntp_delivery_period" value="<?= $default->delivery_period ?>">
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                ORS Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="ors_conducted_date" id="ors_conducted_date" value="<?= !empty($default->ors_conducted_date) ? date("d-m-Y", strtotime($default->ors_conducted_date)) : "" ?>">
 
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>*LDD:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="ldd_date_display" id="ldd_date_display" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>" disabled>
-                      <input type="hidden" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>">
 
-                      <script>
-                        $(document).on("change", '#ntp_delivery_period,#ntp_conducted_date',
-                          function(e) {
-                            var tmp = $("#ntp_conducted_date").val().split("-");
-                            var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
-                            result.setDate(result.getDate() + parseInt($("#ntp_delivery_period").val()));
-                            var month = result.getMonth() + 1;
-                            $("#ldd_date_display").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                            $("[name='ldd_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
-                          })
-                      </script>
-                    </div>
+
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                NTP Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="ntp_conducted_date" id="ntp_conducted_date" value="<?= !empty($default->ntp_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conducted_date)) : "" ?>">
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Delivery Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label>*Date Delivered:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="delivery_conducted_date" id="delivery_conducted_date" value="<?= !empty($default->delivery_conducted_date) ? date("d-m-Y", strtotime($default->delivery_conducted_date)) : "" ?>">
-
-
-
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Inspected Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="inspected_conducted_date" id="inspected_conducted_date" value="<?= !empty($default->inspected_conducted_date) ? date("d-m-Y", strtotime($default->inspected_conducted_date)) : "" ?>">
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                NTP CONFORME Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
 
-                    </div>
+                    <input type="text" class="form-control form-control-sm datepicker" name="ntp_conforme_conducted_date" id="ntp_conforme_conducted_date" value="<?= !empty($default->ntp_conforme_conducted_date) ? date("d-m-Y", strtotime($default->ntp_conforme_conducted_date)) : "" ?>">
+
+
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>*Delivery Period</label>
+                    <input type="number" class="form-control form-control-sm" name="ntp_delivery_period" id="ntp_delivery_period" value="<?= $default->delivery_period ?>">
+
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>*LDD:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="ldd_date_display" id="ldd_date_display" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>" disabled>
+                    <input type="hidden" class="form-control form-control-sm datepicker" name="ldd_date" id="ldd_date" value="<?= !empty($default->ldd) ? date("d-m-Y", strtotime($default->ldd)) : "" ?>">
+
+                    <script>
+                      $(document).on("change", '#ntp_delivery_period,#ntp_conducted_date',
+                        function(e) {
+                          var tmp = $("#ntp_conducted_date").val().split("-");
+                          var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
+                          result.setDate(result.getDate() + parseInt($("#ntp_delivery_period").val()));
+                          var month = result.getMonth() + 1;
+                          $("#ldd_date_display").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                          $("[name='ldd_date']").val(result.getDate() + "-" + month + "-" + result.getFullYear());
+                        })
+                    </script>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card card-dark card-outline card-tabs">
-              <div class="card-header">
-                <h3 class="card-title">
-                  Accepted Details
-                </h3>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>*Conducted Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="accepted_conducted_date" id="accepted_conducted_date" value="<?= !empty($default->accepted_conducted_date) ? date("d-m-Y", strtotime($default->accepted_conducted_date)) : "" ?>">
+          </div>
+
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                Delivery Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label>*Date Delivered:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="delivery_conducted_date" id="delivery_conducted_date" value="<?= !empty($default->delivery_conducted_date) ? date("d-m-Y", strtotime($default->delivery_conducted_date)) : "" ?>">
 
 
-                    </div>
+
                   </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>DV/Check:</label>
-                      <div class="form-group" style="display:flex">
-                        <div class="form-check" style="width:15%">
-                          <input class="form-check-input" type="radio" name="dv" value="1" <?= ($default->dv) ? 'checked' : '' ?>>
-                          <label class="form-check-label">DV</label>
-                        </div>
-                        <div class="form-check" style="width:15%">
-                          <input class="form-check-input" type="radio" name="dv" value="0" <?= (!$default->dv) ? 'checked' : '' ?>>
-                          <label class="form-check-label">Check</label>
-                        </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                Inspected Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="inspected_conducted_date" id="inspected_conducted_date" value="<?= !empty($default->inspected_conducted_date) ? date("d-m-Y", strtotime($default->inspected_conducted_date)) : "" ?>">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card card-dark card-outline card-tabs">
+            <div class="card-header">
+              <h3 class="card-title">
+                Accepted Details
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>*Conducted Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="accepted_conducted_date" id="accepted_conducted_date" value="<?= !empty($default->accepted_conducted_date) ? date("d-m-Y", strtotime($default->accepted_conducted_date)) : "" ?>">
+
+
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>DV/Check:</label>
+                    <div class="form-group" style="display:flex">
+                      <div class="form-check" style="width:15%">
+                        <input class="form-check-input" type="radio" name="dv" value="1" <?= ($default->dv) ? 'checked' : '' ?>>
+                        <label class="form-check-label">DV</label>
+                      </div>
+                      <div class="form-check" style="width:15%">
+                        <input class="form-check-input" type="radio" name="dv" value="0" <?= (!$default->dv) ? 'checked' : '' ?>>
+                        <label class="form-check-label">Check</label>
                       </div>
                     </div>
                   </div>
-                  <div class="col-sm-4">
-                    <div class="form-group ">
-                      <label>Amount</label>
-                      <input type="text" class="form-control form-control-sm currency" name="amount" id="amount" value="<?= number_format($default->amount, 2) ?>">
-                    </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group ">
+                    <label>Amount</label>
+                    <input type="text" class="form-control form-control-sm currency" name="amount" id="amount" value="<?= number_format($default->amount, 2) ?>">
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_1" id="accepted_date_1" value="<?= !empty($default->accepted_date_1) ? date("d-m-Y", strtotime($default->accepted_date_1)) : "" ?>">
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>Retention Percentage</label>
-                      <select class="form-control form-control-sm" name="retention_percentage" id="retention_percentage">
-                        <?php
-                        for ($i = 1; $i < 11; $i++) {  ?>
-                          <option <?= $default->retention_percent == $i ? 'selected' : '' ?>><?= $i ?></option>
-                        <?php } ?>
-
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>Retention Amount</label>
-                      <input type="text" class="form-control form-control-sm" id="retention_display" name="retention_display" value="<?= number_format($default->retention_amount, 2) ?>" disabled>
-                      <input type="hidden" name="retention_amount" id="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
-
-                      <script>
-                        $(document).on("change", '#retention_percentage,#contract_price',
-                          function(e) {
-
-                            let total = (($("#retention_percentage").val() / 100) * parseFloat($("#contract_price").val().replace(",", ""))).toFixed(2);
-
-                            const numFor = Intl.NumberFormat('en-US');
-                            const new_for = numFor.format(total);
-                            $("#retention_display").val(total).maskMoney();
-                            $("[name='retention_amount']").val(total);
-                          })
-                      </script>
-                    </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_1" id="accepted_date_1" value="<?= !empty($default->accepted_date_1) ? date("d-m-Y", strtotime($default->accepted_date_1)) : "" ?>">
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>Date:</label>
-                      <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_2" id="accepted_date_2" value="<?= !empty($default->accepted_date_2) ? date("d-m-Y", strtotime($default->accepted_date_2)) : "" ?>">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Retention Percentage</label>
+                    <select class="form-control form-control-sm" name="retention_percentage" id="retention_percentage">
+                      <?php
+                      for ($i = 1; $i < 11; $i++) {  ?>
+                        <option <?= $default->retention_percent == $i ? 'selected' : '' ?>><?= $i ?></option>
+                      <?php } ?>
 
-                    </div>
+                    </select>
                   </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>LD Amount</label>
-                      <input type="text" class="form-control form-control-sm currency" name="ld_amount" id="ld_amount" value="<?= number_format($default->ld_amount, 2)  ?>">
-                    </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Retention Amount</label>
+                    <input type="text" class="form-control form-control-sm" id="retention_display" name="retention_display" value="<?= number_format($default->retention_amount, 2) ?>" disabled>
+                    <input type="hidden" name="retention_amount" id="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
+
+                    <script>
+                      $(document).on("change", '#retention_percentage,#contract_price',
+                        function(e) {
+
+                          let total = (($("#retention_percentage").val() / 100) * parseFloat($("#contract_price").val().trim().replace(/,/g, '')));
+
+
+
+
+                          $("#retention_display").val(Number(parseFloat(total).toFixed(2)).toLocaleString('en', {
+                            minimumFractionDigits: 2
+                          }));
+                          $("[name='retention_amount']").val(total);
+                        })
+                    </script>
                   </div>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                      <label>Total</label>
-                      <input type="text" class="form-control form-control-sm" id="total_display" name="total_display" value="<?= number_format($default->total, 2)  ?>" disabled>
-                      <input type="hidden" name="total" value="<?= number_format($default->total, 2) ?>">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Date:</label>
+                    <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_2" id="accepted_date_2" value="<?= !empty($default->accepted_date_2) ? date("d-m-Y", strtotime($default->accepted_date_2)) : "" ?>">
 
-                      <script>
-                         $(document).on("change", '#amount,#retention_amount,#retention_percentage,#contract_price',
-                          function(e) {
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>LD Amount</label>
+                    <input type="text" class="form-control form-control-sm currency" name="ld_amount" id="ld_amount" value="<?= number_format($default->ld_amount, 2)  ?>">
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Total</label>
+                    <input type="text" class="form-control form-control-sm" id="total_display" name="total_display" value="<?= number_format($default->total, 2)  ?>" disabled>
+                    <input type="hidden" name="total" value="<?= number_format($default->total, 2) ?>">
 
-                            let total = (parseFloat($("#amount").val().replace(",", "")) + parseFloat($("#retention_amount").val().replace(",", ""))).toFixed(2);
-                            console.log(total);
-                            $("#total_display").val(total).maskMoney();
-                            $("[name='total']").val(total);
-                          })
-                      </script>
-                    </div>
+                    <script>
+                      $(document).on("change", '#amount,#retention_amount,#retention_percentage,#contract_price',
+                        function(e) {
+
+                          let total = (parseFloat($("#amount").val().replace(",", "")) + parseFloat($("#retention_amount").val().replace(",", "")));
+                          $("#total_display").val(Number(parseFloat(total).toFixed(2)).toLocaleString('en', {
+                            minimumFractionDigits: 2
+                          }));
+                          $("[name='total']").val(total);
+                        })
+                    </script>
                   </div>
                 </div>
               </div>
             </div>
-          <?php } ?>
-
+          </div>
           <div class="card card-dark card-outline card-tabs">
             <div class="card-header">
               <h3 class="card-title">
@@ -968,11 +1013,17 @@
   </div>
 </div>
 <script>
-  $('.currency').maskMoney();
+  $('.currency').maskMoney({
+    allowZero: true,
+  });
 
   //Date picker
   $('.datepicker').datepicker({
     format: "dd-mm-yyyy",
+  });
+  $('.multidate').datepicker({
+    format: "dd-mm-yyyy",
+    multidate: true
   });
   $(function() {
     bsCustomFileInput.init();
@@ -1014,6 +1065,36 @@
   $(wrapper3).on("click", ".btn-remove-user", function(e) {
     e.preventDefault();
     $(this).parent().parent().remove();
+  })
+
+  var wrapper5 = $("#wrapper5");
+  var add_button5 = $("#add_supplier");
+
+  $(add_button5).click(function(e) {
+    e.preventDefault();
+
+    $(wrapper5).append('<tr><td> <input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[]"></td> <td>  <input type="text" class="form-control form-control-sm" name="bidder_supplier[]"> </td><td> <input type="text" class="form-control form-control-sm currency" name="bidder_price[]" value="0.00"> </td><td> <select name = "bidder_local[]" class="form-control form-control-sm"><?php foreach ($data['default']['local'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $('.datepicker').datepicker({
+      format: "dd-mm-yyyy",
+    });
+    let ctr = 1;
+    $(".bidder_rank").each(function(index) {
+      $(this).val(ctr);
+      ctr++;
+    });
+    $('.currency').maskMoney({
+      allowZero: true
+    });
+  });
+
+  $(wrapper5).on("click", ".btn-remove-user", function(e) {
+    e.preventDefault();
+    $(this).parent().parent().remove();
+    let ctr = 1;
+    $(".bidder_rank").each(function(index) {
+      $(this).val(ctr);
+      ctr++;
+    });
   })
 
 

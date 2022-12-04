@@ -83,6 +83,7 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       $data['default'] = $base->set_default_data();
       $data['default_data'] = $base->get_one("Select p.* from tbl_project p where p.id = $id");
       $data['suppliers'] = $base->get_list("Select p.*,s.name as `status`,l.name as `type` from tbl_project_supplier p inner join tbl_project_status s on s.id = p.status_id inner join tbl_local l on l.id = p.local_id where p.project_id = $id order by id asc");
+      $data['bidders'] = $base->get_list("Select b.*,b.id as bidder_id,l.name from tbl_project_bidder b inner join tbl_local l on l.id = b.local_id where b.project_id = $id ");
       $data['twgs'] = $base->get_list("Select p.* from tbl_project_twg p where p.project_id = $id");
       $data['asas'] = $base->get_list("Select p.* from tbl_project_asa p where p.project_id = $id");
       $data['chronology'] = $base->get_list("Select p.*,concat(o.first_name, ' ', o.last_name) as full_name,s.name from tbl_project_history p inner join tbl_users_info o on o.id = p.created_by inner join tbl_project_status s on s.id = p.project_status_id where p.project_id = $id order by p.created_date desc");

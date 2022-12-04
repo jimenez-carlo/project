@@ -28,6 +28,12 @@ class Dashboard extends Base
     $data->inspected = $this->get_one("select count(*) as count from tbl_project where status_id = 14 and deleted_flag = 0 {$this->is_admin}")->count;
     $data->accepted = $this->get_one("select count(*) as count from tbl_project where status_id = 15 and deleted_flag = 0 {$this->is_admin}")->count;
 
+    $where  =  ($_SESSION['user']->access_id != 1) ? "and (p.created_by = " . $_SESSION['user']->id . " OR  find_in_set('" . $_SESSION['user']->id . "',personell_ids) <> 0 OR find_in_set('" . $_SESSION['user']->id . "',officer_id) <> 0)" : "";
+
+    $data->accepted = $this->get_one("select count(*) as count from tbl_project where status_id in (2,3) and deleted_flag = 0")->count;
+    $data->accepted = $this->get_one("select count(*) as count from tbl_project where status_id in (2,3) and deleted_flag = 0")->count;
+    $data->accepted = $this->get_one("select count(*) as count from tbl_project where status_id in (2,3) and deleted_flag = 0")->count;
+    $data->accepted = $this->get_one("select count(*) as count from tbl_project where status_id in (2,3) and deleted_flag = 0")->count;
     return $data;
   }
 }

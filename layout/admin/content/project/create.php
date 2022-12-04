@@ -181,7 +181,7 @@
               <div class="row">
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <label>ABC</label>
+                    <label>*ABC</label>
                     <input type="text" class="form-control form-control-sm currency" name="abc" id="abc">
                   </div>
                 </div>
@@ -412,8 +412,14 @@
   </div>
 </div>
 <script>
-  $('.currency').maskMoney();
+  $('.currency').maskMoney({
+    allowZero: true,
+  });
 
+  $('.multidate').datepicker({
+    format: "dd-mm-yyyy",
+    multidate: true
+  });
   //Date picker
   $('.datepicker').datepicker({
     format: "dd-mm-yyyy",
