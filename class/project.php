@@ -243,15 +243,15 @@ class Project extends Base
         $required_fields[] = 'preproc_conducted_date';
 
         if ($new_status_id == 2) {
-          // $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
-          // $where .=  ", `prebid_target_date` = '$prebid_target_date'";
+          $prebid_target_date = date('Y-m-d', strtotime($preproc_conducted_date . ' + 7 days'));
+          $where .=  ", `prebid_target_date` = '$prebid_target_date'";
         }
       }
 
       if ($new_status_id == 4) {
         $required_fields[] = 'prebid_conducted_date';
-        // $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 8 days'));
-        // $where .=  ", `sobe_target_date` = '$sobe_target_date'";
+        $sobe_target_date = date('Y-m-d', strtotime($prebid_conducted_date . ' + 8 days'));
+        $where .=  ", `sobe_target_date` = '$sobe_target_date'";
       }
 
 
@@ -548,7 +548,7 @@ class Project extends Base
         $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,created_by,`conducted_date`)  values ('$id','$tmp_supp->price', '$tmp_supp->local_id','$tmp_supp->supplier','$new_status_id','$updated_by','$pq_final_date')");
       }
 
-      if (isset($bidder_rank) && !isset($change_status)) {
+      if (isset($bidder_rank) && (!isset($change_status) || (in_array($new_status_id, array(5, 6, 7, 17)))) {
         $this->query("DELETE FROM tbl_project_bidder where project_id = $id");
         foreach ($bidder_rank as $key => $res) {
           $b_rank = $bidder_rank[$key];

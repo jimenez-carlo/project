@@ -324,7 +324,7 @@
                           function(e) {
                             var tmp = $("#preproc_conducted_date").val().split("-");
                             var result = new Date(tmp[2], (tmp[1] - 1), tmp[0]);
-                            result.setDate(result.getDate() + 7);
+                            result.setDate(result.getDate() + 8);
                             console.log(result);
                             var month = result.getMonth() + 1;
                             $("#prebid_target_date").val(result.getDate() + "-" + month + "-" + result.getFullYear());
