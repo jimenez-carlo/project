@@ -224,13 +224,15 @@
                     <input type="text" class="form-control form-control-sm currency" name="contract_price" id="contract_price" value="<?= number_format($default->contract_price, 2) ?>">
                   </div>
                 </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>Residuals</label>
-                    <input type="text" class="form-control form-control-sm currency" id="residuals_display" name="residuals_display" value="<?= number_format($default->residuals, 2) ?>" disabled>
-                    <input type="hidden" class="form-control form-control-sm" name="residuals" value="<?= $default->residuals ?>" id="residuals">
+                <?php if ($status_id >= 9) { ?>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Residuals</label>
+                      <input type="text" class="form-control form-control-sm currency" id="residuals_display" name="residuals_display" value="<?= number_format($default->residuals, 2) ?>" disabled>
+                      <input type="hidden" class="form-control form-control-sm" name="residuals" value="<?= $default->residuals ?>" id="residuals">
+                    </div>
                   </div>
-                </div>
+                <?php } ?>
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>End User</label>
@@ -241,26 +243,26 @@
                     </select>
                   </div>
                 </div>
+                <?php if ($status_id >= 9) { ?>
+                  <script>
+                    $(document).on("change", "#contract_price,#abc", function(e) {
+                      // if (!$("#abc").val() || !$("#contract_price").val()) {
+                      //   $("#residuals_display").val(0);
+                      //   $("#residuals").val(0);
+                      // } else {
+                      // }
+                      let total = parseFloat($("#abc").val().trim().replace(/,/g, '')) - parseFloat($("#contract_price").val().trim().replace(/,/g, ''));
 
-                <script>
-                  $(document).on("change", "#contract_price,#abc", function(e) {
-                    // if (!$("#abc").val() || !$("#contract_price").val()) {
-                    //   $("#residuals_display").val(0);
-                    //   $("#residuals").val(0);
-                    // } else {
-                    // }
-                    let total = parseFloat($("#abc").val().trim().replace(/,/g, '')) - parseFloat($("#contract_price").val().trim().replace(/,/g, ''));
+                      let numFor = Intl.NumberFormat('en-US');
+                      let new_for = numFor.format(total);
 
-                    let numFor = Intl.NumberFormat('en-US');
-                    let new_for = numFor.format(total);
-
-                    $("#residuals_display").val(Number(parseFloat(total).toFixed(2)).toLocaleString('en', {
-                      minimumFractionDigits: 2
-                    }));
-                    $("#residuals").val(total);
-                  })
-                </script>
-
+                      $("#residuals_display").val(Number(parseFloat(total).toFixed(2)).toLocaleString('en', {
+                        minimumFractionDigits: 2
+                      }));
+                      $("#residuals").val(total);
+                    })
+                  </script>
+                <?php } ?>
               </div>
               <div class="row">
                 <div class="col-sm-3">

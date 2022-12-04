@@ -241,7 +241,6 @@
                     </select>
                   </div>
                 </div>
-
                 <script>
                   $(document).on("change", "#contract_price,#abc", function(e) {
                     // if (!$("#abc").val() || !$("#contract_price").val()) {
