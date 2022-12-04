@@ -49,6 +49,8 @@ class Project extends Base
       return $result;
     }
 
+
+
     if (!$epa && !isset($asa_nr)) {
       $msg .= "No ASA Entry!";
       $result->result = $this->response_swal($msg, "System Error", "error");
@@ -83,9 +85,11 @@ class Project extends Base
       $bidding_file_name = $this->upload_file($bidding_file, "bidding");
       $upr_file_name = $this->upload_file($upr_file, "upr");
       $other_file_name = $this->upload_file($other_file, "other");
+
       $abc = floatval(str_replace(",", "", $abc));
       $contract_price = floatval(str_replace(",", "", $contract_price));
       $residuals = floatval(str_replace(",", "", $residuals));
+
       // echo "INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by','$preproc_target_date')";
       $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by',$preproc_target_date)");
 
@@ -301,7 +305,7 @@ class Project extends Base
         $residuals = floatval(str_replace(",", "", $residuals));
 
 
-        if (empty($residuals)) {
+        if (empty($residuals) || $residuals <= 0) {
           $required_fields[] = 'residuals_display';
         }
         $required_fields[] = 'abc';
@@ -551,6 +555,7 @@ class Project extends Base
 
 
       if ((isset($bidder_modify)) || (!isset($bidder_modify) && !isset($bidder_new_rank))) {
+        $array = 0;
         if (isset($bidder_modify)) {
           foreach ($bidder_modify  as $key => $res) {
             $b_rank = $bidder_rank[$key];
@@ -559,9 +564,9 @@ class Project extends Base
             $b_local = $bidder_local[$key];
             $this->query("UPDATE tbl_project_bidder set `rank` = '$b_rank',supplier = '$b_supplier',price = '$b_price',`local_id`='$b_local'  where project_id = $id and id = '$key' ");
           }
+          $array = implode(",", $bidder_modify);
+          $array = !empty($array) ? $array : 0;
         }
-        $array = implode(",", $bidder_modify);
-        $array = !empty($array) ? $array : 0;
         $this->query("DELETE FROM tbl_project_bidder where project_id = $id and id NOT IN (" . $array . ")");
       }
 
