@@ -191,13 +191,7 @@
                     <input type="text" class="form-control form-control-sm currency" name="contract_price" id="contract_price">
                   </div>
                 </div>
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label>Residuals</label>
-                    <input type="text" class="form-control form-control-sm currency" id="residuals_display" disabled>
-                    <input type="hidden" class="form-control form-control-sm" name="residuals" id="residuals">
-                  </div>
-                </div>
+
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>End User</label>
@@ -209,18 +203,7 @@
                   </div>
                 </div>
 
-                <script>
-                  $(document).on("change", "#contract_price,#abc", function(e) {
-                    if (!$("#abc").val() || !$("#contract_price").val()) {
-                      $("#residuals_display").val(0);
-                      $("#residuals").val(0);
-                    } else {
-                      let total = parseFloat($("#abc").val().replace(",", "")) - parseFloat($("#contract_price").val().replace(",", ""));
-                      $("#residuals_display").val(total).maskMoney();
-                      $("#residuals").val(total);
-                    }
-                  })
-                </script>
+
 
               </div>
               <div class="row">
