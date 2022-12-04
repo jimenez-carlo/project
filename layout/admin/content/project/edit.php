@@ -416,12 +416,13 @@
                     <tbody id="wrapper5">
                       <?php $ctr = 1 ?>
                       <?php foreach ($data['bidders'] as $res) { ?>
+                        <input type="hidden" name="bidder_modify[<?= $res['bidder_id'] ?>]" value="<?= $res['bidder_id'] ?>">
                         <tr>
-                          <td><input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[]" value="<?= $res['rank'] ?>"></td>
-                          <td><input type="text" class="form-control form-control-sm" name="bidder_supplier[]" value="<?= $res['supplier'] ?>"></td>
-                          <td><input type="text" class="form-control form-control-sm currency" name="bidder_price[]" value="<?= number_format($res['price'], 2) ?>"></td>
+                          <td><input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[<?= $res['bidder_id'] ?>]" value="<?= $res['rank'] ?>"></td>
+                          <td><input type="text" class="form-control form-control-sm" name="bidder_supplier[<?= $res['bidder_id'] ?>]" value="<?= $res['supplier'] ?>"></td>
+                          <td><input type="text" class="form-control form-control-sm currency" name="bidder_price[<?= $res['bidder_id'] ?>]" value="<?= number_format($res['price'], 2) ?>"></td>
                           <td>
-                            <select name="bidder_local[]" class="form-control form-control-sm">
+                            <select name="bidder_local[<?= $res['bidder_id'] ?>]" class="form-control form-control-sm">
                               <?php foreach ($data['default']['local'] as $subres) { ?>
                                 <option value="<?= $subres['id']; ?>" <?= $res['local_id'] == $subres['id'] ? 'selected' : '' ?>> <?php echo $subres['name'] ?> </option>
                               <?php } ?>
@@ -1100,7 +1101,7 @@
   $(add_button5).click(function(e) {
     e.preventDefault();
 
-    $(wrapper5).append('<tr><td> <input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[]"></td> <td>  <input type="text" class="form-control form-control-sm" name="bidder_supplier[]"> </td><td> <input type="text" class="form-control form-control-sm currency" name="bidder_price[]" value="0.00"> </td><td> <select name = "bidder_local[]" class="form-control form-control-sm"><?php foreach ($data['default']['local'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $(wrapper5).append('<tr><td><input type="hidden" name="bidder_new[]"> <input type="text" class="form-control form-control-sm bidder_rank" name="bidder_rank[]"></td> <td>  <input type="text" class="form-control form-control-sm" name="bidder_supplier[]"> </td><td> <input type="text" class="form-control form-control-sm currency" name="bidder_price[]" value="0.00"> </td><td> <select name = "bidder_local[]" class="form-control form-control-sm"><?php foreach ($data['default']['local'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
     $('.datepicker').datepicker({
       format: "dd-mm-yyyy",
     });

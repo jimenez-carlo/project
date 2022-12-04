@@ -548,9 +548,21 @@ class Project extends Base
         $this->query("INSERT INTO tbl_project_supplier (project_id,price,local_id,supplier,status_id,created_by,`conducted_date`)  values ('$id','$tmp_supp->price', '$tmp_supp->local_id','$tmp_supp->supplier','$new_status_id','$updated_by','$pq_final_date')");
       }
 
-      if (isset($bidder_rank) && (!isset($change_status) || (in_array($new_status_id, array(5, 6, 7, 17)))) {
-        $this->query("DELETE FROM tbl_project_bidder where project_id = $id");
-        foreach ($bidder_rank as $key => $res) {
+
+      if (isset($bidder_rank)) {
+        if (isset($bidder_modify)) {
+          foreach ($bidder_modify  as $key => $res) {
+            $b_rank = $bidder_rank[$key];
+            $b_supplier = $bidder_supplier[$key];
+            $b_price = floatval(str_replace(",", "", $bidder_price[$key]));
+            $b_local = $bidder_local[$key];
+            $this->query("UPDATE tbl_project_bidder set `rank` = '$b_rank',supplier = '$b_supplier',price = '$b_price',`local_id`='$b_local'  where project_id = $id and id = '$key' ");
+          }
+        }
+
+        $array = implode("','", $bidder_modify);
+        $this->query("DELETE FROM tbl_project_bidder where project_id = $id and id NOT IN ('" . $array . "')");
+        if (isset($bidder_new)) {
           $b_rank = $bidder_rank[$key];
           $b_supplier = $bidder_supplier[$key];
           $b_price = floatval(str_replace(",", "", $bidder_price[$key]));
