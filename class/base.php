@@ -6,12 +6,15 @@ class Base
   private $conn;
   public function __construct($db)
   {
-    if (!isset($_SESSION['created'])) {
-      $_SESSION['created'] = time();
-    } else if (time() - $_SESSION['created'] > 1800) {
-      // session started more than 30 minutes ago
-      session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
-      $_SESSION['created'] = time();  // update creation time
+    if (!isset($_SESSION['session_created'])) {
+      $_SESSION['session_created'] = time();
+    }
+
+    if (time() - $_SESSION['session_created'] > 1800) {
+      session_destroy();
+      header('location:index.php');
+    } else {
+      $_SESSION['session_created'] = time();
     }
 
     $this->conn = $db;
