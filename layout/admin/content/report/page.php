@@ -42,8 +42,8 @@
                 </div>
                 <div class="col-sm-2">
                   <div class="form-group">
-                    <input class="form-check-input" type="checkbox" name="col_emplementing_unit" id="eu" checked>
-                    <label class="form-check-label" for="eu">Emplementing Unit</label>
+                    <input class="form-check-input" type="checkbox" name="col_implementing_unit" id="eu" checked>
+                    <label class="form-check-label" for="eu">Implementing Unit</label>
                   </div>
                 </div>
                 <div class="col-sm-2">
@@ -435,7 +435,8 @@
               </div>
             </div>
             <div class="card-footer">
-              <button class="btn btn-sm btn-dark float-right" id="download">Download</button>
+              <button class="btn btn-sm btn-dark float-right" name="download" id="download">Download</button>
+              <button class="btn btn-sm btn-dark float-right mg-r" name="pdf" id="pdf">PDF</button>
             </div>
           </div>
           <!-- /.card -->
@@ -447,11 +448,11 @@
   </div>
 <script>
   $(function() {
-    $("#download").on("click", function(e) {
+    $("#download, #pdf").on("click", function(e) {
       e.preventDefault()
       parameters = $("#reportform").serialize() 
       var anchor = document.createElement('a')
-      anchor.href = base_url+'layout/admin/content/report/download.php?'+parameters
+      anchor.href = base_url+'layout/admin/content/report/download.php?'+parameters+'&type='+$(this).attr("name")
       anchor.target="_blank"
       anchor.click();
     })
