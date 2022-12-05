@@ -328,4 +328,7 @@ if (count($projects) > 0) {
 <br>
 <br>
 <br>
+<script>
+	window.print()
+</script>
 <?php endif; ?>
