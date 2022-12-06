@@ -256,7 +256,7 @@ $qry = <<<SQL
 			LEFT JOIN
 		tbl_users_info c ON c.id = p.created_by
 	WHERE
-			p.deleted_flag = 0 {$is_admin} {$date_range_created} {$filter}
+			p.deleted_flag = 0 {$is_admin} {$filter}
 	GROUP BY p.id
 SQL;
 
