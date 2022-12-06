@@ -356,7 +356,7 @@ class Project extends Base
         $required_fields[] = 'retention_percentage';
         $required_fields[] = 'retention_amount';
         $required_fields[] = 'accepted_date_2';
-        $required_fields[] = 'ld_amount';
+        // $required_fields[] = 'ld_amount';
         $required_fields[] = 'total';
       }
     } else {
@@ -412,6 +412,9 @@ class Project extends Base
       }
 
       if ($status_id >= 9) {
+        $abc = floatval(str_replace(",", "", $abc));
+        $contract_price = floatval(str_replace(",", "", $contract_price));
+        $residuals = floatval(str_replace(",", "", $residuals));
 
         if (empty($residuals) || $residuals <= 0) {
           $required_fields[] = 'residuals_display';
@@ -465,7 +468,7 @@ class Project extends Base
         $required_fields[] = 'retention_percentage';
         $required_fields[] = 'retention_amount';
         $required_fields[] = 'accepted_date_2';
-        $required_fields[] = 'ld_amount';
+        // $required_fields[] = 'ld_amount';
         $required_fields[] = 'total';
         // if ($status_id == 14 && !isset($twg_rank)) {
         //   $msg .= "No TWG Entry!";
