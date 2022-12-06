@@ -198,15 +198,7 @@ if (isset($_GET['mode_of_proc'])) {
 
 $filter = "";
 if (count($where) > 0) {
-	$filter .= "OR (".implode(" AND ", $where).")";
-}
-
-$date_range_created = "";
-if (isset($_GET['created_date'])) {
-	$created_dates = explode(" - ", $_GET['created_date']);
-	$created_date_from =	date("Y-m-d", strtotime($created_dates[0]));
-	$created_date_to = date("Y-m-d", strtotime($created_dates[1]));
-	$date_range_created .= "AND (p.created_date > '$created_date_from 00:00:00' AND p.created_date < '$created_date_to 23:59:59')";
+	$filter .= "AND (".implode(" AND ", $where).")";
 }
 
 $is_admin = "";
