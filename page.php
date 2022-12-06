@@ -56,9 +56,10 @@ if (in_array($page, $pages)) {
 
       $data['default'] = $base->set_default_data();
       $where  =  (!empty($id)) ? "and (p.created_by = $id OR  find_in_set('$id',personell_ids) <> 0 OR find_in_set('$id',officer_id) <> 0)" : "";
-      $data['list'] = $base->get_list("select concat(o.last_name, ', ', o.first_name,' ', LEFT(o.middle_name, 1), '[#',o.id,']') as officer_full_name, p.id,s.name as `status`,ui.name as `implementing_unit`,cm.name as`comodity`,pm.name as `program_manager`,p.created_date,p.updated_date,epa from 
+      $data['list'] = $base->get_list("select concat(o.last_name, ', ', o.first_name,' ', LEFT(o.middle_name, 1), '[#',o.id,']') as officer_full_name, p.id,s.name as `status`,ui.name as `implementing_unit`,cm.name as`comodity`,pm.name as `program_manager`, p.project_description, p.qty, u.name AS `unit`, p.abc, p.created_date,p.updated_date,epa from 
 tbl_project p  inner join 
 tbl_implementing_unit ui on ui.id = p.implementing_unit_id inner join 
+tbl_unit u on u.id = p.unit_id inner join 
 tbl_comodity cm on cm.id = p.comodity_id inner join 
 tbl_program_manager pm on pm.id = p.program_manager_id inner join 
 tbl_project_status s on s.id = p.status_id left join 

@@ -875,6 +875,21 @@ LOCK TABLES `tbl_verify_status` WRITE;
 INSERT INTO `tbl_verify_status` VALUES (0,'2022-11-22 17:38:11','2022-11-22 17:38:11',0,'PENDING',1),(1,'2022-11-22 17:38:11','2022-11-22 17:38:11',0,'VERIFIED',2);
 /*!40000 ALTER TABLE `tbl_verify_status` ENABLE KEYS */;
 UNLOCK TABLES;
+
+ALTER TABLE `pms_db`.`tbl_mode_of_proc` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_comodity` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_end_user` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_pabac` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_program_manager` 
+ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
