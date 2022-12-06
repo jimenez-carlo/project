@@ -120,7 +120,10 @@ if (isset($_GET["col_accepted_conducted_date"])) {
 	$select .= ", DATE_FORMAT(p.accepted_conducted_date, '%d-%b-%Y') AS `ACCEPTED DATE`";
 }
 if (isset($_GET["col_dv"])) {
-	$select .= ", p.dv AS `DV/CHECK`";
+	$select .= ", IF(p.dv = 1, 'DV', 'CHECK') AS `DV/CHECK`";
+}
+if (isset($_GET["col_dv"])) {
+	$select .= ", p.amount AS `DV AMOUNT`";
 }
 if (isset($_GET["col_dv"])) {
 	$select .= ", DATE_FORMAT(p.accepted_date_1, '%d-%b-%Y') AS `DV/CHECK DATE`";
