@@ -6,20 +6,16 @@ require('../../../../class/base.php');
 
 $base = new Base($conn);
 
-$is_admin = "";
-if ($_SESSION['user']->access_id != "1") {
-	$is_admin  = "AND p.created_by = ".$_SESSION['user']->id;
-}
+$select = "";
 
-$select = "p.id";
-if (isset($_GET["col_status"])) {
-	$select .= ", s.name AS `Status`";
+if (isset($_GET["col_reference"])) {
+	$select .= ", p.id AS `REFERENCE#`";
 }
 if (isset($_GET["col_epa"])) {
 	$select .= ", IF(p.epa, 'Yes', 'No') AS EPA";
 }
 if (isset($_GET["col_implementing_unit"])) {
-	$select .= ", iu.name AS `Implementing Unit`";
+	$select .= ", iu.name AS `IMPLEMENTING UNIT`";
 }
 if (isset($_GET["col_pabac"])) {
 	$select .= ", pabac.name AS `PABAC`";
@@ -30,125 +26,153 @@ if (isset($_GET["col_pabac_nr"])) {
 if (isset($_GET["col_upr_nr"])) {
 	$select .= ", p.upr_nr AS `UPR NR`";
 }
+if (isset($_GET["col_upr_date"])) {
+	$select .= ", DATE_FORMAT(p.upr_date, '%d-%b-%Y') AS `UPR DATE`";
+}
 if (isset($_GET["col_commodity"])) {
-	$select .= ", cm.name AS `Comodity`";
+	$select .= ", cm.name AS `COMODITY`";
 }
 if (isset($_GET["col_program_manager"])) {
-	$select .= ", pm.name AS `Program Manager`";
+	$select .= ", pm.name AS `PROGRAM MANAGER`";
+}
+if (isset($_GET["col_asa_nr"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(asa.asa_nr,'')) AS `ASA NR`";
+}
+if (isset($_GET["col_asa_date"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT DATE_FORMAT(asa.asa_date, '%d-%b-%Y')) AS `DATE OF ASA`";
+}
+if (isset($_GET["col_asa_object_code"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(asa.object_code,'')) AS `ASA OBJECT CODE`";
+}
+if (isset($_GET["col_asa_amount"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT FORMAT(IFNULL(asa.asa_amount,0), 2)) AS `ASA AMOUNT`";
+}
+if (isset($_GET["col_asa_expense_class"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(expns_clss.name,'')) AS `EXPENSE CLASS`";
+}
+if (isset($_GET["col_contract_nr"])) {
+	$select .= ", p.contract_nr AS `CONTRACT NR`";
 }
 if (isset($_GET["col_project_description"])) {
-	$select .= ", p.project_description AS `Project Description`";
+	$select .= ", p.project_description AS `PROJECT DESCRIPTION`";
 }
 if (isset($_GET["col_quantity"])) {
-	$select .= ", p.qty AS `Quantity`";
+	$select .= ", p.qty AS `QUANTITY`";
 }
 if (isset($_GET["col_unit"])) {
-	$select .= ", unit.name AS `Unit`";
+	$select .= ", unit.name AS `UNIT`";
 }
 if (isset($_GET["col_abc"])) {
 	$select .= ", p.abc AS `ABC`";
 }
-if (isset($_GET["col_contract_nr"])) {
-	$select .= ", p.contract_nr AS `Contract NR`";
-}
 if (isset($_GET["col_contract_price"])) {
-	$select .= ", p.contract_price AS `Contract Price`";
+	$select .= ", p.contract_price AS `CONTRACT PRICE`";
 }
 if (isset($_GET["col_residuals"])) {
-	$select .= ", p.residuals AS `Residuals`";
+	$select .= ", p.residuals AS `RESIDUALS`";
 }
-if (isset($_GET["col_end_user"])) {
-	$select .= ", p.end_user AS `End User`";
+if (isset($_GET["col_end_user"])) { 
+	$select .= ", GROUP_CONCAT(DISTINCT eu.name) AS `END USER`";
 }
 if (isset($_GET["col_mode_of_proc"])) {
-	$select .= ", mop.name AS `Mode Of Proc`";
+	$select .= ", mop.name AS `MODE OF PROCUREMENT`";
 }
 if (isset($_GET["col_preproc_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.preproc_conducted_date, '%d-%b-%Y') AS `Preproc Conducted Date`";
+	$select .= ", DATE_FORMAT(p.preproc_conducted_date, '%d-%b-%Y') AS `PRE-PROC`";
 }
 if (isset($_GET["col_prebid_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.prebid_conducted_date, '%d-%b-%Y') AS `Prebid Conducted Date`";
+	$select .= ", DATE_FORMAT(p.prebid_conducted_date, '%d-%b-%Y') AS `PRE-BID`";
 }
 if (isset($_GET["col_sobe_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.sobe_conducted_date, '%d-%b-%Y') AS `Sobe Conducted Date`";
-}
-if (isset($_GET["col_no_bidder"])) {
-	$select .= ", IF(p.no_bidder, 'Yes', 'No') AS `No Bidder`";
+	$select .= ", DATE_FORMAT(p.sobe_conducted_date, '%d-%b-%Y') AS `SOBE`";
 }
 if (isset($_GET["col_pq_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.pq_conducted_date, '%d-%b-%Y') AS `PQ Conducted Date`";
+	$select .= ", DATE_FORMAT(p.pq_conducted_date, '%d-%b-%Y') AS `PQ`";
 }
 if (isset($_GET["pqr_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.pqr_conducted_date, '%d-%b-%Y') AS `PQR Conducted Date`";
+	$select .= ", DATE_FORMAT(p.pqr_conducted_date, '%d-%b-%Y') AS `PQR`";
 }
 if (isset($_GET["col_noa_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.noa_conducted_date, '%d-%b-%Y') AS `NOA Conducted Date`";
+	$select .= ", DATE_FORMAT(p.noa_conducted_date, '%d-%b-%Y') AS `NOA`";
 }
 if (isset($_GET["col_ors_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.ors_conducted_date, '%d-%b-%Y') AS `ORS Conducted Date`";
+	$select .= ", DATE_FORMAT(p.ors_conducted_date, '%d-%b-%Y') AS `ORS`";
 }
 if (isset($_GET["col_ntp_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.ntp_conducted_date, '%d-%b-%Y') AS `NTO Conducted Date`";
+	$select .= ", DATE_FORMAT(p.ntp_conducted_date, '%d-%b-%Y') AS `NTP`";
 }
 if (isset($_GET["col_ntp_conforme_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.ntp_conforme_conducted_date, '%d-%b-%Y') AS `NTP Conforme Conducted Date`";
+	$select .= ", DATE_FORMAT(p.ntp_conforme_conducted_date, '%d-%b-%Y') AS `NTP CONFORME`";
 }
-if (isset($_GET["col_delivery_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.delivery_conducted_date, '%d-%b-%Y') AS `Delivery Conducted Date`";
+if (isset($_GET["col_delivery_period"])) {
+	$select .= ", DATE_FORMAT(p.delivery_period, '%d-%b-%Y') AS `DELIVERY PERIOD`";
 }
 if (isset($_GET["col_ldd"])) {
 	$select .= ", DATE_FORMAT(p.ldd, '%d-%b-%Y') AS `LDD`";
 }
+if (isset($_GET["col_delivery_conducted_date"])) {
+	$select .= ", DATE_FORMAT(p.delivery_conducted_date, '%d-%b-%Y') AS `DELIVERY CONDUCTED DATE`";
+}
 if (isset($_GET["col_inspected_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.inspected_conducted_date, '%d-%b-%Y') AS `Inspected Conducted Date`";
+	$select .= ", DATE_FORMAT(p.inspected_conducted_date, '%d-%b-%Y') AS `INSPECTED CONDUCTED DATE`";
 }
 if (isset($_GET["col_accepted_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.accepted_conducted_date, '%d-%b-%Y') AS `Accepted Conducted Date`";
+	$select .= ", DATE_FORMAT(p.accepted_conducted_date, '%d-%b-%Y') AS `ACCEPTED DATE`";
 }
 if (isset($_GET["col_dv"])) {
-	$select .= ", p.dv AS `DV`";
+	$select .= ", p.dv AS `DV/CHECK`";
 }
-if (isset($_GET["col_amount"])) {
-	$select .= ", p.amount AS `Amount`";
-}
-if (isset($_GET["col_retention_percent"])) {
-	$select .= ", p.retention_percent AS `Retention Percent`";
+if (isset($_GET["col_dv"])) {
+	$select .= ", DATE_FORMAT(p.accepted_date_1, '%d-%b-%Y') AS `DV/CHECK DATE`";
 }
 if (isset($_GET["col_retention_amount"])) {
-	$select .= ", p.retention_amount AS `Retention Amount`";
+	$select .= ", FORMAT(IFNULL(p.retention_amount,0), 2) AS `RETENTION AMOUNT`";
+}
+if (isset($_GET["col_retention_amount"])) {
+	$select .= ", DATE_FORMAT(p.accepted_date_2, '%d-%b-%Y') AS `RETENTION DATE`";
 }
 if (isset($_GET["col_ld_amount"])) {
-	$select .= ", p.ld_amount AS `LD Amount`";
+	$select .= ", FORMAT(IFNULL(p.ld_amount,0), 2) AS `LD AMOUNT`";
 }
 if (isset($_GET["col_total"])) {
-	$select .= ", p.total AS `Total`";
-}
-if (isset($_GET["col_twg"])) {
-	$select .= ", GROUP_CONCAT(IFNULL(rnk.name,''), IF(rnk.name IS NOT NULL, ', ', ''), IFNULL(twg.last_name,''), IF(twg.last_name IS NOT NULL, ', ', ''), IFNULL(twg.first_name,''), ' ', IFNULL(twg.middle_name, ''), ' ', IFNULL(IF(twg.suffix_id != 1, sfx.name, NULL), ''), IF(twg.suffix_id != 1, ', ', ''), IFNULL(branch.name, ''), IF(branch.name IS NOT NULL, ', ', ''), IFNULL(designation.name, ''), IF(designation.name IS NOT NULL, ', ', ''), IFNULL(twg.authority,''), IF(twg.authority IS NOT NULL, ', ', ''), IFNULL(twg.serial_no, '') SEPARATOR '\n') AS `TWG`";
+	$select .= ", FORMAT(IFNULL(p.total,0), 2) AS `TOTAL`";
 }
 if (isset($_GET["col_supplier"])) {
-	$select .= ", GROUP_CONCAT(IFNULL(sup_rnk.name, ''), IF(sup_rnk.name IS NOT NULL, ', ', ''), IFNULL(ps.supplier,''), IF(ps.supplier IS NOT NULL, ', ', ''), IFNULL(ps.price, ''), IF(ps.price IS NOT NULL, ', ', ''), IFNULL(lcl.name, ''), IF(lcl.name IS NOT NULL, ', ', ''), IFNULL(ss.name, '') SEPARATOR '\n') AS `Supplier`";
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(ps.supplier, 'N/A') SEPARATOR '\n') AS `SUPPLIER`";
 }
-if (isset($_GET["col_created_by"])) {
-	$select .= ", CONCAT(IFNULL(o.first_name, ''), ' ', IFNULL(o.middle_name, ''), ' ', IFNULL(o.last_name, '')) AS `Created By`";
+if (isset($_GET["col_bid_price"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT FORMAT(IFNULL(ps.price, 0), 2) SEPARATOR '\n') AS `BID PRICE`";
 }
-if (isset($_GET["col_created_date"])) {
-	$select .= ", DATE_FORMAT(p.created_date, '%d-%b-%Y %H:%i:%s') AS `Created Date`";
+if (isset($_GET["col_lc_local"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(lcl.name, 'N/A')  SEPARATOR '\n') AS `LC/LOCAL`";
 }
-if (isset($_GET["col_updated_date"])) {
-	$select .= ",DATE_FORMAT(p.updated_date, '%d-%b-%Y %H:%i:%s') AS `Updated Date`";
+if (isset($_GET["col_twg"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(rnk.name,''), IF(rnk.name IS NOT NULL, ', ', ''), IFNULL(twg.last_name,''), IF(twg.last_name IS NOT NULL, ', ', ''), IFNULL(twg.first_name,''), ' ', IFNULL(twg.middle_name, ''), ' ', IFNULL(IF(twg.suffix_id != 1, sfx.name, NULL), ''), IF(twg.suffix_id != 1, ', ', ''), IFNULL(branch.name, ''), IF(branch.name IS NOT NULL, ', ', ''), IFNULL(designation.name, ''), IF(designation.name IS NOT NULL, ', ', ''), IFNULL(twg.serial_no, '') SEPARATOR '\n') AS `TWG`";
+}
+if (isset($_GET["col_authority"])) {
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(twg.authority,'N/A')  SEPARATOR '\n') AS `AUTHORITY`";
 }
 
 $where = [];
 
-if (isset($_GET['project_status'])) {
-	$status_ids = implode(",", $_GET['project_status']);
-	$where[] = "p.status_id IN($status_ids)";
+if (isset($_GET['epa'])) {
+	$epa_ids = implode(",", $_GET['epa']);
+	$where[] = "p.epa IN($epa_ids)";
 }
 
-if (isset($_GET['commodity'])) {
-	$commodity_ids = implode(",", $_GET['commodity']);
-	$where[] = "p.comodity_id IN($commodity_ids)";
+if (isset($_GET['implementing_unit'])) {
+	$implementing_unit_ids = implode(",", $_GET['implementing_unit']);
+	$where[] = "p.implementing_unit_id IN($implementing_unit_ids)";
+}
+
+if (isset($_GET['program_manager'])) {
+	$program_manager_ids = implode(",", $_GET['program_manager']);
+	$where[] = "p.program_manager_id IN($program_manager_ids)";
+}
+
+if (isset($_GET['pabac'])) {
+	$pabac_ids = implode(",", $_GET['pabac']);
+	$where[] = "p.pabac_id IN($pabac_ids)";
 }
 
 if (isset($_GET['end_user'])) {
@@ -159,34 +183,14 @@ if (isset($_GET['end_user'])) {
 	$where[] = "(".implode(" OR ", $where_end_user).")";
 }
 
-if (isset($_GET['unit'])) {
-	$unit_ids = implode(",", $_GET['unit']);
-	$where[] = "p.unit_id IN($unit_ids)";
+if (isset($_GET['commodity'])) {
+	$commodity_ids = implode(",", $_GET['commodity']);
+	$where[] = "p.comodity_id IN($commodity_ids)";
 }
 
 if (isset($_GET['mode_of_proc'])) {
 	$mode_of_proc_ids = implode(",", $_GET['mode_of_proc']);
 	$where[] = "p.mode_of_proc_id IN($mode_of_proc_ids)";
-}
-
-if (isset($_GET['epa'])) {
-	$epa_ids = implode(",", $_GET['epa']);
-	$where[] = "p.epa IN($epa_ids)";
-}
-
-if (isset($_GET['pabac'])) {
-	$pabac_ids = implode(",", $_GET['pabac']);
-	$where[] = "p.pabac_id IN($pabac_ids)";
-}
-
-if (isset($_GET['program_manager'])) {
-	$program_manager_ids = implode(",", $_GET['program_manager']);
-	$where[] = "p.program_manager_id IN($program_manager_ids)";
-}
-
-if (isset($_GET['implementing_unit'])) {
-	$implementing_unit_ids = implode(",", $_GET['implementing_unit']);
-	$where[] = "p.implementing_unit_id IN($implementing_unit_ids)";
 }
 
 $filter = "";
@@ -197,32 +201,45 @@ if (count($where) > 0) {
 $date_range_created = "";
 if (isset($_GET['created_date'])) {
 	$created_dates = explode(" - ", $_GET['created_date']);
-	$created_date_from =  date("Y-m-d", strtotime($created_dates[0]));
+	$created_date_from =	date("Y-m-d", strtotime($created_dates[0]));
 	$created_date_to = date("Y-m-d", strtotime($created_dates[1]));
 	$date_range_created .= "AND (p.created_date > '$created_date_from 00:00:00' AND p.created_date < '$created_date_to 23:59:59')";
 }
+
+$is_admin = "";
+if ($_SESSION['user']->access_id != "1") {
+	$is_admin	= "AND p.created_by = ".$_SESSION['user']->id;
+}
+
+$select = substr($select, 2); 
 
 $qry = <<<SQL
 	SELECT 
 		{$select}
 	FROM
-	  tbl_project p
-	    LEFT JOIN
-	  tbl_implementing_unit iu ON iu.id = p.implementing_unit_id
-	    LEFT JOIN
+		tbl_project p
+			LEFT JOIN
+		tbl_implementing_unit iu ON iu.id = p.implementing_unit_id
+			LEFT JOIN
 		tbl_pabac pabac ON pabac.id = p.pabac_id
-	    LEFT JOIN
+			LEFT JOIN
+		tbl_end_user eu ON find_in_set(eu.id, p.end_user)
+			LEFT JOIN 
 		tbl_unit unit ON unit.id = p.unit_id
 			LEFT JOIN
-	  tbl_comodity cm ON cm.id = p.comodity_id
-	    LEFT JOIN
+		tbl_comodity cm ON cm.id = p.comodity_id
+			LEFT JOIN
 		tbl_mode_of_proc mop ON mop.id = p.mode_of_proc_id
 			LEFT JOIN
-	  tbl_program_manager pm ON pm.id = p.program_manager_id
-	    LEFT JOIN
-	  tbl_project_status s ON s.id = p.status_id
-	    LEFT JOIN
-	  tbl_users_info o ON o.id = p.officer_id
+		tbl_program_manager pm ON pm.id = p.program_manager_id
+			LEFT JOIN
+		tbl_project_asa asa ON asa.project_id = p.id
+			LEFT JOIN
+		tbl_expense_class expns_clss ON expns_clss.id = asa.expense_class_id
+			LEFT JOIN
+		tbl_project_status s ON s.id = p.status_id
+			LEFT JOIN
+		tbl_users_info o ON o.id = p.officer_id
 			LEFT JOIN
 		tbl_project_twg twg ON twg.project_id = p.id
 			LEFT JOIN
@@ -233,7 +250,7 @@ $qry = <<<SQL
 		tbl_branch branch ON branch.id = twg.branch_id
 			LEFT JOIN
 		tbl_designation designation ON designation.id = twg.designation_id
-	    LEFT JOIN
+			LEFT JOIN
 		tbl_project_supplier ps ON ps.project_id = p.id
 			LEFT JOIN
 		tbl_rank sup_rnk ON sup_rnk.id = ps.rank
@@ -242,9 +259,9 @@ $qry = <<<SQL
 			LEFT JOIN
 		tbl_supplier_status ss ON ss.id = ps.status_id
 			LEFT JOIN
-	  tbl_users_info c ON c.id = p.created_by
+		tbl_users_info c ON c.id = p.created_by
 	WHERE
-	    p.deleted_flag = 0 {$is_admin} {$date_range_created} {$filter}
+			p.deleted_flag = 0 {$is_admin} {$date_range_created} {$filter}
 	GROUP BY p.id
 SQL;
 
