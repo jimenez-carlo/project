@@ -24,7 +24,8 @@ $routes = array(
   'admin/maintenance/dropdown' => $admin_route . '/maintenance/dropdown.php',
   'admin/maintenance/dropdown/edit' => $admin_route . '/maintenance/dropdown_edit.php',
   
-  'admin/report' => $admin_route . '/report/page.php',
+  'admin/report/project' => $admin_route . '/report/page.php',
+  'admin/report/commodity' => $admin_route . '/report/commodity/landing_page.php',
 
   #Landing Page
   'landing_page/about_us' => $landing_route . '/about_us.php',

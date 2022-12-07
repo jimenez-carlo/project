@@ -176,8 +176,243 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
       $data['default'] = $base->get_one("SELECT id, name FROM $table WHERE id = $id AND deleted_flag = 0");
       break;
 
-    case 'admin/report':
+    case 'admin/report/project':
       $data['default'] = $base->set_default_data();
+      break;
+    case 'admin/report/commodity':
+      $data['commodities'] = $base->get_list("
+        SELECT * FROM (    
+          SELECT 
+          c.name AS `Commodity`,
+          SUM(IF(status_id = 1  AND p.comodity_id = 1, 1, 0)) AS `For Pre-Proc`,
+          SUM(IF(status_id = 2  AND p.comodity_id = 1, 1, 0)) AS `Pre-Proc Passed`,
+          SUM(IF(status_id = 3  AND p.comodity_id = 1, 1, 0)) AS `Pre-Proc Failed`,
+          SUM(IF(status_id = 4  AND p.comodity_id = 1, 1, 0)) AS `Pre-Bid`,
+          SUM(IF(status_id = 5  AND p.comodity_id = 1, 1, 0)) AS `Sobe Passed`,
+          SUM(IF(status_id = 6  AND p.comodity_id = 1, 1, 0)) AS `Sobe Failed`,
+          SUM(IF(status_id = 7  AND p.comodity_id = 1, 1, 0)) AS `PQ Passed`,
+          SUM(IF(status_id = 17 AND p.comodity_id = 1, 1, 0)) AS `PQ Failed`,
+          SUM(IF(status_id = 8  AND p.comodity_id = 1, 1, 0)) AS `PQR`,
+          SUM(IF(status_id = 9  AND p.comodity_id = 1, 1, 0)) AS `NOA`,
+          SUM(IF(status_id = 10 AND p.comodity_id = 1, 1, 0)) AS `ORS`,
+          SUM(IF(status_id = 11 AND p.comodity_id = 1, 1, 0)) AS `NTP`,
+          SUM(IF(status_id = 12 AND p.comodity_id = 1, 1, 0)) AS `NTP Conforme`,
+          SUM(IF(status_id = 13 AND p.comodity_id = 1, 1, 0)) AS `Delivery`,
+          SUM(IF(status_id = 14 AND p.comodity_id = 1, 1, 0)) AS `Inspected`,
+          SUM(IF(status_id = 15 AND p.comodity_id = 1, 1, 0)) AS `Accepted`,
+          COUNT(*) AS `Total`
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 1 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 2, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 2, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 2, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 2, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 2, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 2, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 2, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 2, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 2, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 2, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 2, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 2, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 2, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 2, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 2, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 2, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id 
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 2 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 3, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 3, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 3, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 3, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 3, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 3, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 3, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 3, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 3, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 3, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 3, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 3, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 3, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 3, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 3, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 3, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 3 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 4, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 4, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 4, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 4, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 4, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 4, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 4, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 4, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 4, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 4, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 4, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 4, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 4, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 4, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 4, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 4, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 4 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 5, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 5, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 5, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 5, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 5, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 5, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 5, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 5, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 5, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 5, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 5, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 5, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 5, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 5, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 5, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 5, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 5 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 6, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 6, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 6, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 6, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 6, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 6, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 6, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 6, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 6, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 6, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 6, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 6, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 6, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 6, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 6, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 6, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 6 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 7, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 7, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 7, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 7, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 7, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 7, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 7, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 7, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 7, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 7, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 7, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 7, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 7, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 7, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 7, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 7, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 4 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 8, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 8, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 8, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 8, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 8, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 8, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 8, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 8, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 8, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 8, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 8, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 8, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 8, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 8, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 8, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 8, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 8 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 9, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 9, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 9, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 9, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 9, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 9, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 9, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 9, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 9, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 9, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 9, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 9, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 9, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 9, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 9, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 9, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 9 GROUP BY p.comodity_id
+          UNION
+          SELECT 
+          c.name,
+          SUM(IF(status_id = 1  AND p.comodity_id = 10, 1, 0)) AS for_pre_proc,
+          SUM(IF(status_id = 2  AND p.comodity_id = 10, 1, 0)) AS pre_proc_passed,
+          SUM(IF(status_id = 3  AND p.comodity_id = 10, 1, 0)) AS pre_proc_failed,
+          SUM(IF(status_id = 4  AND p.comodity_id = 10, 1, 0)) AS pre_bid,
+          SUM(IF(status_id = 5  AND p.comodity_id = 10, 1, 0)) AS sobe_passed,
+          SUM(IF(status_id = 6  AND p.comodity_id = 10, 1, 0)) AS sobe_failed,
+          SUM(IF(status_id = 7  AND p.comodity_id = 10, 1, 0)) AS pq_passed,
+          SUM(IF(status_id = 17 AND p.comodity_id = 10, 1, 0)) AS pq_failed,
+          SUM(IF(status_id = 8  AND p.comodity_id = 10, 1, 0)) AS pqr,
+          SUM(IF(status_id = 9  AND p.comodity_id = 10, 1, 0)) AS noa,
+          SUM(IF(status_id = 10 AND p.comodity_id = 10, 1, 0)) AS ors,
+          SUM(IF(status_id = 11 AND p.comodity_id = 10, 1, 0)) AS ntp,
+          SUM(IF(status_id = 12 AND p.comodity_id = 10, 1, 0)) AS ntp_conforme,
+          SUM(IF(status_id = 13 AND p.comodity_id = 10, 1, 0)) AS delivery,
+          SUM(IF(status_id = 14 AND p.comodity_id = 10, 1, 0)) AS inspected,
+          SUM(IF(status_id = 15 AND p.comodity_id = 10, 1, 0)) AS accepted,
+          COUNT(*)
+          FROM tbl_project p 
+          INNER JOIN tbl_comodity c ON c.id = p.comodity_id
+          WHERE p.deleted_flag = 0 AND p.comodity_id = 10 GROUP BY p.comodity_id
+          ) AS commodity_status_report
+      ");
       break;
   }
   echo get_contents(page_url($page), $data);

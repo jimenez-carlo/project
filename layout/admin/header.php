@@ -127,12 +127,31 @@
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link btn-view" name="admin/report">
-                <i class="nav-icon fas fa-copy"></i>
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-columns"></i>
                 <p>
                   Reports
+                  <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link btn-view" name="admin/report/project">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>
+                      Project
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link btn-view" name="admin/report/commodity">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>
+                      Commodity
+                    </p>
+                  </a>
+                </li>
+              </ul>
             </li>
 
             <?php if (in_array($user->access_id, [1,2,3])) { ?>
