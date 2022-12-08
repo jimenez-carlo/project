@@ -122,16 +122,16 @@ if (isset($_GET["col_accepted_conducted_date"])) {
 if (isset($_GET["col_dv"])) {
 	$select .= ", IF(p.dv = 1, 'DV', 'CHECK') AS `DV/CHECK`";
 }
-if (isset($_GET["col_dv"])) {
+if (isset($_GET["col_dv_amount"])) {
 	$select .= ", p.amount AS `DV AMOUNT`";
 }
-if (isset($_GET["col_dv"])) {
+if (isset($_GET["col_dv_date"])) {
 	$select .= ", DATE_FORMAT(p.accepted_date_1, '%d-%b-%Y') AS `DV/CHECK DATE`";
 }
 if (isset($_GET["col_retention_amount"])) {
 	$select .= ", FORMAT(IFNULL(p.retention_amount,0), 2) AS `RETENTION AMOUNT`";
 }
-if (isset($_GET["col_retention_amount"])) {
+if (isset($_GET["col_retention_date"])) {
 	$select .= ", DATE_FORMAT(p.accepted_date_2, '%d-%b-%Y') AS `RETENTION DATE`";
 }
 if (isset($_GET["col_ld_amount"])) {
@@ -141,22 +141,30 @@ if (isset($_GET["col_total"])) {
 	$select .= ", FORMAT(IFNULL(p.total,0), 2) AS `TOTAL`";
 }
 if (isset($_GET["col_supplier"])) {
-	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(ps.supplier, 'N/A') SEPARATOR '\n') AS `SUPPLIER`";
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(ps.supplier, 'N/A') ORDER BY ps.project_id SEPARATOR '\n') AS `SUPPLIER`";
 }
 if (isset($_GET["col_bid_price"])) {
-	$select .= ", GROUP_CONCAT(DISTINCT FORMAT(IFNULL(ps.price, 0), 2) SEPARATOR '\n') AS `BID PRICE`";
+	$select .= ", GROUP_CONCAT(DISTINCT FORMAT(IFNULL(ps.price, 0), 2) ORDER BY ps.project_id SEPARATOR '\n') AS `BID PRICE`";
 }
 if (isset($_GET["col_lc_local"])) {
 	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(lcl.name, 'N/A')  SEPARATOR '\n') AS `LC/LOCAL`";
 }
 if (isset($_GET["col_twg"])) {
-	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(rnk.name,''), IF(rnk.name IS NOT NULL, ', ', ''), IFNULL(twg.last_name,''), IF(twg.last_name IS NOT NULL, ', ', ''), IFNULL(twg.first_name,''), ' ', IFNULL(twg.middle_name, ''), ' ', IFNULL(IF(twg.suffix_id != 1, sfx.name, NULL), ''), IF(twg.suffix_id != 1, ', ', ''), IFNULL(branch.name, ''), IF(branch.name IS NOT NULL, ', ', ''), IFNULL(designation.name, ''), IF(designation.name IS NOT NULL, ', ', ''), IFNULL(twg.serial_no, '') SEPARATOR '\n') AS `TWG`";
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(rnk.name,''), IF(rnk.name IS NOT NULL, ', ', ''), IFNULL(twg.last_name,''), IF(twg.last_name IS NOT NULL, ', ', ''), IFNULL(twg.first_name,''), ' ', IFNULL(twg.middle_name, ''), ' ', IFNULL(IF(twg.suffix_id != 1, sfx.name, NULL), ''), IF(twg.suffix_id != 1, ', ', ''), IFNULL(branch.name, ''), IF(branch.name IS NOT NULL, ', ', ''), IFNULL(designation.name, ''), IF(designation.name IS NOT NULL, ', ', ''), IFNULL(twg.serial_no, '') ORDER BY twg.id SEPARATOR '\n') AS `TWG`";
 }
 if (isset($_GET["col_authority"])) {
-	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(twg.authority,'N/A')  SEPARATOR '\n') AS `AUTHORITY`";
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(twg.authority,'N/A') ORDER BY twg.id SEPARATOR '\n') AS `AUTHORITY`";
+}
+if (isset($_GET["col_status"])) {
+	$select .= ", s.name AS `Status`";
 }
 
 $where = [];
+
+if (isset($_GET['project_status'])) {
+	$status_ids = implode(",", $_GET['project_status']);
+	$where[] = "p.status_id IN($status_ids)";
+}
 
 if (isset($_GET['epa'])) {
 	$epa_ids = implode(",", $_GET['epa']);
@@ -246,17 +254,20 @@ $qry = <<<SQL
 			LEFT JOIN
 		tbl_designation designation ON designation.id = twg.designation_id
 			LEFT JOIN
-		tbl_project_supplier ps ON ps.project_id = p.id
+		(
+      SELECT ps.project_id, ps.price, ps.supplier, ps.local_id, ss.name, ps.rank
+			FROM tbl_project_supplier ps
+			LEFT JOIN tbl_supplier_status ss ON ss.id = ps.status_id
+      WHERE ss.name = 'PASSED'
+    ) AS ps ON ps.project_id = p.id
 			LEFT JOIN
 		tbl_rank sup_rnk ON sup_rnk.id = ps.rank
 			LEFT JOIN
 		tbl_local lcl ON lcl.id = ps.local_id
 			LEFT JOIN
-		tbl_supplier_status ss ON ss.id = ps.status_id
-			LEFT JOIN
 		tbl_users_info c ON c.id = p.created_by
 	WHERE
-			p.deleted_flag = 0 {$is_admin} {$date_range_created} {$filter}
+			p.deleted_flag = 0 {$is_admin} {$filter}
 	GROUP BY p.id
 SQL;
 
