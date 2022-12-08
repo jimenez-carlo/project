@@ -280,22 +280,34 @@
                 </div>
                 <div class="col-sm-2">
                   <div class="form-group">
-                    <input class="form-check-input column" type="checkbox" name="retention_amount" id="retentionamount" checked>
+                    <input class="form-check-input column" type="checkbox" name="col_dv_amount" id="dv_amount" checked>
+                    <label class="form-check-label" for="dv_amount">DV/CHECK AMOUNT</label>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <input class="form-check-input column" type="checkbox" name="col_dv_date" id="dv_date" checked>
+                    <label class="form-check-label" for="dv_date">DV/CHECK DATE</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-2 offset-sm-1">
+                  <div class="form-group">
+                    <input class="form-check-input column" type="checkbox" name="col_retention_amount" id="retentionamount" checked>
                     <label class="form-check-label" for="retentionamount">RETENTION AMOUNT</label>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <input class="form-check-input column" type="checkbox" name="col_retention_date" id="retentiondate" checked>
+                    <label class="form-check-label" for="retentiondate">RETENTION DATE</label>
                   </div>
                 </div>
                 <div class="col-sm-2">
                   <div class="form-group">
                     <input class="form-check-input column" type="checkbox" name="col_ld_amount" id="ldamount" checked>
                     <label class="form-check-label" for="ldamount">LD AMOUNT</label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-2 offset-sm-1 column">
-                  <div class="form-group">
-                    <input class="form-check-input column" type="checkbox" name="col_total" id="total" checked>
-                    <label class="form-check-label" for="total">TOTAL</label>
                   </div>
                 </div>
                 <div class="col-sm-2">
@@ -310,7 +322,9 @@
                     <label class="form-check-label" for="bid_price">BID PRICE</label>
                   </div>
                 </div>
-                <div class="col-sm-2">
+              </div>
+              <div class="row">
+                <div class="col-sm-2 offset-sm-1">
                   <div class="form-group">
                     <input class="form-check-input column" type="checkbox" name="col_lc_local" id="lc_local" checked>
                     <label class="form-check-label" for="lc_local">LC/LOCAL</label>
@@ -322,12 +336,16 @@
                     <label class="form-check-label" for="twg">TWG</label>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-2 offset-sm-1">
+                <div class="col-sm-2">
                   <div class="form-group">
                     <input class="form-check-input column" type="checkbox" name="col_authority" id="authority" checked>
                     <label class="form-check-label" for="authority">AUTHORITY</label>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <input class="form-check-input column" type="checkbox" name="col_status" id="status" checked>
+                    <label class="form-check-label" for="status">STATUS</label>
                   </div>
                 </div>
               </div>
@@ -346,6 +364,17 @@
                 </div>
               </div>
               <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Status</label>
+                    <?php foreach ($data['default']['project_status'] as $res) { ?>
+                      <div class="custom-control">
+                        <input class="form-check-input filter" id="status_<?= $res['id'] ?>" type="checkbox" name="project_status[]" value="<?= $res['id'] ?>">
+                        <label for="status_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
+                      </div>
+                    <?php } ?>
+                  </div>
+                </div>
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>EPA</label>
@@ -374,14 +403,12 @@
                     <div class="form-group">
                       <?php foreach ($data['default']['program_manager'] as $res) { ?>
                         <div class="custom-control">
-                          <input id="progran_manager_<?= $res['id'] ?>" class="form-checkbox-input filter" type="checkbox" name="program_manager[]" value="<?= $res['id'] ?>">
+                          <input id="progran_manager_<?= $res['id'] ?>" class="form-check-input filter" type="checkbox" name="program_manager[]" value="<?= $res['id'] ?>">
                           <label for="progran_manager_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
                         </div>
                       <?php } ?>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-4">
                   <div class="form-group">
                     <label>PABAC</label>
                     <div class="form-group">
@@ -393,6 +420,8 @@
                       <?php } ?>
                     </div>
                   </div>
+                </div>
+                <div class="col-sm-4">
                   <div class="form-group">
                     <label>END USER</label>
                     <div class="form-group">
@@ -404,8 +433,6 @@
                       <?php } ?>
                     </div>
                   </div>
-                </div>
-                <div class="col-sm-4">
                   <div class="form-group">
                     <label>COMMODITY</label>
                     <div class="form-group">
