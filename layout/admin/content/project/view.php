@@ -126,6 +126,12 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>GAA</label>
+                    <input type="text" class="form-control form-control-sm" name="gaa" id="gaa" value="<?= $default->gaa ?>" disabled>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1010,7 +1016,7 @@
   $(add_button2).click(function(e) {
     e.preventDefault();
 
-    $(wrapper2).append('<tr><td> <select disabled name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input disabled type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input disabled type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input disabled type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select disabled name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select disabled name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input disabled type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select disabled name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input disabled type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $(wrapper2).append('<tr><td> <select disabled name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['twg_rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input disabled type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input disabled type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input disabled type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select disabled name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select disabled name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input disabled type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select disabled name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input disabled type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
   });
 
   $(wrapper2).on("click", ".btn-remove-user", function(e) {

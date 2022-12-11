@@ -109,7 +109,7 @@
                 <div class="col-sm-2">
                   <div class="form-group">
                     <input class="form-check-input column" type="checkbox" name="col_asa_object_code" id="asa_object_code" checked>
-                    <label class="form-check-label" for="asa_object_code">ASA OBJECT CODE</label>
+                    <label class="form-check-label" for="asa_object_code">OBJECT CODE</label>
                   </div>
                 </div>
                 <div class="col-sm-2">
@@ -269,7 +269,7 @@
                 <div class="col-sm-2">
                   <div class="form-group">
                     <input class="form-check-input column" type="checkbox" name="col_accepted_conducted_date" id="acceptedconducteddate" checked>
-                    <label class="form-check-label" for="acceptedconducteddate">ACCEPTED DATE</label>
+                    <label class="form-check-label" for="acceptedconducteddate">ACCEPTED</label>
                   </div>
                 </div>
                 <div class="col-sm-2">
@@ -327,7 +327,7 @@
                 <div class="col-sm-2 offset-sm-1">
                   <div class="form-group">
                     <input class="form-check-input column" type="checkbox" name="col_lc_local" id="lc_local" checked>
-                    <label class="form-check-label" for="lc_local">LC/LOCAL</label>
+                    <label class="form-check-label" for="lc_local">FOREIGN/LOCAL</label>
                   </div>
                 </div>
                 <div class="col-sm-2">
@@ -346,6 +346,12 @@
                   <div class="form-group">
                     <input class="form-check-input column" type="checkbox" name="col_status" id="status" checked>
                     <label class="form-check-label" for="status">STATUS</label>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <input class="form-check-input column" type="checkbox" name="col_gaa" id="gaa" checked>
+                    <label class="form-check-label" for="gaa">GAA</label>
                   </div>
                 </div>
               </div>

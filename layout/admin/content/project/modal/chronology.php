@@ -27,7 +27,7 @@
                           <td><?= strtoupper($res['name']) ?></td>
                           <td><?= date("d-m-Y", strtotime($res['conducted_date'])) ?></td>
                           <td><?= strtoupper($res['remarks']) ?></td>
-                          <td><?= strtoupper($res['other_details']) ?></td>
+                          <td><?= (isset($res['other_details'])) ? strtoupper($res['other_details']) : '' ?></td>
                           <td><?= ucwords($res['full_name']) ?></td>
                           <td><?= date("d-m-Y", strtotime($res['created_date'])) ?></td>
                         </tr>

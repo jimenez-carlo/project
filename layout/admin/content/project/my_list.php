@@ -37,6 +37,7 @@
                   <th>Qty</th>
                   <th>Unit</th>
                   <th>ABC</th>
+                  <th>GAA</th>
                   <th>Status</th>
                   <th>Settings</th>
                 </tr>
@@ -53,6 +54,7 @@
                     <td><?= $res['qty'] ?></td>
                     <td><?= $res['unit'] ?></td>
                     <td><?= $res['abc'] ?></td>
+                    <td><?= $res['gaa'] ?></td>
                     <td><?= $res['status'] ?></td>
                     <td class="flex">
                       <?php if (in_array($_SESSION['user']->access_id, array(1, 3))) { ?>

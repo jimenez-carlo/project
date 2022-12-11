@@ -25,11 +25,11 @@
         <div id="result">
         </div>
 
-        <form method="post" name="project_update" refresh="admin/project/edit&id=<?= $default->id ?>" enctype="multipart/form-data">
+        <form method="post" name="project_update" refresh="admin/project/edit_admin&id=<?= $default->id ?>" enctype="multipart/form-data">
           <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#chronology_modal" style="right: 251px;z-index: 99;position: fixed;bottom: 20px;">Chronology</button>
-          <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#change_status_modal" style="right: 137px;z-index: 99;position: fixed;bottom: 20px;">Change Status</button>
+          <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#change_status_modal" style="right: 137px;z-index: 99;position: fixed;bottom: 20px;" <?= $data['default']['set_status'][$default->status_id] == "ACCEPTED" ? "disabled" : "" ?>>Change Status</button>
 
-          <button type="submit" class="btn btn-dark pull-right" name="update" confirmation="Save Changes To Project?" style="right: 20px;z-index: 99;position: fixed;bottom: 20px;">Update Project</button>
+          <button type="submit" class="btn btn-dark pull-right" name="update" confirmation="Save Changes To Project?" style="right: 20px;z-index: 99;position: fixed;bottom: 20px;">Save Changes</button>
           <input type="submit" name="change_status" id="change_status" confirmation="Change Status Confirmation?" style="display:none">
           <input type="hidden" name="status_id" value="<?= $default->status_id ?>">
           <input type="hidden" name="id" value="<?= $default->id ?>">
@@ -124,6 +124,12 @@
                         <option value="<?= $res['id'] ?>" <?= $default->program_manager_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
                       <?php } ?>
                     </select>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>GAA</label>
+                    <input type="text" class="form-control form-control-sm" name="gaa" id="gaa" value="<?= $default->gaa ?>">
                   </div>
                 </div>
               </div>
@@ -400,10 +406,10 @@
                 <table id="example1" class="table table-bordered table-striped table-sm">
                   <thead>
                     <tr>
-                      <th>Rank</th>
+                      <th>SCB/LCB</th>
                       <th>SUPPLIER</th>
                       <th>BID Price</th>
-                      <th>LC/Local</th>
+                      <th>Foreign/Local</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -449,10 +455,10 @@
               <table id="example1" class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
-                    <th>Rank</th>
+                    <th>SCB/LCB</th>
                     <th>SUPPLIER</th>
                     <th>BID Price</th>
-                    <th>LC/Local</th>
+                    <th>Foreign/Local</th>
                     <th>Conducted Date</th>
                     <th>Status</th>
                   </tr>
@@ -676,7 +682,7 @@
               <div class="row">
                 <div class="col-sm-12">
                   <div class="form-group">
-                    <label>*Conducted Date:</label>
+                    <label>*Inspection Date:</label>
                     <input type="text" class="form-control form-control-sm datepicker" name="inspected_conducted_date" id="inspected_conducted_date" value="<?= !empty($default->inspected_conducted_date) ? date("d-m-Y", strtotime($default->inspected_conducted_date)) : "" ?>">
 
                   </div>
@@ -717,15 +723,15 @@
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group ">
-                    <label>Amount</label>
-                    <input type="text" class="form-control form-control-sm currency" name="amount" id="amount" value="<?= number_format($default->amount, 2) ?>">
+                    <label>DV Amount</label>
+                    <input type="text" class="form-control form-control-sm currency" name="amount" id="amount" value="<?= (isset($default->amount)) ? number_format($default->amount, 2) : '' ?>">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label>Date:</label>
+                    <label>DV Date:</label>
                     <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_1" id="accepted_date_1" value="<?= !empty($default->accepted_date_1) ? date("d-m-Y", strtotime($default->accepted_date_1)) : "" ?>">
                   </div>
                 </div>
@@ -744,8 +750,8 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Retention Amount</label>
-                    <input type="text" class="form-control form-control-sm" id="retention_display" name="retention_display" value="<?= number_format($default->retention_amount, 2) ?>" disabled>
-                    <input type="hidden" name="retention_amount" id="retention_amount" value="<?= number_format($default->retention_amount, 2) ?>">
+                    <input type="text" class="form-control form-control-sm" id="retention_display" name="retention_display" value="<?= (isset($default->retention_amount)) ? number_format($default->retention_amount, 2) : '' ?>" disabled>
+                    <input type="hidden" name="retention_amount" id="retention_amount" value="<?= (isset($default->retention_amount)) ? number_format($default->retention_amount, 2) : '' ?>">
 
                     <script>
                       $(document).on("change", '#retention_percentage,#contract_price',
@@ -768,7 +774,7 @@
               <div class="row">
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label>Date:</label>
+                    <label>Retention Date:</label>
                     <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_2" id="accepted_date_2" value="<?= !empty($default->accepted_date_2) ? date("d-m-Y", strtotime($default->accepted_date_2)) : "" ?>">
 
                   </div>
@@ -776,13 +782,13 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>LD Amount</label>
-                    <input type="text" class="form-control form-control-sm currency" name="ld_amount" id="ld_amount" value="<?= number_format($default->ld_amount, 2)  ?>">
+                    <input type="text" class="form-control form-control-sm currency" name="ld_amount" id="ld_amount" value="<?= (isset($default->ld_amount)) ? number_format($default->ld_amount, 2) : '' ?>">
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label>Total</label>
-                    <input type="text" class="form-control form-control-sm" id="total_display" name="total_display" value="<?= number_format($default->total, 2)  ?>" disabled>
+                    <label hidden="hidden">Total</label>
+                    <input type="text" class="form-control form-control-sm" id="total_display" name="total_display" value="<?= number_format($default->total, 2)  ?>" disabled >
                     <input type="hidden" name="total" value="<?= number_format($default->total, 2) ?>">
 
                     <script>
@@ -795,6 +801,9 @@
                           }));
                           $("[name='total']").val(total);
                         })
+
+                      $('#total_display').hide();
+
                     </script>
                   </div>
                 </div>
@@ -1039,7 +1048,7 @@
   $(add_button2).click(function(e) {
     e.preventDefault();
 
-    $(wrapper2).append('<tr><td> <select name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $(wrapper2).append('<tr><td> <select name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['twg_rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
   });
 
   $(wrapper2).on("click", ".btn-remove-user", function(e) {
@@ -1105,16 +1114,16 @@
   });
 
 
-  $(document).on("change", "input[name='epa']:checked", function(e) {
+  // $(document).on("change", "input[name='epa']:checked", function(e) {
 
-    if ($('input[name="epa"]:checked').val() == 1) {
-      $('#asa_table').hide();
-      $(add_button3).hide();
-    } else {
-      $('#asa_table').show();
-      $(add_button3).show();
-    }
-  })
+  //   if ($('input[name="epa"]:checked').val() == 1) {
+  //     $('#asa_table').hide();
+  //     $(add_button3).hide();
+  //   } else {
+  //     $('#asa_table').show();
+  //     $(add_button3).show();
+  //   }
+  // })
 
   // $(document).on("change", "input[name='no_bidder']:checked", function(e) {
   //   if ($('input[name="no_bidder"]:checked').val() == 1) {
