@@ -91,7 +91,7 @@ class Project extends Base
       $residuals = $abc - $contract_price;
 
       // echo "INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`residuals`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$residuals','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by','$preproc_target_date')";
-      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`end_user`,`contract_nr`,`contract_price`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`,`residuals`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$end_user_ids','$contract_nr','$contract_price','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by',$preproc_target_date,'$residuals')");
+      $project_id = $this->insert_get_id("INSERT INTO tbl_project (`epa`,`implementing_unit_id`,`pabac_id`,`pabac_nr`,`upr_nr`,`upr_date`,`comodity_id`,`program_manager_id`,`project_description`,`qty`,`unit_id`,`abc`,`gaa`,`end_user`,`contract_nr`,`contract_price`,`mode_of_proc_id`,`status_id`,`app_file`,`ppmp_file`,`procurement_file`,`tech_specs_file`,`bidding_file`,`upr_file`,`other_file`,`officer_id`,`personell_ids`,`created_by`,`preproc_target_date`,`residuals`) VALUES('$epa','$implementing_unit','$pabac','$pabac_nr','$upr_nr',$upr_date,'$comodity','$program_manager','$project_description','$qty','$unit','$abc','$gaa','$end_user_ids','$contract_nr','$contract_price','$mode_of_proc',1,$app_file_name,$ppmp_file_name,$procurement_file_name,$tech_specs_file_name,$bidding_file_name,$upr_file_name,$other_file_name,'$officer_ids','$personell_ids','$created_by',$preproc_target_date,'$residuals')");
 
 
       $this->insert_project_status($project_id, 1, "Project Initialize", date("Y-m-d"));
@@ -106,8 +106,7 @@ class Project extends Base
           $asa_amt = floatval(str_replace(",", "", $asa_amount[$key]));
           $asa_amount[$key];
           $asa_class =  $asa_expense_class[$key];
-          $asa_date_final = (!empty($upr_date) && DateTime::createFromFormat('d-m-Y', $asa_date) !== false) ? "'" . date("Y-m-d", strtotime($asa_date)) . "'" : null;
-
+          $asa_date_final = (!empty($upr_date) && DateTime::createFromFormat('d-m-Y', $asa_date) !== false) ? "'" . date("Y-m-d", strtotime($asa_date)) . "'" : 'null';
           $this->query("INSERT INTO tbl_project_asa (project_id,asa_nr,asa_date,object_code,asa_amount,expense_class_id,created_by)  values ($project_id,'$asa_nr_value',$asa_date_final, '$asa_code','$asa_amt','$asa_class','$created_by')");
         }
       }
@@ -165,6 +164,7 @@ class Project extends Base
     $where .= isset($qty) ? ", `qty` = '$qty'" : "";
     $where .= isset($unit) ? ", `unit_id` = '$unit'" : "";
     $where .= isset($abc) ? ", `abc` = '" . floatval(str_replace(",", "", $abc)) . "'" : "";
+    $where .= isset($gaa) ? ", `gaa` = '$gaa'" : "";
     $where .= isset($contract_nr) ? ", `contract_nr` = '$contract_nr'" : "";
     $where .= isset($contract_price) ? ", `contract_price` = '" . floatval(str_replace(",", "", $contract_price)) . "'" : "";
     $residuals = floatval(str_replace(",", "", $abc)) - floatval(str_replace(",", "", $contract_price));
@@ -610,8 +610,8 @@ class Project extends Base
           $conducted_date = ((!empty($tmp) && DateTime::createFromFormat('d-m-Y', $tmp) !== false) ?  date("Y-m-d", strtotime($tmp)) : $tmp);
         }
         $other_details = "null";
-        if ($new_status_id == 7 || $new_status_id == 8) {
-          $other_details = "'$pq_supplier'";
+        if ($new_status_id == 7 || $new_status_id == 17) {
+          $other_details = "'$tmp_supp->supplier'";
         }
         if (isset($no_bidder)) {
           $other_details = "'No Bidder'";

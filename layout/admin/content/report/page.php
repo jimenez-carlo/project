@@ -348,6 +348,12 @@
                     <label class="form-check-label" for="status">STATUS</label>
                   </div>
                 </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <input class="form-check-input column" type="checkbox" name="col_gaa" id="gaa" checked>
+                    <label class="form-check-label" for="gaa">GAA</label>
+                  </div>
+                </div>
               </div>
             </div>
             <!-- /.card-body -->

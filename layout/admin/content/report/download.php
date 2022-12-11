@@ -167,7 +167,10 @@ if (isset($_GET["col_authority"])) {
 	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(twg.authority,'N/A') ORDER BY twg.id SEPARATOR '\n') AS `AUTHORITY`";
 }
 if (isset($_GET["col_status"])) {
-	$select .= ", s.name AS `Status`";
+	$select .= ", s.name AS `STATUS`";
+}
+if (isset($_GET["col_gaa"])) {
+	$select .= ", p.gaa AS `GAA`";
 }
 
 $where = [];

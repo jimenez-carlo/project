@@ -890,6 +890,9 @@ ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
 
 ALTER TABLE `pms_db`.`tbl_program_manager` 
 ADD UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE;
+
+ALTER TABLE `pms_db`.`tbl_project` 
+ADD COLUMN `gaa` VARCHAR(255) NULL DEFAULT NULL AFTER `abc`;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

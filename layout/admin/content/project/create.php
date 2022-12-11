@@ -116,6 +116,12 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>GAA</label>
+                    <input type="text" class="form-control form-control-sm" name="gaa" id="gaa">
+                  </div>
+                </div>
               </div>
             </div>
           </div>

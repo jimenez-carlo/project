@@ -27,9 +27,9 @@
 
         <form method="post" name="project_update" refresh="admin/project/edit&id=<?= $default->id ?>" enctype="multipart/form-data">
           <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#chronology_modal" style="right: 251px;z-index: 99;position: fixed;bottom: 20px;">Chronology</button>
-          <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#change_status_modal" style="right: 137px;z-index: 99;position: fixed;bottom: 20px;">Change Status</button>
+          <button type="button" class="btn btn-dark pull-right" data-toggle="modal" data-target="#change_status_modal" style="right: 137px;z-index: 99;position: fixed;bottom: 20px;" <?= $data['default']['set_status'][$default->status_id] == "ACCEPTED" ? "disabled" : "" ?>>Change Status</button>
 
-          <button type="submit" class="btn btn-dark pull-right" name="update" confirmation="Save Changes To Project?" style="right: 20px;z-index: 99;position: fixed;bottom: 20px;">Update Project</button>
+          <button type="submit" class="btn btn-dark pull-right" name="update" confirmation="Save Changes To Project?" style="right: 20px;z-index: 99;position: fixed;bottom: 20px;">Save Changes</button>
           <input type="submit" name="change_status" id="change_status" confirmation="Change Status Confirmation?" style="display:none">
           <input type="hidden" name="status_id" value="<?= $default->status_id ?>">
           <input type="hidden" name="id" value="<?= $default->id ?>">
@@ -124,6 +124,12 @@
                         <option value="<?= $res['id'] ?>" <?= $default->program_manager_id == $res['id'] ? 'selected' : '' ?>><?= $res['name'] ?></option>
                       <?php } ?>
                     </select>
+                  </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>GAA</label>
+                    <input type="text" class="form-control form-control-sm" name="gaa" id="gaa" value="<?= $default->gaa ?>">
                   </div>
                 </div>
               </div>
@@ -702,7 +708,7 @@
                 <div class="row">
                   <div class="col-sm-12">
                     <div class="form-group">
-                      <label>*Conducted Date:</label>
+                      <label>*Inspection Date:</label>
                       <input type="text" class="form-control form-control-sm datepicker" name="inspected_conducted_date" id="inspected_conducted_date" value="<?= !empty($default->inspected_conducted_date) ? date("d-m-Y", strtotime($default->inspected_conducted_date)) : "" ?>">
 
                     </div>
