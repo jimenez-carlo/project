@@ -167,6 +167,7 @@ class Base
     $data['access'] = $this->get_list("select * from tbl_access where deleted_flag = 0");
     $data['user_status'] = $this->get_list("select * from tbl_users_status where deleted_flag = 0");
     $data['rank'] = $this->get_list("select * from tbl_rank where deleted_flag = 0");
+    $data['twg_rank'] = $this->get_list("select * from tbl_rank where classification_id = 1 and deleted_flag = 0");
     $data['classification'] = $this->get_list("select * from tbl_classification where deleted_flag = 0");
     $data['suffix'] = $this->get_list("select * from tbl_suffix where deleted_flag = 0");
     $data['branch'] = $this->get_list("select * from tbl_branch where deleted_flag = 0");

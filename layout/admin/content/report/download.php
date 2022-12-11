@@ -9,7 +9,7 @@ $base = new Base($conn);
 $select = "";
 
 if (isset($_GET["col_reference"])) {
-	$select .= ", p.id AS `REFERENCE#`";
+	$select .= ", p.id AS `REF #`";
 }
 if (isset($_GET["col_epa"])) {
 	$select .= ", IF(p.epa, 'Yes', 'No') AS EPA";
@@ -105,19 +105,19 @@ if (isset($_GET["col_ntp_conforme_conducted_date"])) {
 	$select .= ", DATE_FORMAT(p.ntp_conforme_conducted_date, '%d-%b-%Y') AS `NTP CONFORME`";
 }
 if (isset($_GET["col_delivery_period"])) {
-	$select .= ", DATE_FORMAT(p.delivery_period, '%d-%b-%Y') AS `DELIVERY PERIOD`";
+	$select .= ", p.delivery_period AS `DELIVERY PERIOD`";
 }
 if (isset($_GET["col_ldd"])) {
 	$select .= ", DATE_FORMAT(p.ldd, '%d-%b-%Y') AS `LDD`";
 }
 if (isset($_GET["col_delivery_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.delivery_conducted_date, '%d-%b-%Y') AS `DELIVERY CONDUCTED DATE`";
+	$select .= ", DATE_FORMAT(p.delivery_conducted_date, '%d-%b-%Y') AS `DELIVERY`";
 }
 if (isset($_GET["col_inspected_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.inspected_conducted_date, '%d-%b-%Y') AS `INSPECTED CONDUCTED DATE`";
+	$select .= ", DATE_FORMAT(p.inspected_conducted_date, '%d-%b-%Y') AS `INSPECTED`";
 }
 if (isset($_GET["col_accepted_conducted_date"])) {
-	$select .= ", DATE_FORMAT(p.accepted_conducted_date, '%d-%b-%Y') AS `ACCEPTED DATE`";
+	$select .= ", DATE_FORMAT(p.accepted_conducted_date, '%d-%b-%Y') AS `ACCEPTED`";
 }
 if (isset($_GET["col_dv"])) {
 	$select .= ", IF(p.dv = 1, 'DV', 'CHECK') AS `DV/CHECK`";
@@ -141,14 +141,25 @@ if (isset($_GET["col_total"])) {
 	$select .= ", FORMAT(IFNULL(p.total,0), 2) AS `TOTAL`";
 }
 if (isset($_GET["col_supplier"])) {
-	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(ps.supplier, 'N/A') ORDER BY ps.project_id SEPARATOR '\n') AS `SUPPLIER`";
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(ps.supplier, '') ORDER BY ps.project_id SEPARATOR '\n') AS `SUPPLIER`";
 }
 if (isset($_GET["col_bid_price"])) {
-	$select .= ", GROUP_CONCAT(DISTINCT FORMAT(IFNULL(ps.price, 0), 2) ORDER BY ps.project_id SEPARATOR '\n') AS `BID PRICE`";
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(FORMAT(ps.price, 2), '') ORDER BY ps.project_id SEPARATOR '\n') AS `BID PRICE`";
 }
 if (isset($_GET["col_lc_local"])) {
-	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(lcl.name, 'N/A')  SEPARATOR '\n') AS `LC/LOCAL`";
+	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(lcl.name, '')  SEPARATOR '\n') AS `FOREIGN/LOCAL`";
 }
+
+//if (isset($_GET["col_supplier"])) {
+//	$select .= ", ps.supplier AS `SUPPLIER`";
+//}
+//if (isset($_GET["col_bid_price"])) {
+//	$select .= ", FORMAT(IFNULL(ps.price,0), 2) AS `BID PRICE`";
+//}
+//if (isset($_GET["col_lc_local"])) {
+//	$select .= ", lcl.name AS `FOREIGN/LOCAL`";
+//}
+
 if (isset($_GET["col_twg"])) {
 	$select .= ", GROUP_CONCAT(DISTINCT IFNULL(rnk.name,''), IF(rnk.name IS NOT NULL, ', ', ''), IFNULL(twg.last_name,''), IF(twg.last_name IS NOT NULL, ', ', ''), IFNULL(twg.first_name,''), ' ', IFNULL(twg.middle_name, ''), ' ', IFNULL(IF(twg.suffix_id != 1, sfx.name, NULL), ''), IF(twg.suffix_id != 1, ', ', ''), IFNULL(branch.name, ''), IF(branch.name IS NOT NULL, ', ', ''), IFNULL(designation.name, ''), IF(designation.name IS NOT NULL, ', ', ''), IFNULL(twg.serial_no, '') ORDER BY twg.id SEPARATOR '\n') AS `TWG`";
 }
@@ -255,10 +266,9 @@ $qry = <<<SQL
 		tbl_designation designation ON designation.id = twg.designation_id
 			LEFT JOIN
 		(
-      SELECT ps.project_id, ps.price, ps.supplier, ps.local_id, ss.name, ps.rank
+      SELECT ps.project_id, ps.price, ps.supplier, ps.local_id, ps.rank, ps.status_id
 			FROM tbl_project_supplier ps
-			LEFT JOIN tbl_supplier_status ss ON ss.id = ps.status_id
-      WHERE ss.name = 'PASSED'
+      WHERE ps.status_id = '17'
     ) AS ps ON ps.project_id = p.id
 			LEFT JOIN
 		tbl_rank sup_rnk ON sup_rnk.id = ps.rank

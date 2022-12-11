@@ -400,10 +400,10 @@
                 <table id="example1" class="table table-bordered table-striped table-sm">
                   <thead>
                     <tr>
-                      <th>Rank</th>
+                      <th>SCB/LCB</th>
                       <th>SUPPLIER</th>
                       <th>BID Price</th>
-                      <th>LC/Local</th>
+                      <th>Foreign/Local</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -449,10 +449,10 @@
               <table id="example1" class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
-                    <th>Rank</th>
+                    <th>SCB/LCB</th>
                     <th>SUPPLIER</th>
                     <th>BID Price</th>
-                    <th>LC/Local</th>
+                    <th>Foreign/Local</th>
                     <th>Conducted Date</th>
                     <th>Status</th>
                   </tr>
@@ -717,7 +717,7 @@
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group ">
-                    <label>Amount</label>
+                    <label>DV Amount</label>
                     <input type="text" class="form-control form-control-sm currency" name="amount" id="amount" value="<?= number_format($default->amount, 2) ?>">
                   </div>
                 </div>
@@ -725,7 +725,7 @@
               <div class="row">
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label>Date:</label>
+                    <label>DV Date:</label>
                     <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_1" id="accepted_date_1" value="<?= !empty($default->accepted_date_1) ? date("d-m-Y", strtotime($default->accepted_date_1)) : "" ?>">
                   </div>
                 </div>
@@ -768,7 +768,7 @@
               <div class="row">
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label>Date:</label>
+                    <label>Retention Date:</label>
                     <input type="text" class="form-control form-control-sm datepicker" name="accepted_date_2" id="accepted_date_2" value="<?= !empty($default->accepted_date_2) ? date("d-m-Y", strtotime($default->accepted_date_2)) : "" ?>">
 
                   </div>
@@ -781,8 +781,8 @@
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label>Total</label>
-                    <input type="text" class="form-control form-control-sm" id="total_display" name="total_display" value="<?= number_format($default->total, 2)  ?>" disabled>
+                    <label hidden="hidden">Total</label>
+                    <input type="text" class="form-control form-control-sm" id="total_display" name="total_display" value="<?= number_format($default->total, 2)  ?>" disabled >
                     <input type="hidden" name="total" value="<?= number_format($default->total, 2) ?>">
 
                     <script>
@@ -795,6 +795,9 @@
                           }));
                           $("[name='total']").val(total);
                         })
+
+                      $('#total_display').hide();
+
                     </script>
                   </div>
                 </div>
@@ -1039,7 +1042,7 @@
   $(add_button2).click(function(e) {
     e.preventDefault();
 
-    $(wrapper2).append('<tr><td> <select name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
+    $(wrapper2).append('<tr><td> <select name = "twg_rank[]" class="form-control form-control-sm"><?php foreach ($data['default']['twg_rank'] as $res) { ?> <option value="<?= $res['id']; ?>" style="color:<?= $res['color'] ?>"> <?php echo $res['name'] ?> </option><?php } ?> </select> </td> <td><input type="text" class="form-control form-control-sm" name="last_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="first_name[]"></td> <td><input type="text" class="form-control form-control-sm" name="middle_name[]"></td>   <td> <select name="suffix[]" class="form-control form-control-sm"><?php foreach ($data['default']['suffix'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td> <select name = "branch[]" class="form-control form-control-sm"><?php foreach ($data['default']['branch'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="serial_no[]"></td><td> <select name = "designation[]" class="form-control form-control-sm"><?php foreach ($data['default']['designation'] as $res) { ?> <option value="<?= $res['id']; ?>" > <?php echo $res['name'] ?> </option><?php } ?> </select> </td><td><input type="text" class="form-control form-control-sm" name="authority[]"></td><td><button type ="button" class="btn btn-dark btn-remove-user btn-sm" > <i class="fa fa-times"></i> </button></td> </tr>');
   });
 
   $(wrapper2).on("click", ".btn-remove-user", function(e) {
@@ -1105,16 +1108,16 @@
   });
 
 
-  $(document).on("change", "input[name='epa']:checked", function(e) {
+  // $(document).on("change", "input[name='epa']:checked", function(e) {
 
-    if ($('input[name="epa"]:checked').val() == 1) {
-      $('#asa_table').hide();
-      $(add_button3).hide();
-    } else {
-      $('#asa_table').show();
-      $(add_button3).show();
-    }
-  })
+  //   if ($('input[name="epa"]:checked').val() == 1) {
+  //     $('#asa_table').hide();
+  //     $(add_button3).hide();
+  //   } else {
+  //     $('#asa_table').show();
+  //     $(add_button3).show();
+  //   }
+  // })
 
   // $(document).on("change", "input[name='no_bidder']:checked", function(e) {
   //   if ($('input[name="no_bidder"]:checked').val() == 1) {

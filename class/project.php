@@ -51,12 +51,12 @@ class Project extends Base
 
 
 
-    if (!$epa && !isset($asa_nr)) {
-      $msg .= "No ASA Entry!";
-      $result->result = $this->response_swal($msg, "System Error", "error");
-      $result->items = implode(',', array('asa_nr'));
-      return $result;
-    }
+    // if (!$epa && !isset($asa_nr)) {
+    //   $msg .= "No ASA Entry!";
+    //   $result->result = $this->response_swal($msg, "System Error", "error");
+    //   $result->items = implode(',', array('asa_nr'));
+    //   return $result;
+    // }
 
     if (!isset($twg_rank)) {
       $msg .= "No TWG Entry!";
@@ -222,12 +222,12 @@ class Project extends Base
     // }
 
     // IF EPA Yes
-    if (!$epa && !isset($asa_nr)) {
-      $msg .= "No ASA Entry!";
-      $result->result = $this->response_swal($msg, "System Error", "error");
-      $result->items = implode(',', array('asa_nr'));
-      return $result;
-    }
+    // if (!$epa && !isset($asa_nr)) {
+    //   $msg .= "No ASA Entry!";
+    //   $result->result = $this->response_swal($msg, "System Error", "error");
+    //   $result->items = implode(',', array('asa_nr'));
+    //   return $result;
+    // }
 
     if (!isset($twg_rank)) {
       $msg .= "No TWG Entry!";
@@ -309,10 +309,10 @@ class Project extends Base
         if (empty($residuals) || $residuals <= 0) {
           $required_fields[] = 'residuals_display';
         }
-        $required_fields[] = 'abc';
-        $required_fields[] = 'contract_nr';
-        $required_fields[] = 'contract_price';
-        $required_fields[] = 'residuals';
+        // $required_fields[] = 'abc';
+        // $required_fields[] = 'contract_nr';
+        // $required_fields[] = 'contract_price';
+        // $required_fields[] = 'residuals';
         $required_fields[] = 'noa_conducted_date';
       }
 
