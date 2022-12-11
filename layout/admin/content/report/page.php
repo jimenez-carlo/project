@@ -393,6 +393,7 @@
                       <label for="epa_0" class="form-check-label">No</label>
                     </div>
                   </div>
+                  <!--
                   <div class="form-group">
                     <label>IMPLEMENTING UNIT</label>
                     <div class="form-group">
@@ -439,6 +440,7 @@
                       <?php } ?>
                     </div>
                   </div>
+                  -->
                   <div class="form-group">
                     <label>COMMODITY</label>
                     <div class="form-group">
@@ -450,6 +452,7 @@
                       <?php } ?>
                     </div>
                   </div>
+                  <!--
                   <div class="form-group">
                     <label>MODE OF PROC</label>
                     <div class="form-group">
@@ -461,6 +464,7 @@
                       <?php } ?>
                     </div>
                   </div>
+                  -->
                 </div>
               </div>
             </div>
