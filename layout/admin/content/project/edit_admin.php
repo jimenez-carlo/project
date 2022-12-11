@@ -750,8 +750,8 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>Retention Amount</label>
-                    <input type="text" class="form-control form-control-sm" id="retention_display" name="retention_display" value="<?= (isset($default->retention_amount)) ? number_format($default->retention_amount, 2) : '' ?>" disabled>
-                    <input type="hidden" name="retention_amount" id="retention_amount" value="<?= (isset($default->retention_amount)) ? number_format($default->retention_amount, 2) : '' ?>">
+                    <input type="text" class="form-control form-control-sm" id="retention_display" name="retention_display" value="<?= (isset($default->retention_amount)) ? number_format(floatval($default->retention_amount), 2) : '' ?>" disabled>
+                    <input type="hidden" name="retention_amount" id="retention_amount" value="<?= (isset($default->retention_amount)) ? number_format(floatval($default->retention_amount), 2) : '' ?>">
 
                     <script>
                       $(document).on("change", '#retention_percentage,#contract_price',
