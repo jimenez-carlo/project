@@ -292,12 +292,13 @@ if ($_GET['type'] == "download") {
 	header("Content-Disposition: attachment; filename=Project Report ".date('Y-m-d H:i:s').".csv");
 
 	$fp = fopen('php://output', 'w');
-	fputcsv($fp, $columns);
+	
 	if (count($projects) > 0) {
 		$columns = array_keys($projects[0]);
-			foreach ($projects as $project) {
-				fputcsv($fp, $project);
-			}
+		fputcsv($fp, $columns);
+		foreach ($projects as $project) {
+			fputcsv($fp, $project);
+		}
 	}
 	fputcsv($fp, []);
 	fputcsv($fp, []);
