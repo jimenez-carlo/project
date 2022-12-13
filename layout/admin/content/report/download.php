@@ -120,7 +120,7 @@ if (isset($_GET["col_accepted_conducted_date"])) {
 	$select .= ", DATE_FORMAT(p.accepted_conducted_date, '%d-%b-%Y') AS `ACCEPTED`";
 }
 if (isset($_GET["col_dv"])) {
-	$select .= ", IF(p.dv = 1, 'DV', 'CHECK') AS `DV/CHECK`";
+	$select .= ", CASE WHEN p.dv = 1 THEN 'DV' WHEN p.dv = 0 THEN 'CHECK' ELSE '' END AS `DV/CHECK`";
 }
 if (isset($_GET["col_dv_amount"])) {
 	$select .= ", p.amount AS `DV AMOUNT`";
@@ -224,8 +224,8 @@ if (count($where) > 0) {
 }
 
 $is_admin = "";
-if ($_SESSION['user']->access_id != "1") {
-	$is_admin	= "AND p.created_by = ".$_SESSION['user']->id;
+if ($_SESSION['user']->access_id == "2") {
+	$is_admin	= " AND find_in_set({$_SESSION['user']->id}, p.personell_ids) ";
 }
 
 $select = substr($select, 2); 
