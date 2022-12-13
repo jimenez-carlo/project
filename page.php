@@ -52,11 +52,12 @@ if (in_array($page, $pages)) {
       break;
 
     case 'admin/project/my_list':
+      $data['default'] = $base->set_default_data();
+
+      $where = ($_SESSION['user']->access_id == "2") ? " AND find_in_set({$_SESSION['user']->id}, p.personell_ids) " : "";
       $where_status = (isset($_GET['status_id'])) ? " AND p.status_id = {$_GET['status_id']} " : "";
 
-      $data['default'] = $base->set_default_data();
-      $where  =  (!empty($id)) ? "and (p.created_by = $id OR  find_in_set('$id',personell_ids) <> 0 OR find_in_set('$id',officer_id) <> 0)" : "";
-      $data['list'] = $base->get_list("select concat(o.last_name, ', ', o.first_name,' ', LEFT(o.middle_name, 1), '[#',o.id,']') as officer_full_name, p.id,s.name as `status`,ui.name as `implementing_unit`,cm.name as`comodity`,pm.name as `program_manager`, p.project_description, p.qty, u.name AS `unit`, p.abc, p.gaa, p.created_date,p.updated_date,epa from 
+      $data['list'] = $base->get_list("select concat(o.last_name, ', ', o.first_name,' ', LEFT(o.middle_name, 1), '[#',o.id,']') as officer_full_name, p.id,s.name as `status`,ui.name as `implementing_unit`,cm.name as`comodity`,pm.name as `program_manager`, p.project_description, p.qty, u.name AS `unit`, p.abc, p.contract_price, p.gaa, p.created_date,p.updated_date,epa from 
 tbl_project p  inner join 
 tbl_implementing_unit ui on ui.id = p.implementing_unit_id inner join 
 tbl_unit u on u.id = p.unit_id inner join 
@@ -182,6 +183,9 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
     case 'admin/report/commodity':
       $select = [];
       $commodities = $base->get_list("SELECT id FROM tbl_comodity WHERE deleted_flag = 0");
+      $is_maker = ($_SESSION['user']->access_id == "2") ? " AND find_in_set({$_SESSION['user']->id}, p.personell_ids) " : "";
+      $where_gaa = (isset($_GET['gaa'])) ? " AND p.gaa = UPPER('".$_GET['gaa']."') " : "";
+
       if (count($commodities) > 0) {
         foreach ($commodities as $commodity) {
             $commodity_id = $commodity['id'];
@@ -207,7 +211,8 @@ tbl_users_info c on c.id = p.created_by where p.deleted_flag = 0");
               COUNT(*) AS `Total`
               FROM tbl_project p 
               INNER JOIN tbl_comodity c ON c.id = p.comodity_id
-              WHERE p.deleted_flag = 0 AND p.comodity_id = {$commodity_id} GROUP BY p.comodity_id
+              WHERE p.deleted_flag = 0 AND p.comodity_id = {$commodity_id} {$where_gaa} {$is_maker}
+              GROUP BY p.comodity_id
             ";
         }
         $select_union_commodities = implode(" UNION ", $select);

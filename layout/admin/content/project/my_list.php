@@ -29,15 +29,17 @@
               <thead>
                 <tr>
                   <th>Reference#</th>
+                  <th>GAA</th>
                   <!-- <th>Officer</th> -->
                   <th>EPA</th>
                   <th>Implementing Unit</th>
                   <th>Comodity</th>
+                  <th>Project Manager</th>
                   <th>Project Description</th>
                   <th>Qty</th>
                   <th>Unit</th>
                   <th>ABC</th>
-                  <th>GAA</th>
+                  <th>Contract Price</th>
                   <th>Status</th>
                   <th>Settings</th>
                 </tr>
@@ -46,15 +48,17 @@
                 <?php foreach ($data['list'] as $res) { ?>
                   <tr>
                     <td><?= $res['id'] ?></td>
+                    <td><?= $res['gaa'] ?></td>
                     <!-- <td><?= $res['officer_full_name'] ?></td> -->
                     <td><?= ($res['epa']) ? 'YES' : 'NO'; ?></td>
                     <td><?= $res['implementing_unit'] ?></td>
                     <td><?= $res['comodity'] ?></td>
+                    <td><?= $res['program_manager'] ?></td>
                     <td><?= $res['project_description'] ?></td>
                     <td><?= $res['qty'] ?></td>
                     <td><?= $res['unit'] ?></td>
-                    <td><?= $res['abc'] ?></td>
-                    <td><?= $res['gaa'] ?></td>
+                    <td><?= (isset($res['abc'])) ? number_format($res['abc'], 2) : '' ?></td>
+                    <td><?= (isset($res['contract_price'])) ? number_format($res['contract_price'], 2) : '' ?></td>
                     <td><?= $res['status'] ?></td>
                     <td class="flex">
                       <?php if (in_array($_SESSION['user']->access_id, array(1, 3))) { ?>

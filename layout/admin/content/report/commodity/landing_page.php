@@ -15,6 +15,29 @@
     </div><!-- /.container-fluid -->
   </div>
   <div class="container-fluid">
+          <div class="card" style="margin-buttom: .1rem;">
+            <!-- /.card-header -->
+            <div class="card-header">
+              <h3 class="card-title">Filter</h3>
+            </div>
+            <!-- /.card-body -->
+            <form id="commodity-report-form">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <label for="gaa">GAA</label>
+                      <input type="text" class="form-control form-control-sm" name="gaa" id="gaa" value="<?= $_GET['gaa'] ?? '' ?>">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-dark float-right" id="commodity-report-filter">Search</button> 
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
     <div class="row">
       <div class="col-12">
           <div class="card" style="margin-buttom: .1rem;">
@@ -74,24 +97,37 @@
   </div>
 <script>
   $(function() {
-    $("#download, #pdf").on("click", function(e) {
+    $("#commodity-report-filter").on("click", function(e) {
       e.preventDefault()
-      parameters = $("#reportform").serialize() 
-      var anchor = document.createElement('a')
-      anchor.href = base_url+'layout/admin/content/report/download.php?'+parameters+'&type='+$(this).attr("name")
-      anchor.target="_blank"
-      anchor.click();
+      var parameters = $("#commodity-report-form").serialize() 
+      var page = "admin/report/commodity&"+parameters 
+      $("#content").load(base_url + 'page.php?page=' + page,
+         (response, status, xhr) => {
+          if (status == "error") {
+            $('#result').html(MessageServerError);  
+          }
+        }
+      );
     })
-  })
 
-  $("#select_all_columns, #select_all_filters").click(function(){
-    var input_class_name = $(this).attr("id") == "select_all_columns" ? '.column' : '.filter';
-    $(input_class_name).not(this).prop('checked', this.checked);
+    $("#commodity-table").DataTable({
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "ordering": false,
+      "searching": false,
+      "buttons": [
+        {
+          extend: 'csv',
+          text: '<i class="fa fa-export"></i> CSV</button>',
+          className: 'btn btn-sm btn-dark'
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-export"></i> PDF</button>',
+          className: 'btn btn-sm btn-dark'
+        }
+      ]
+    }).buttons().container().appendTo('#commodity-table_wrapper .col-md-6:eq(0)');;
   })
-
-  $('.daterange').daterangepicker({
-    locale: {
-      format: 'DD-MM-YYYY'
-    }
-  });
 </script>
