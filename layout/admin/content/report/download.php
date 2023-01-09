@@ -172,6 +172,9 @@ if (isset($_GET["col_status"])) {
 if (isset($_GET["col_gaa"])) {
 	$select .= ", p.gaa AS `GAA`";
 }
+if (isset($_GET["col_chronology"])) {
+	$select .= ", ph.ph_status AS `CHRONOLOGY STATUS`";
+}
 
 $where = [];
 
@@ -218,6 +221,12 @@ if (isset($_GET['mode_of_proc'])) {
 	$where[] = "p.mode_of_proc_id IN($mode_of_proc_ids)";
 }
 
+$where_chronology_status = "";
+if (isset($_GET['chronology_status'])) {
+	$status_ids = implode(",", $_GET['chronology_status']);
+	$where_chronology_status .= "WHERE ph.project_status_id IN($status_ids)";
+}
+
 $filter = "";
 if (count($where) > 0) {
 	$filter .= "AND (".implode(" AND ", $where).")";
@@ -235,6 +244,17 @@ $qry = <<<SQL
 		{$select}
 	FROM
 		tbl_project p
+			LEFT JOIN
+		(
+			SELECT 
+				ph.project_id, GROUP_CONCAT(IFNULL(phs.name, '') ORDER BY ph.id SEPARATOR '\n') AS ph_status
+				FROM
+			tbl_project_history ph 
+				LEFT JOIN
+			tbl_project_status phs ON phs.id = ph.project_status_id
+			{$where_chronology_status}
+			GROUP BY ph.project_id
+		) AS ph ON ph.project_id = p.id
 			LEFT JOIN
 		tbl_implementing_unit iu ON iu.id = p.implementing_unit_id
 			LEFT JOIN
@@ -281,7 +301,7 @@ $qry = <<<SQL
 		tbl_users_info c ON c.id = p.created_by
 	WHERE
 			p.deleted_flag = 0 {$is_admin} {$filter}
-	GROUP BY p.id
+	GROUP BY p.id, ph.ph_status
 SQL;
 
 $projects = $base->get_list($qry);
