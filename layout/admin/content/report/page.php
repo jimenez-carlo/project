@@ -355,6 +355,14 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-sm-2 offset-sm-1">
+                  <div class="form-group">
+                    <input class="form-check-input column" type="checkbox" name="col_chronology" id="chronology" checked>
+                    <label class="form-check-label" for="chronology">CHRONOLOGY</label>
+                  </div>
+                </div>
+              </div>
             </div>
             <!-- /.card-body -->
             <div class="card-header">
@@ -465,6 +473,17 @@
                     </div>
                   </div>
                   -->
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Chronology Status</label>
+                    <?php foreach ($data['default']['project_status'] as $res) { ?>
+                      <div class="custom-control">
+                        <input class="form-check-input filter" id="chronology_status_<?= $res['id'] ?>" type="checkbox" name="chronology_status[]" value="<?= $res['id'] ?>">
+                        <label for="chronology_status_<?= $res['id'] ?>" class="form-check-label"><?= $res['name'] ?></label>
+                      </div>
+                    <?php } ?>
+                  </div>
                 </div>
               </div>
             </div>
