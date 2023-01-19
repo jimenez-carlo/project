@@ -247,7 +247,7 @@ $qry = <<<SQL
 			LEFT JOIN
 		(
 			SELECT 
-				ph.project_id, GROUP_CONCAT(IFNULL(phs.name, ''), ', ', IFNULL(ph.remarks, ''), ', ', IFNULL(DATE_FORMAT(ph.conducted_date, '%d-%b-%Y'), '') ORDER BY ph.id SEPARATOR '\n') AS ph_status
+				ph.project_id, GROUP_CONCAT(IFNULL(phs.name, ''), ' ', IFNULL(ph.remarks, ''), ' ', IFNULL(DATE_FORMAT(ph.conducted_date, '%d-%b-%Y'), '') ORDER BY ph.id SEPARATOR '\n') AS ph_status
 				FROM
 			tbl_project_history ph 
 				LEFT JOIN
