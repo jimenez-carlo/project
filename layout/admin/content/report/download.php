@@ -63,13 +63,13 @@ if (isset($_GET["col_unit"])) {
 	$select .= ", unit.name AS `UNIT`";
 }
 if (isset($_GET["col_abc"])) {
-	$select .= ", p.abc AS `ABC`";
+	$select .= ", FORMAT(IFNULL(p.abc, 0), 2) AS `ABC`";
 }
 if (isset($_GET["col_contract_price"])) {
-	$select .= ", p.contract_price AS `CONTRACT PRICE`";
+	$select .= ", FORMAT(IFNULL(p.contract_price, 0), 2) AS `CONTRACT PRICE`";
 }
 if (isset($_GET["col_residuals"])) {
-	$select .= ", p.residuals AS `RESIDUALS`";
+	$select .= ", FORMAT(IFNULL(p.residuals, 0), 2) AS `RESIDUALS`";
 }
 if (isset($_GET["col_end_user"])) { 
 	$select .= ", GROUP_CONCAT(DISTINCT eu.name) AS `END USER`";
@@ -123,7 +123,7 @@ if (isset($_GET["col_dv"])) {
 	$select .= ", CASE WHEN p.dv = 1 THEN 'DV' WHEN p.dv = 0 THEN 'CHECK' ELSE '' END AS `DV/CHECK`";
 }
 if (isset($_GET["col_dv_amount"])) {
-	$select .= ", p.amount AS `DV AMOUNT`";
+	$select .= ", FORMAT(IFNULL(p.amount, 0), 2) AS `DV AMOUNT`";
 }
 if (isset($_GET["col_dv_date"])) {
 	$select .= ", DATE_FORMAT(p.accepted_date_1, '%d-%b-%Y') AS `DV/CHECK DATE`";
@@ -247,7 +247,7 @@ $qry = <<<SQL
 			LEFT JOIN
 		(
 			SELECT 
-				ph.project_id, GROUP_CONCAT(IFNULL(phs.name, '') ORDER BY ph.id SEPARATOR '\n') AS ph_status
+				ph.project_id, GROUP_CONCAT(IFNULL(phs.name, ''), ', ', IFNULL(ph.remarks, ''), ', ', IFNULL(DATE_FORMAT(ph.conducted_date, '%d-%b-%Y'), '') ORDER BY ph.id SEPARATOR '\n') AS ph_status
 				FROM
 			tbl_project_history ph 
 				LEFT JOIN
