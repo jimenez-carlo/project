@@ -558,6 +558,23 @@ class Project extends Base
         $result->status = true;
         $result->result = $this->response_swal("Project Changed Status Successfully!", 'Successfull!');
         return $result;
+      } else {
+        $conducted_dates = [
+          [ 'status_id' => 1, 'conducted_date' => $preproc_conducted_date ],
+          [ 'status_id' => 4, 'conducted_date' => $prebid_conducted_date ], 
+          [ 'status_id' => 5, 'conducted_date' => $sobe_conducted_date ],
+          [ 'status_id' => 7, 'conducted_date' => $pq_conducted_date ],
+          [ 'status_id' => 8, 'conducted_date' => $pqr_conducted_date ],
+          [ 'status_id' => 9, 'conducted_date' => $noa_conducted_date ],
+          [ 'status_id' => 10, 'conducted_date' => $ors_conducted_date ],
+          [ 'status_id' => 11, 'conducted_date' => $ntp_conducted_date ],
+          [ 'status_id' => 12, 'conducted_date' => $ntp_conforme_conducted_date ],
+          [ 'status_id' => 13, 'conducted_date' => $delivery_conducted_date ], 
+          [ 'status_id' => 14, 'conducted_date' => $inspected_conducted_date ], 
+          [ 'status_id' => 15, 'conducted_date' => $accepted_conducted_date ]
+        ];
+
+        $this->update_chronology($id, $conducted_dates);
       }
 
       $this->commit_transaction();

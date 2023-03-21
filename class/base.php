@@ -209,13 +209,22 @@ class Base
     }
     return $tmp;
   }
+
   public function insert_project_status($project_id, $status_id, $remarks, $date, $other = "null")
   {
     if (empty($date)) {
       $date = date("Y-m-d");
     }
     $created_by =  $_SESSION['user']->id;
-    // echo "INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date, other_details) values($project_id, $status_id,'$remarks', $created_by, '$date',$other)";
     $this->query("INSERT INTO tbl_project_history (project_id,project_status_id,remarks,created_by,conducted_date, other_details) values($project_id, $status_id,'$remarks', $created_by, '$date',$other)");
+  }
+
+  public function update_chronology($project_id, $conducted_dates)
+  {
+    foreach($conducted_dates AS $conducted_date) {
+      if(isset($conducted_date['conducted_date']) && $conducted_date['conducted_date'] !== "") {
+        $this->query("UPDATE tbl_project_history SET conducted_date=IF(conducted_date = '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."', conducted_date, '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."'), updated_date=IF(conducted_date = '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."', updated_date, NOW()) WHERE project_id = ".$project_id." AND project_status_id = ".$conducted_date['status_id']);
+      }
+    }
   }
 }
