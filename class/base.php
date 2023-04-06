@@ -223,7 +223,14 @@ class Base
   {
     foreach($conducted_dates AS $conducted_date) {
       if(isset($conducted_date['conducted_date']) && $conducted_date['conducted_date'] !== "") {
-        $this->query("UPDATE tbl_project_history SET conducted_date=IF(conducted_date = '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."', conducted_date, '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."'), updated_date=IF(conducted_date = '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."', updated_date, NOW()) WHERE project_id = ".$project_id." AND project_status_id = ".$conducted_date['status_id']);
+        $this->query("
+          UPDATE tbl_project_history 
+          SET 
+            conducted_date=IF(conducted_date = '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."', conducted_date, '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."'), 
+            updated_date=IF(conducted_date = '".date('Y-m-d', strtotime($conducted_date['conducted_date']))."', updated_date, NOW()) 
+            WHERE project_id = ".$project_id." AND project_status_id = ".$conducted_date['status_id']."
+          ORDER BY id DESC LIMIT 1
+        ");
       }
     }
   }
